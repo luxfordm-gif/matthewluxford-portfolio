@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>CV — Matthew Luxford</title>
+<meta name="description" content="Curriculum Vitae of Matthew Luxford — senior product designer based in Surrey, UK." />
+<meta name="theme-color" content="#fafaf7" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#fafaf7;
+  --paper:#ffffff;
+  --ink:#0a0a0a;
+  --ink-2:#27272a;
+  --muted:#9a958d;
+  --line:#eae6dd;
+  --dot:#c9c4b9;
+  --hl:#ffe600;
+  --hl-2:#ffd900;
+  --serif:"Fraunces",ui-serif,Georgia,serif;
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --hand:"Caveat",ui-serif,Georgia,serif;
+  --pad:clamp(1.25rem,4vw,3.5rem);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans);
+  font-size:15px;line-height:1.55;color:var(--ink);
+  overflow-x:hidden;
+  background:#070707;
+  padding-bottom:62vh;
+}
+.page{
+  position:relative;z-index:2;
+  background-color:var(--bg);
+  background-image:radial-gradient(circle, rgba(201, 196, 185, .3) 1px, transparent 1.4px);
+  background-size:18px 18px;
+  background-attachment:fixed;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+ul,ol{margin:0;padding:0;list-style:none}
+::selection{background:var(--hl);color:#000}
+
+/* ============================================================== nav */
+.nav{
+  position:sticky;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:32px var(--pad) 18px;
+  background:linear-gradient(var(--bg) 70%, transparent);
+  gap:2rem;
+}
+.nav__brand{
+  font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:var(--ink);
+  flex-shrink:0;
+}
+.nav__contact{
+  display:flex;flex-direction:column;align-items:flex-end;
+  text-align:right;
+  font-size:.78rem;line-height:1.6;color:var(--ink-2);
+  margin:0;
+}
+.nav__contact b{font-weight:600;color:var(--ink)}
+.nav__contact a:hover{color:var(--ink)}
+.nav__contact .status{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:4px;font-weight:500;color:var(--ink);
+}
+.nav__contact .dot{
+  width:8px;height:8px;border-radius:50%;background:#22c55e;
+  display:inline-block;
+  box-shadow:0 0 0 0 rgba(34,197,94,.55);
+  animation:pulse 2s infinite var(--ease);
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}
+  70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}
+  100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+}
+@media (max-width:680px){.nav__contact{font-size:.72rem}}
+
+/* ============================================================ hero */
+.cv-hero{
+  padding:clamp(2rem,5vw,4rem) var(--pad) clamp(2rem,4vw,3rem);
+  border-bottom:1px solid var(--line);
+  max-width:1280px;
+  margin:0 auto;
+}
+.cv-hero__eyebrow{
+  font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;
+  display:inline-block;padding:4px 10px;
+  background:var(--hl);color:#000;border-radius:4px;
+  margin-bottom:1.25rem;
+}
+.cv-hero__name{
+  font-family:var(--hand);
+  font-size:clamp(3.5rem,2rem + 5vw,6rem);
+  font-weight:600;
+  line-height:.95;letter-spacing:.005em;
+  color:var(--ink);
+  margin:0;
+  display:inline-block;
+  transform:rotate(-2deg) translateX(-3px);
+  user-select:none;
+}
+.cv-hero__role{
+  margin:.6rem 0 0;
+  letter-spacing:-.01em;
+}
+.cv-hero__role .role-main{
+  display:block;
+  font-family:var(--sans);font-weight:700;
+  font-size:clamp(1.5rem,1rem + 1.4vw,2.2rem);
+  color:var(--ink);line-height:1.1;
+}
+.cv-hero__role .role-sub{
+  display:block;margin-top:.35em;
+  font-family:var(--serif);font-style:italic;font-weight:400;
+  font-size:clamp(1rem,.9rem + .55vw,1.35rem);
+  color:var(--ink-2);
+}
+.cv-hero__intro{
+  margin-top:1.25rem;
+  max-width:65ch;
+  font-size:.95rem;line-height:1.6;color:var(--ink-2);
+}
+.cv-hero__intro p{margin:0 0 .85rem}
+.cv-hero__intro p:last-child{margin-bottom:0}
+.cv-hero__intro strong{color:var(--ink);font-weight:600}
+.cv-hero__intro em{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
+
+/* notable achievement callout */
+.cv-callout{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-left:6px solid var(--hl);
+  border-radius:10px;
+  padding:1.1rem 1.25rem 1.2rem;
+  margin-bottom:2rem;
+}
+.cv-callout__lab{
+  display:inline-block;
+  font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:.65rem;
+}
+.cv-callout__title{
+  font-family:var(--sans);font-weight:700;
+  font-size:1rem;letter-spacing:-.005em;line-height:1.3;
+  margin:0 0 .35rem;
+}
+.cv-callout__title em{font-family:var(--serif);font-style:italic;font-weight:400}
+.cv-callout__desc{
+  font-size:.88rem;line-height:1.55;color:var(--ink-2);margin:0;
+}
+
+/* outside of work */
+.cv-outside p{
+  font-size:.88rem;line-height:1.5;color:var(--ink-2);margin:0 0 .75rem;
+}
+.cv-outside p:last-child{margin-bottom:0}
+.cv-outside p strong{color:var(--ink);font-weight:600}
+
+.cv-aside__note{
+  margin:.65rem 0 0;
+  font-size:.78rem;line-height:1.45;color:var(--muted);
+}
+.cv-aside__note em{font-family:var(--serif);font-style:italic}
+
+/* ============================================================ grid */
+.cv-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.85fr) minmax(0,1fr);
+  gap:clamp(2rem,4vw,4rem);
+  padding:clamp(2.5rem,5vw,4rem) var(--pad);
+  max-width:1280px;margin:0 auto;
+}
+@media (max-width:880px){
+  .cv-grid{grid-template-columns:1fr;gap:2.5rem}
+}
+
+.cv-section__h{
+  font-family:var(--sans);font-weight:700;
+  font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#000;
+  display:inline-block;padding:6px 12px 5px;
+  background:var(--hl);
+  border-radius:4px;
+  margin:0 0 1.5rem;
+}
+.cv-section + .cv-section{margin-top:2.5rem}
+
+/* job entries */
+.cv-job{
+  display:grid;
+  grid-template-columns:130px 1fr;
+  gap:.5rem 1.5rem;
+  padding:1.1rem 0;
+  border-top:1px solid var(--line);
+}
+.cv-job:last-of-type{border-bottom:1px solid var(--line)}
+.cv-job__years{
+  grid-column:1;grid-row:1 / span 3;
+  font-size:.78rem;color:var(--muted);
+  font-variant-numeric:tabular-nums;
+  padding-top:2px;
+}
+.cv-job__title{
+  grid-column:2;
+  font-family:var(--sans);font-weight:600;
+  font-size:1rem;letter-spacing:-.005em;
+  margin:0;line-height:1.35;
+}
+.cv-job__title em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink-2);font-size:.95rem;margin-left:4px}
+.cv-job__loc{
+  grid-column:2;
+  font-size:.78rem;color:var(--muted);margin-top:1px;
+}
+.cv-job__desc{
+  grid-column:2;
+  font-size:.88rem;color:var(--ink-2);line-height:1.55;
+  margin:.5rem 0 0;max-width:62ch;
+}
+.cv-job__desc ul{display:flex;flex-direction:column;gap:.25rem;margin:.4rem 0 0}
+.cv-job__desc li{padding-left:1em;position:relative}
+.cv-job__desc li::before{content:"·";position:absolute;left:.2em;color:var(--muted);font-weight:700}
+
+@media (max-width:560px){
+  .cv-job{grid-template-columns:1fr;gap:.25rem}
+  .cv-job__years,.cv-job__title,.cv-job__loc,.cv-job__desc{grid-column:1}
+}
+
+/* aside */
+.cv-aside .cv-section + .cv-section{margin-top:3.25rem}
+.cv-tags{
+  display:block;
+  font-size:.92rem;line-height:1.55;color:var(--ink-2);
+}
+.cv-tags li{
+  display:inline;
+  padding:0;border:none;background:none;
+}
+.cv-tags li::after{content:", "}
+.cv-tags li:last-child::after{content:""}
+.cv-list{display:flex;flex-direction:column;gap:.65rem}
+.cv-list li{
+  font-size:.88rem;line-height:1.4;color:var(--ink-2);
+  padding-bottom:.65rem;border-bottom:1px solid var(--line);
+}
+.cv-list li:last-child{border-bottom:0;padding-bottom:0}
+.cv-list li b{color:var(--ink);font-weight:600;display:block;margin-bottom:1px}
+
+/* contact block in aside */
+.cv-contact{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:14px;padding:1.25rem;
+  display:flex;flex-direction:column;gap:.5rem;
+  font-size:.85rem;
+}
+.cv-contact a{color:var(--ink);font-weight:500}
+.cv-contact a:hover{color:var(--hl-2);background:var(--ink);padding:0 4px;border-radius:3px}
+.cv-contact .lab{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:-2px}
+
+/* ===================================================== download CTA */
+.cv-download{
+  position:fixed;
+  right:clamp(1rem,2.5vw,2rem);bottom:clamp(1rem,2.5vw,2rem);
+  z-index:55;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 22px;border-radius:999px;
+  background:var(--ink);color:var(--paper);
+  border:0;cursor:pointer;
+  font-family:var(--sans);font-weight:600;font-size:.92rem;
+  box-shadow:0 18px 40px -18px rgba(20,17,15,.5),0 6px 14px -6px rgba(20,17,15,.2);
+  transition:transform .35s var(--ease),background .25s var(--ease);
+}
+.cv-download:hover{
+  transform:translateY(-3px) scale(1.04);
+  background:var(--hl);color:#000;
+}
+.cv-download:active{transform:translateY(-1px) scale(1)}
+
+/* ===================================================== secret footer */
+.secret-footer{
+  position:fixed;left:0;right:0;bottom:0;
+  height:62vh;z-index:1;
+  background:#070707;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size:32px 32px;
+  color:#fff;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:6vh var(--pad);
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23fde047' stroke='%23000' stroke-width='1.6'/><circle cx='12' cy='13' r='1.6' fill='%23000'/><circle cx='20' cy='13' r='1.6' fill='%23000'/><path d='M10.5 18.5 Q16 24 21.5 18.5' stroke='%23000' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>") 16 16, default;
+}
+.secret-footer__eyebrow{
+  position:absolute;top:9vh;left:50%;
+  width:max-content;max-width:90vw;
+  font-size:.85rem;font-weight:500;letter-spacing:.08em;
+  color:rgba(255,255,255,.6);
+  text-align:center;margin:0;line-height:1.4;
+  transform:translateX(-50%) translateY(-15px) scale(.85);
+  opacity:0;
+}
+.secret-footer.is-revealed .secret-footer__eyebrow{
+  animation:eyebrowIn .8s cubic-bezier(.34,1.5,.64,1) .35s forwards;
+}
+@keyframes eyebrowIn{
+  from{opacity:0;transform:translateX(-50%) translateY(-15px) scale(.85)}
+  to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+}
+.secret-footer__head{
+  font-family:var(--serif);
+  font-weight:400;font-style:italic;
+  font-size:clamp(2.6rem,1.4rem + 7vw,8rem);
+  line-height:1;letter-spacing:-.01em;
+  margin:0;position:relative;text-align:center;
+  opacity:0;transform:scale(.55);
+}
+.secret-footer__head em{font-style:italic;color:#fff}
+.secret-footer__head .nonit{font-style:normal;font-weight:400}
+.secret-footer.is-revealed .secret-footer__head{
+  animation:
+    headReveal 1s cubic-bezier(.34,1.5,.64,1) forwards,
+    headBounce 4.5s ease-in-out 1.05s infinite;
+}
+@keyframes headReveal{to{opacity:1;transform:scale(1)}}
+@keyframes headBounce{
+  0%,100%{transform:scale(1) translateY(0)}
+  50%{transform:scale(1) translateY(-10px)}
+}
+.secret-pill{
+  position:absolute;
+  display:inline-flex;align-items:center;
+  padding:7px 14px;border-radius:999px;
+  background:#070707;border:1px solid rgba(255,255,255,.3);
+  color:#fff;
+  font-family:var(--sans);font-size:.72rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;white-space:nowrap;
+  opacity:0;
+}
+.secret-pill--cmon{top:-22%;left:6%;--pill-r:-9deg}
+.secret-pill--just{bottom:-28%;left:18%;--pill-r:6deg}
+.secret-footer.is-revealed .secret-pill--cmon{
+  animation:pillIn .6s cubic-bezier(.34,1.6,.64,1) .55s forwards, floatA 3.4s ease-in-out 1.2s infinite;
+}
+.secret-footer.is-revealed .secret-pill--just{
+  animation:pillIn .6s cubic-bezier(.34,1.6,.64,1) .7s forwards, floatB 3.8s ease-in-out 1.35s infinite;
+}
+@keyframes pillIn{
+  from{opacity:0;transform:scale(.4) rotate(0deg)}
+  to{opacity:1;transform:scale(1) rotate(var(--pill-r))}
+}
+@keyframes floatA{
+  0%,100%{transform:translateY(0) rotate(-9deg)}
+  50%{transform:translateY(-10px) rotate(-13deg)}
+}
+@keyframes floatB{
+  0%,100%{transform:translateY(0) rotate(6deg)}
+  50%{transform:translateY(-7px) rotate(10deg)}
+}
+.secret-footer__bottom{
+  position:absolute;bottom:8vh;left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.85rem;
+  width:max-content;max-width:90vw;text-align:center;
+}
+.secret-footer__cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 26px;border-radius:999px;
+  background:#fff;color:#000;
+  text-decoration:none;font-weight:600;font-size:.95rem;
+  transition:transform .55s cubic-bezier(.34,1.5,.64,1), background .35s var(--ease), padding .55s cubic-bezier(.34,1.5,.64,1);
+  opacity:0;transform:translateY(20px) scale(.85);
+}
+.secret-footer.is-revealed .secret-footer__cta{
+  animation:elemIn .8s cubic-bezier(.34,1.5,.64,1) .55s forwards;
+}
+.secret-footer__cta:hover{
+  transform:translateY(-6px) scale(1.14) rotate(-1deg)!important;
+  background:#fde047;padding:16px 32px;
+  box-shadow:0 18px 40px -12px rgba(253,224,71,.55);
+}
+.secret-footer__cta:active{transform:translateY(-2px) scale(1.06)!important;transition:transform .12s var(--ease)}
+.secret-footer__cta .arr{display:inline-block;transition:transform .55s cubic-bezier(.34,1.5,.64,1)}
+.secret-footer__cta:hover .arr{transform:translate(4px,-4px) rotate(8deg)}
+.secret-footer__tag{
+  font-size:.78rem;color:rgba(255,255,255,.55);
+  margin:0;line-height:1.4;font-family:var(--sans);
+  white-space:nowrap;
+  opacity:0;transform:translateY(15px);
+}
+.secret-footer.is-revealed .secret-footer__tag{
+  animation:elemIn .8s var(--ease) .8s forwards;
+}
+@keyframes elemIn{to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* ============================================================== print */
+@media print{
+  @page{size:A4;margin:14mm 12mm}
+  html,body{background:#fff!important;padding:0;margin:0}
+  body{font-size:9.5pt;color:#000;line-height:1.4}
+  .page{background:#fff!important;background-image:none!important}
+  .nav{position:static;padding:0 0 8mm;background:none;border-bottom:1px solid #000;align-items:center}
+  .nav__brand{font-size:11pt}
+  .nav__contact{font-size:8pt}
+  .nav__contact .dot{display:none}
+  .nav__contact .status{color:#000}
+  .cv-hero{padding:6mm 0 5mm;border-bottom:1px solid #000}
+  .cv-hero__eyebrow{background:none;color:#000;padding:0;font-size:8pt;margin-bottom:3mm;font-weight:700}
+  .cv-hero__name{font-size:38pt;transform:none;letter-spacing:0}
+  .cv-hero__role{font-size:11pt;margin-top:2mm}
+  .cv-hero__intro{font-size:9pt;margin-top:3mm;max-width:none}
+  .cv-grid{padding:6mm 0;gap:8mm;max-width:none;grid-template-columns:1.85fr 1fr}
+  .cv-section__h{background:#000;color:#fff;padding:2.5pt 6pt;font-size:8pt;margin-bottom:3mm;border-radius:2pt}
+  .cv-section + .cv-section{margin-top:6mm}
+  .cv-job{padding:3mm 0;break-inside:avoid;page-break-inside:avoid;grid-template-columns:24mm 1fr;gap:1mm 6mm}
+  .cv-job__years{font-size:8pt;color:#000}
+  .cv-job__title{font-size:10pt}
+  .cv-job__title em{font-size:9pt}
+  .cv-job__loc{font-size:7.5pt;color:#444}
+  .cv-job__desc{font-size:8.5pt;margin-top:1.5mm}
+  .cv-tags{font-size:8.5pt;color:#000}
+  .cv-tags li{display:inline;padding:0;border:0;background:none;color:#000}
+  .cv-list li{font-size:8.5pt;color:#000;border-bottom:1px solid #ddd}
+  .cv-list li b{color:#000}
+  .cv-contact{background:#fff;border:1px solid #000;padding:3mm;font-size:8.5pt}
+  .cv-download,.secret-footer{display:none!important}
+  body{padding-bottom:0!important}
+  a{color:inherit!important;text-decoration:none}
+  *{box-shadow:none!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<header class="nav">
+  <a class="nav__brand" href="index.html">matthew.</a>
+  <p class="nav__contact">
+    <span><b>Matthew Luxford</b> · Senior Product Designer</span>
+    <span><a href="mailto:luxfordm@gmail.com">luxfordm@gmail.com</a> · Surrey / Remote</span>
+    <span class="status"><span class="dot"></span>Open to senior roles · 2026</span>
+  </p>
+</header>
+
+<!-- HERO -->
+<section class="cv-hero">
+  <span class="cv-hero__eyebrow">About me</span>
+  <p class="cv-hero__role">
+    <span class="role-main">Senior Web Designer</span>
+    <span class="role-sub">Design Lead · Go-to designer · 18+ years</span>
+  </p>
+  <div class="cv-hero__intro">
+    <p>I'm a senior web designer, design lead and go-to designer based in <strong>Surrey, UK</strong>. I work end-to-end across UX, UI, brand and design systems, sitting comfortably between users, business and engineering. Currently freelance and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
+    <p>I'm a dad of two and a recently converted road cyclist <em>(apologies in advance)</em>. When I was permanent, I was always chasing the next job title, grinding towards design director. Since going contract, that's changed — <strong>any role is a role</strong>, and I genuinely love getting stuck in. Full-cycle work from the first kickoff brief through to delivery is where I'm happiest. I've worn a lot of different hats across my career, and that's given me real experience communicating with developers, helping teams build in various CMSs, and translating between design and code without the ego.</p>
+    <p>More recently, I've been actively exploring <strong>AI</strong> — not as a replacement, but as a tool. I'll use whatever level works: design, code generation, or the latest trend. If it makes me more efficient and helps me deliver better work, I'm all in.</p>
+  </div>
+</section>
+
+<!-- TWO-COLUMN GRID -->
+<div class="cv-grid">
+
+  <!-- LEFT: experience -->
+  <main class="cv-main">
+
+    <section class="cv-section">
+      <h2 class="cv-section__h">Notable Achievement</h2>
+      <div class="cv-callout">
+        <span class="cv-callout__lab">★ Apple Best of 2019</span>
+        <h3 class="cv-callout__title">Lifecake <em>— "The Storyteller Within"</em></h3>
+        <p class="cv-callout__desc">
+          Led creative direction, UX and UI for Lifecake (now BackThen), a family photo-sharing platform with 3.4M+ users. Only web designer on a 5-person team that won Apple's award out of thousands of App Store submissions. Overhauled the native app (iOS &amp; Android) and web platform with new brand identity, tone of voice, and user-centred design practices.
+        </p>
+      </div>
+    </section>
+
+    <section class="cv-section">
+      <h2 class="cv-section__h">Experience</h2>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2024 — 2025</span>
+        <h3 class="cv-job__title">Senior Web Designer <em>· Kraken</em></h3>
+        <span class="cv-job__loc">Remote · Crypto exchange</span>
+        <p class="cv-job__desc">Crypto moves fast, and so did we. Collaborated on design solutions in a high-pressure environment across product, engineering, and stakeholder groups. Can't share what we shipped due to NDA, but navigating the pace and complexity was invaluable.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2021 — 2022</span>
+        <h3 class="cv-job__title">Lead Product Designer <em>· Yoppie</em></h3>
+        <span class="cv-job__loc">London · Women's-health DTC</span>
+        <p class="cv-job__desc">Head of Design and creative oversight of all digital communications. Drove brand consistency and strategic direction across the business while implementing user-centred design practices.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2020 — 2021</span>
+        <h3 class="cv-job__title">Lead Product Designer <em>· Spark44 (Jaguar Land Rover)</em></h3>
+        <span class="cv-job__loc">London · Automotive · NDA</span>
+        <p class="cv-job__desc">Worked under NDA on high-profile automotive projects for Jaguar Land Rover across 27 global markets. Managed design teams and led UX/UI across multiple concurrent projects, presenting to internal teams and global JLR stakeholders. Designed the 'Help Me Choose' tool and overhauled 'Models &amp; Specifications' pages using data-driven decisions to help users navigate complex vehicle ranges for dual-brand global rollout.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2020 — 2021</span>
+        <h3 class="cv-job__title">Lead Product Designer <em>· The Collective</em></h3>
+        <span class="cv-job__loc">London · Co-living</span>
+        <p class="cv-job__desc">Led creative direction and UX/UI across multiple digital projects. Strategically updated the booking flow — within the first month post-launch, analytics showed a <strong>500% increase in booking enquiries</strong>. Also refreshed brand positioning and overhauled the native app (iOS &amp; Android) to improve booking, event organisation, and payment flows.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2018 — 2020</span>
+        <h3 class="cv-job__title">Lead Product Designer <em>· Lifecake</em></h3>
+        <span class="cv-job__loc">London · Family photo-sharing</span>
+        <p class="cv-job__desc">Led creative direction, UX, UI and user experience for a family photo-sharing platform with 3.4M+ users. Overhauled the native app and web platform with a refreshed brand identity while implementing new design methodologies across the business. <strong>Apple's Best of 2019 'The Storyteller Within' award</strong> — only web designer on a 5-person team that won against thousands of App Store submissions.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2016 — 2018</span>
+        <h3 class="cv-job__title">Senior Designer <em>· Spark44 (Jaguar Land Rover)</em></h3>
+        <span class="cv-job__loc">London · Automotive global programme</span>
+        <p class="cv-job__desc">Long-term contract designing fully responsive tools and platforms for Jaguar Land Rover's global digital presence. Managed design teams, ran design workshops, and presented to build teams and global stakeholders. Worked on 'Help Me Choose,' Customer Portal, Comparison Tool, Navigation as a Service, and Global Navigation — balancing user needs with business goals across 27 markets and dual brands.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2016</span>
+        <h3 class="cv-job__title">Lead Product Designer <em>· EY-Seren</em></h3>
+        <span class="cv-job__loc">London · Banking innovation lab</span>
+        <p class="cv-job__desc">UI design across four native iPad &amp; iPhone apps for a Tier One ASPAC bank as part of an innovation lab and business transformation project.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2016</span>
+        <h3 class="cv-job__title">Design Director <em>· Totally Communications</em></h3>
+        <span class="cv-job__loc">London · Agency</span>
+        <p class="cv-job__desc">Short-term contract providing creative oversight of all design output. Evaluated work, created pitch presentations for prospective clients, and guided the design team on art direction and quality standards.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2015 — 2016</span>
+        <h3 class="cv-job__title">Lead Product Designer <em>· OLIVER Agency</em></h3>
+        <span class="cv-job__loc">London · Agency</span>
+        <p class="cv-job__desc">Led two major projects (Slaughter and May, GLL) and managed other designers. Client-facing role presenting all UX and UI work, creating mobile prototypes, and producing digital and functional brand guidelines.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2015</span>
+        <h3 class="cv-job__title">Design Director <em>· LONO Creative</em></h3>
+        <span class="cv-job__loc">London · Agency</span>
+        <p class="cv-job__desc">Led creative direction of the business, implemented new working methodologies, and participated in strategy planning. Managed a team of 6 designers, supported their career development, and provided creative oversight and design standards. <strong>Last permanent role before going contract-only.</strong></p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2014 — 2015</span>
+        <h3 class="cv-job__title">Senior Designer <em>· Big Group</em></h3>
+        <span class="cv-job__loc">London · Agency</span>
+        <p class="cv-job__desc">Digital design across multiple projects with focus on UX and brand consistency.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2013 — 2014</span>
+        <h3 class="cv-job__title">Senior Designer <em>· Global Beach</em></h3>
+        <span class="cv-job__loc">London · Agency</span>
+        <p class="cv-job__desc">Digital design work across various client projects.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2011 — 2013</span>
+        <h3 class="cv-job__title">Digital Creative Lead <em>· JPMH</em></h3>
+        <span class="cv-job__loc">London</span>
+        <p class="cv-job__desc">Led digital creative output across client and internal projects.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2010 — 2011</span>
+        <h3 class="cv-job__title">Digital Creative Lead <em>· Bell Design</em></h3>
+        <span class="cv-job__loc">London</span>
+        <p class="cv-job__desc">Directed digital creative strategy and output.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2008 — 2010</span>
+        <h3 class="cv-job__title">Digital Designer <em>· Galileo London</em></h3>
+        <span class="cv-job__loc">London · Agency</span>
+        <p class="cv-job__desc">Built foundational digital design skillset across client work.</p>
+      </article>
+
+      <article class="cv-job">
+        <span class="cv-job__years">2007 — 2008</span>
+        <h3 class="cv-job__title">Digital Designer <em>· Wickedweb</em></h3>
+        <span class="cv-job__loc">London</span>
+        <p class="cv-job__desc">Early-stage digital design experience.</p>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- RIGHT: skills, tools, contact, outside of work -->
+  <aside class="cv-aside">
+
+    <section class="cv-section">
+      <h2 class="cv-section__h">Core Skills</h2>
+      <ul class="cv-tags">
+        <li>Art direction</li>
+        <li>User experience</li>
+        <li>UI design</li>
+        <li>Design systems</li>
+        <li>Front-end web design</li>
+        <li>Micro-interactions</li>
+        <li>Animation</li>
+        <li>Design direction</li>
+        <li>Rapid prototyping</li>
+      </ul>
+    </section>
+
+    <section class="cv-section">
+      <h2 class="cv-section__h">Tools &amp; Tech</h2>
+      <ul class="cv-tags">
+        <li>Figma</li>
+        <li>Affinity</li>
+        <li>GitHub</li>
+        <li>Slack</li>
+        <li>Jira</li>
+        <li>Trello</li>
+        <li>Google Docs</li>
+        <li>Claude</li>
+      </ul>
+    </section>
+
+    <section class="cv-section">
+      <h2 class="cv-section__h">AI Tools</h2>
+      <ul class="cv-tags">
+        <li>Granola AI</li>
+        <li>Nano Banana 2</li>
+        <li>Wispr Flow</li>
+      </ul>
+      <p class="cv-aside__note"><em>— plus whatever's new this week. The AI space moves fast.</em></p>
+    </section>
+
+    <section class="cv-section">
+      <h2 class="cv-section__h">Outside of Work</h2>
+      <div class="cv-outside">
+        <p><strong>Barbecuing</strong> is a proper passion — I've got three smokers and love having friends over for long, slow cooks. Brisket is my go-to. I used to run a fairly popular Instagram page around it, but pulled back to keep it enjoyable rather than a side hustle.</p>
+        <p><strong>Road cycling</strong> is my latest obsession. Planning an Isle of Wight 100km trip this year — longest ride I've done. Still getting my legs used to it.</p>
+        <p>I'm a <strong>dad of two</strong>, and we're always out exploring new places together. And then there's <strong>Bella, our cavapoo</strong> — probably the laziest in the world, but she makes everyone smile.</p>
+      </div>
+    </section>
+
+    <section class="cv-section">
+      <h2 class="cv-section__h">Contact</h2>
+      <div class="cv-contact">
+        <span class="lab">Email</span>
+        <a href="mailto:luxfordm@gmail.com">luxfordm@gmail.com</a>
+        <span class="lab">LinkedIn</span>
+        <a href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener">linkedin.com/in/matthewluxford</a>
+        <span class="lab">Portfolio</span>
+        <a href="index.html">matthewluxford.com</a>
+        <span class="lab">Based</span>
+        <span>Surrey, UK · worldwide</span>
+      </div>
+    </section>
+
+  </aside>
+</div>
+
+</div><!-- /.page -->
+
+<button class="cv-download" type="button" id="cv-download" aria-label="Download CV as PDF">
+  Download CV <span class="arr">↓</span>
+</button>
+
+<!-- HIDDEN REVEAL FOOTER -->
+<section class="secret-footer" aria-label="Hidden message">
+  <p class="secret-footer__eyebrow">WOAH... YOU REALLY LIKE TO SCROLL<br/>DON'T YOU?</p>
+
+  <h2 class="secret-footer__head">
+    <span class="secret-pill secret-pill--cmon">C'mon</span>
+    <span class="nonit">Hire</span> <em>me</em> <span class="nonit">Already!</span>
+    <span class="secret-pill secret-pill--just">Just</span>
+  </h2>
+
+  <div class="secret-footer__bottom">
+    <a class="secret-footer__cta" href="mailto:luxfordm@gmail.com">Hire me <span class="arr">↗</span></a>
+    <p class="secret-footer__tag">not forcing you btw, you-do-you</p>
+  </div>
+</section>
+
+<script>
+(() => {
+  // download CTA → triggers print dialog (user picks Save as PDF)
+  document.getElementById("cv-download")?.addEventListener("click", () => window.print());
+
+  // secret footer reveal
+  const secretEl = document.querySelector(".secret-footer");
+  if (secretEl) {
+    const checkReveal = () => {
+      const docH = document.documentElement.scrollHeight;
+      const winH = window.innerHeight;
+      const remaining = docH - winH - window.scrollY;
+      secretEl.classList.toggle("is-revealed", remaining < winH * 0.18);
+    };
+    window.addEventListener("scroll", checkReveal, { passive: true });
+    window.addEventListener("resize", checkReveal);
+    checkReveal();
+  }
+})();
+</script>
+</body>
+</html>

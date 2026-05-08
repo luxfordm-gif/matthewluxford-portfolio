@@ -718,11 +718,11 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 .foot__giant{
   font-family:var(--sans);font-weight:800;
-  font-size:clamp(7rem,8rem + 18vw,28rem);
-  line-height:.78;
+  font-size:clamp(5rem,28vw,100rem);
+  line-height:.82;
   letter-spacing:-.06em;
   color:var(--ink);
-  margin:0 0 0 -.04em;
+  margin:0 0 -0.18em -.04em;
   user-select:none;
   white-space:nowrap;
 }
@@ -900,7 +900,7 @@ ul,ol{margin:0;padding:0;list-style:none}
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a class="nav__cta" href="mailto:luxfordm@gmail.com">Resume</a>
+    <a class="nav__cta" href="cv.html">Resume</a>
   </div>
 </header>
 
@@ -1163,7 +1163,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 
   <div class="foot__bottom">
     <span>© 2026 Matthew Luxford</span>
-    <span>Built with HTML, CSS &amp; a sprinkle of JS</span>
+    <span>Built with HTML, CSS &amp; a sprinkle of JS and <a href="https://claude.com/claude-code" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-decoration-color:rgba(255,255,255,.3);text-underline-offset:3px">Claude Code</a></span>
   </div>
 </footer>
 
@@ -1187,17 +1187,10 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 <script>
 (() => {
-  // wheel-to-x + drag on the work rail
+  // drag-to-scroll on the work rail
+  // (vertical wheel is left alone so it scrolls the page; trackpad horizontal swipes
+  //  and shift+wheel still scroll the rail natively.)
   document.querySelectorAll(".work__rail").forEach((rail) => {
-    rail.addEventListener("wheel", (e) => {
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-      const max = rail.scrollWidth - rail.clientWidth;
-      const next = rail.scrollLeft + e.deltaY;
-      if (next <= 0 || next >= max) return;
-      e.preventDefault();
-      rail.scrollLeft = next;
-    }, { passive: false });
-
     let down = false, sx = 0, sl = 0, moved = false;
     rail.addEventListener("pointerdown", (e) => {
       if (e.target.closest("a,button")) { /* allow link clicks */ }
@@ -1281,7 +1274,10 @@ ul,ol{margin:0;padding:0;list-style:none}
       const h = row.dataset.h || "225px";
       // warm cache
       tryLoad(src);
-      row.addEventListener("mouseenter", async () => {
+      row.addEventListener("mouseenter", async (e) => {
+        // set position FIRST so the image doesn't flash at (0,0) on first hover
+        hoverImg.style.left = e.clientX + "px";
+        hoverImg.style.top = e.clientY + "px";
         hoverImg.style.setProperty("--rot", rot);
         hoverImg.style.setProperty("--h", h);
         const ok = await tryLoad(src);
