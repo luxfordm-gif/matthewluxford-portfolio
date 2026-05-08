@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Lifecake · Case Study — Matthew Luxford</title>
+<meta name="description" content="Family photo-sharing platform reimagined across iOS, Android and web. Apple's Best Storytelling App 2019 with 3.4M+ users worldwide." />
+<meta name="theme-color" content="#fafaf7" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#fafaf7;--paper:#ffffff;--ink:#0a0a0a;--ink-2:#27272a;
+  --muted:#9a958d;--line:#eae6dd;--dot:#c9c4b9;--dark:#0a0a0a;
+  --hl:#ffe600;
+  --accent:#dc2626;
+  --serif:"Fraunces",ui-serif,Georgia,serif;
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --hand:"Caveat",ui-serif,Georgia,serif;
+  --pad:clamp(1.25rem,4vw,3.5rem);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans);font-size:clamp(.95rem,.9rem + .25vw,1.05rem);
+  line-height:1.55;color:var(--ink);overflow-x:hidden;
+  background-color:var(--bg);
+  background-image:radial-gradient(circle, rgba(201, 196, 185, .3) 1px, transparent 1.4px);
+  background-size:18px 18px;background-attachment:fixed;
+}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px var(--pad);
+  transition:transform .45s var(--ease), background .35s var(--ease), border-color .35s var(--ease), backdrop-filter .35s var(--ease), padding .35s var(--ease);
+  border-bottom:1px solid transparent;
+}
+.nav.is-pinned{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+.nav.is-floating{
+  background:rgba(250,250,247,.78);
+  backdrop-filter:saturate(160%) blur(14px);
+  -webkit-backdrop-filter:saturate(160%) blur(14px);
+  border-bottom-color:rgba(20,20,20,.06);
+  padding-top:14px;padding-bottom:14px;
+}
+.nav.is-hidden{transform:translateY(-110%)}
+.nav__brand{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:var(--ink)}
+.nav__right{display:flex;align-items:center;gap:clamp(1.5rem,3vw,2.6rem)}
+.nav__links{display:flex;gap:clamp(1.25rem,2.6vw,2rem)}
+.nav__links a{font-size:1rem;color:var(--ink);font-weight:500}
+.nav__cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;border-radius:999px;
+  background:var(--ink);color:var(--paper);
+  font-weight:500;font-size:.95rem;
+  transition:transform .25s var(--ease);
+}
+.nav__cta:hover{transform:translateY(-2px)}
+@media (max-width:760px){.nav__links{display:none}}
+
+.back{
+  position:relative;z-index:5;
+  padding:clamp(7rem,10vw,9rem) var(--pad) 0;
+  max-width:1400px;margin:0 auto;
+}
+.back a{display:inline-flex;align-items:center;gap:8px;font-size:.95rem;color:var(--muted);transition:color .25s var(--ease)}
+.back a:hover{color:var(--ink)}
+
+.case__head{
+  padding:clamp(2rem,4vw,3rem) var(--pad) clamp(3rem,6vw,4rem);
+  display:grid;grid-template-columns:1fr 1.4fr;
+  gap:clamp(2rem,5vw,5rem);align-items:start;
+  max-width:1400px;margin:0 auto;
+}
+.case__title{
+  font-family:var(--sans);font-weight:700;
+  font-size:clamp(3rem,2rem + 7vw,9rem);
+  letter-spacing:-.045em;line-height:.95;margin:0;
+}
+.case__title em{font-family:var(--serif);font-style:italic;font-weight:400}
+.case__intro{display:flex;flex-direction:column;gap:2rem;padding-top:.75rem}
+.case__lead{
+  font-size:clamp(1.1rem,1rem + .5vw,1.4rem);
+  color:var(--ink-2);line-height:1.45;max-width:48ch;
+}
+.case__lead strong{color:var(--ink);font-weight:600}
+.case__meta{display:grid;grid-template-columns:repeat(3,auto);gap:clamp(1.5rem,3vw,3rem)}
+.case__meta dt{font-size:.75rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;font-weight:500}
+.case__meta dd{margin:0;font-weight:600;font-size:1.05rem}
+.award-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:999px;
+  background:var(--ink);color:#ffe600;
+  font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  margin-bottom:1rem;width:max-content;
+}
+.award-badge svg{width:14px;height:14px;color:#ffe600}
+@media (max-width:880px){.case__head{grid-template-columns:1fr}}
+
+.case__hero{
+  max-width:1400px;
+  margin:0 auto;padding:0 var(--pad);
+}
+.case__hero img{
+  width:100%;
+  border-radius:24px;
+  display:block;
+  aspect-ratio:16/9;object-fit:cover;
+  box-shadow:0 60px 90px -40px rgba(0,0,0,.18);
+}
+
+.case__feature{
+  max-width:1400px;
+  margin:clamp(3rem,5vw,5rem) auto;
+  padding:0 var(--pad);
+}
+.case__feature img{width:100%;border-radius:20px;display:block}
+.case__feature--full{max-width:none;padding:0;margin-left:0;margin-right:0}
+.case__feature--full img{border-radius:0}
+
+.case__split{
+  max-width:1400px;
+  margin:clamp(3rem,5vw,5rem) auto;
+  padding:0 var(--pad);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(.75rem,1.5vw,1.5rem);
+}
+.case__split img{width:100%;border-radius:20px;display:block;aspect-ratio:4/3;object-fit:cover}
+@media (max-width:760px){.case__split{grid-template-columns:1fr}}
+
+.case__caption{
+  font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--muted);margin:.85rem 0 0;
+}
+
+.case__body{
+  padding:clamp(6rem,11vw,9rem) var(--pad) 0;
+  display:grid;grid-template-columns:1fr 2fr;
+  gap:clamp(2rem,5vw,5rem);
+  max-width:1400px;margin:0 auto;
+}
+.case__body + .case__body{padding-top:clamp(5rem,9vw,7rem)}
+.case__body h2{
+  font-family:var(--sans);font-weight:700;
+  font-size:clamp(1.6rem,1.2rem + 1.5vw,2.4rem);
+  letter-spacing:-.025em;line-height:1.05;margin:0;
+}
+.case__body h2 em{font-family:var(--serif);font-style:italic;font-weight:400}
+.case__body__copy{
+  display:flex;flex-direction:column;gap:1.85rem;
+  font-size:clamp(1.05rem,1rem + .35vw,1.2rem);
+  color:var(--ink-2);line-height:1.7;max-width:62ch;
+}
+.case__body__copy p{margin:0}
+.case__body__copy strong{color:var(--ink);font-weight:600}
+.case__body__copy em{font-family:var(--serif);font-style:italic}
+@media (max-width:880px){.case__body{grid-template-columns:1fr}}
+
+.outcomes{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(1rem,2.5vw,2rem);
+  padding:clamp(4rem,8vw,7rem) var(--pad);
+  max-width:1400px;margin:0 auto;
+}
+.outcome{
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:24px;padding:clamp(1.5rem,2.5vw,2rem);
+  display:flex;flex-direction:column;gap:.75rem;
+}
+.outcome__num{
+  font-family:var(--sans);font-weight:800;
+  font-size:clamp(2.5rem,1.5rem + 3.5vw,4.5rem);
+  line-height:1;letter-spacing:-.04em;color:var(--ink);
+}
+.outcome__num em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--accent)}
+.outcome--featured{
+  background:var(--ink);color:#fff;border-color:var(--ink);
+}
+.outcome--featured .outcome__num{color:#ffe600}
+.outcome--featured .outcome__lab{color:rgba(255,255,255,.7)}
+.outcome__lab{font-size:.95rem;color:var(--muted)}
+@media (max-width:760px){.outcomes{grid-template-columns:1fr}}
+
+.next{
+  padding:clamp(4rem,8vw,7rem) var(--pad);
+  text-align:center;border-top:1px solid var(--line);
+}
+.next__eyebrow{
+  font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1rem;font-weight:500;
+}
+.next__title{
+  font-family:var(--sans);font-weight:700;
+  font-size:clamp(2.5rem,1.5rem + 5vw,6rem);
+  letter-spacing:-.04em;line-height:1;margin:0;
+}
+.next__title em{font-family:var(--serif);font-style:italic;font-weight:400}
+.next a.next__cta{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:2rem;padding:14px 26px;border-radius:999px;
+  background:var(--ink);color:var(--paper);
+  font-weight:500;
+  transition:transform .25s var(--ease);
+}
+.next a.next__cta:hover{transform:translateY(-2px)}
+
+.foot{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:1400px;margin:0 auto}
+.foot__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="nav__brand" href="index.html">matthew.</a>
+  <div class="nav__right">
+    <nav class="nav__links" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <a class="nav__cta" href="cv.html">Resume</a>
+  </div>
+</header>
+
+<nav class="back" aria-label="Back navigation">
+  <a href="index.html#work">← Back to work</a>
+</nav>
+
+<header class="case__head">
+  <h1 class="case__title">Lifecake <em>— BackThen.</em></h1>
+  <div class="case__intro">
+    <span class="award-badge">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l2.39 4.84L19.6 7.6l-3.8 3.7.9 5.24L12 14.08l-4.7 2.46.9-5.24-3.8-3.7 5.21-.76z"/></svg>
+      Apple Best of 2019
+    </span>
+    <p class="case__lead">A family photo-sharing platform with <strong>3.4M+ users worldwide</strong>. Led creative direction, UX, UI and brand identity across iOS, Android and web — overhauling the app and platform to deliver a more cohesive, story-driven experience.</p>
+    <dl class="case__meta">
+      <div><dt>Role</dt><dd>Lead Product Designer</dd></div>
+      <div><dt>Timeline</dt><dd>2018 – 2020</dd></div>
+      <div><dt>Scope</dt><dd>Brand · UX · UI · iOS · Android · Web</dd></div>
+    </dl>
+  </div>
+</header>
+
+<section class="case__hero">
+  <img src="assets/lifecake/hero.jpg" alt="Lifecake — Apple Best of 2019 hero" />
+</section>
+
+<section class="case__body">
+  <h2>The <em>brief.</em></h2>
+  <div class="case__body__copy">
+    <p>Lifecake had millions of parents using it but the product felt fragmented. The native apps and the web platform had drifted apart visually, the brand identity was due a refresh, and the timeline experience — Lifecake's core promise of <em>"a beautiful timeline of your child's moments"</em> — wasn't telling stories, just storing photos.</p>
+    <p>The mandate: <strong>unify the experience</strong> across iOS, Android and web, refresh the brand identity and tone of voice, and ship a story-led timeline that felt as warm as the moments inside it.</p>
+  </div>
+</section>
+
+<figure class="case__feature">
+  <img src="assets/lifecake/02.jpg" alt="Lifecake timeline experience" />
+  <figcaption class="case__caption">— Story-led timeline experience</figcaption>
+</figure>
+
+<section class="case__body">
+  <h2>The <em>approach.</em></h2>
+  <div class="case__body__copy">
+    <p>Started with research — interviewing parents about what they actually did with the photos they uploaded, what they shared, what they searched for, what they printed. Most weren't looking for "all photos in date order" — they were looking for a <strong>story</strong> they could send to grandparents.</p>
+    <p>From there, redesigned the timeline around moments and stories rather than a chronological grid. New visual identity — softer, warmer, more editorial. Updated the tone of voice. Implemented user-centred design practices across the small but agile team and worked closely with iOS, Android and web engineers to ship in lockstep.</p>
+    <p>Worked extensively on the iOS 13 keynote-style refresh, the responsive web overhaul, and a new "Treasure" feature for surfacing forgotten moments back to parents.</p>
+  </div>
+</section>
+
+<div class="case__split">
+  <img src="assets/lifecake/03.jpg" alt="Lifecake app screen — moments view" />
+  <img src="assets/lifecake/04.jpg" alt="Lifecake app screen — story view" />
+</div>
+
+<section class="case__body">
+  <h2>The <em>award.</em></h2>
+  <div class="case__body__copy">
+    <p>In December 2019, Apple awarded Lifecake <strong>"Best of 2019"</strong> in the category <em>"The Storyteller Within"</em> — selected from thousands of App Store submissions. As the only web designer on a five-person team, this remains my most memorable career win.</p>
+    <p>Lifecake was featured worldwide on the App Store. The recognition validated the bet on stories over storage — the redesign made the product about <em>parents and their kids</em>, not about file management.</p>
+  </div>
+</section>
+
+<figure class="case__feature case__feature--full">
+  <img src="assets/lifecake/award2.jpg" alt="Apple Best of 2019 — The Storyteller Within" />
+</figure>
+
+<div class="case__split">
+  <img src="assets/lifecake/05.jpg" alt="Lifecake responsive web" />
+  <img src="assets/lifecake/06.jpg" alt="Lifecake brand refresh" />
+</div>
+
+<section class="outcomes">
+  <div class="outcome outcome--featured">
+    <span class="outcome__num">★ <em>'19</em></span>
+    <span class="outcome__lab">Apple Best of 2019 — "The Storyteller Within"</span>
+  </div>
+  <div class="outcome">
+    <span class="outcome__num">3.4<em>M</em></span>
+    <span class="outcome__lab">Active users worldwide</span>
+  </div>
+  <div class="outcome">
+    <span class="outcome__num">385<em>k</em></span>
+    <span class="outcome__lab">Distinct users per month</span>
+  </div>
+</section>
+
+<section class="next">
+  <p class="next__eyebrow">Next project</p>
+  <h2 class="next__title">The Collective <em>— +500%</em></h2>
+  <a class="next__cta" href="collective.html">View case study →</a>
+</section>
+
+<footer class="foot">
+  <div class="foot__bottom">
+    <span>© 2026 Matthew Luxford</span>
+    <span><a href="index.html">↑ Top of site</a></span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const nav = document.querySelector(".nav");
+  if (!nav) return;
+  let lastY = window.scrollY, ticking = false;
+  const updateNav = () => {
+    const y = window.scrollY;
+    const delta = y - lastY;
+    if (y < 24) {
+      nav.classList.remove("is-floating", "is-hidden");
+      nav.classList.add("is-pinned");
+    } else if (delta > 6) {
+      nav.classList.add("is-hidden");
+      nav.classList.remove("is-floating", "is-pinned");
+    } else if (delta < -6) {
+      nav.classList.remove("is-hidden", "is-pinned");
+      nav.classList.add("is-floating");
+    }
+    lastY = y;
+    ticking = false;
+  };
+  window.addEventListener("scroll", () => {
+    if (!ticking) { requestAnimationFrame(updateNav); ticking = true; }
+  }, { passive: true });
+  updateNav();
+})();
+</script>
+
+</body>
+</html>

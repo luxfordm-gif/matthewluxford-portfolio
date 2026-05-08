@@ -417,6 +417,21 @@ ul,ol{margin:0;padding:0;list-style:none}
 .proj__media--02{background:#fde68a}
 .proj__media--03{background:#7f1d1d}
 .proj__media--04{background:#1e293b}
+.proj__media--05{background:linear-gradient(135deg,#7132E4 0%,#3a1d8a 100%)}
+.proj__media--06{background:linear-gradient(135deg,#0f4d3a 0%,#08291e 100%)}
+
+.proj__badge{
+  position:absolute;top:18px;right:18px;
+  background:#ffe600;color:#0a0a0a;
+  padding:6px 12px;border-radius:999px;
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  z-index:4;
+  box-shadow:0 4px 10px -2px rgba(0,0,0,.4);
+}
+.proj.is-soon{cursor:default;pointer-events:none}
+.proj.is-soon .proj__media{
+  filter:saturate(.9);
+}
 
 .proj__logo{
   position:absolute;top:18px;left:18px;
@@ -663,6 +678,8 @@ ul,ol{margin:0;padding:0;list-style:none}
   color:var(--ink-2);max-width:55ch;font-weight:400;
   line-height:1.45;letter-spacing:-.005em;
 }
+.about__exp__desc p{margin:0 0 .85em}
+.about__exp__desc p:last-child{margin-bottom:0}
 @media (max-width:880px){
   .about__intro{grid-template-columns:1fr}
   .about__exp{
@@ -748,15 +765,32 @@ ul,ol{margin:0;padding:0;list-style:none}
   100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}
 }
 
+.foot__giant-row{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:clamp(2rem,4vw,4rem);
+}
 .foot__giant{
   font-family:var(--sans);font-weight:800;
-  font-size:clamp(5rem,25vw,100rem);
+  font-size:clamp(5rem,22vw,100rem);
   line-height:.86;
   letter-spacing:-.06em;
   color:var(--ink);
   margin:0 0 0 -.04em;
   user-select:none;
   white-space:nowrap;
+  flex:1;min-width:0;
+}
+.foot__giant-gif{
+  display:block;
+  width:min(24vw,300px);height:auto;
+  border-radius:8px;
+  box-shadow:0 18px 36px -10px rgba(0,0,0,.35);
+  flex:0 0 auto;
+  margin-bottom:.6rem;
+}
+@media (max-width:720px){
+  .foot__giant-gif{display:none}
+  .foot__giant{font-size:clamp(5rem,26vw,100rem)}
 }
 .foot__bottom{
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;
@@ -1183,7 +1217,28 @@ ul,ol{margin:0;padding:0;list-style:none}
 
     <div class="work__rail" tabindex="0" aria-label="Work case studies">
 
-      <a class="proj" href="project.html">
+      <a class="proj is-soon" href="#" aria-disabled="true">
+        <div class="proj__media proj__media--05">
+          <span class="proj__badge">Coming soon</span>
+          <span class="proj__logo" style="background:#fff;color:#7132E4">K</span>
+          <div class="laptop">
+            <div class="laptop__screen">
+              <div class="mock-bar"><i></i><i></i><i></i></div>
+              <div class="mock-line d"></div>
+              <div class="mock-grid"><span style="background:#ede9fe"></span><span></span><span style="background:#c4b5fd"></span><span></span></div>
+              <div class="mock-line"></div>
+              <div class="mock-line s"></div>
+            </div>
+          </div>
+        </div>
+        <div class="proj__caption">
+          <h3 class="proj__name">Kraken <em>— Crypto exchange</em></h3>
+          <span class="proj__year">2024 – Present</span>
+        </div>
+        <div class="proj__crumb"><b>Senior Web Designer</b><span class="sep"></span>Trading platform</div>
+      </a>
+
+      <a class="proj" href="jlr.html">
         <div class="proj__media proj__media--01">
           <span class="proj__logo">JLR</span>
           <div class="laptop">
@@ -1203,8 +1258,9 @@ ul,ol{margin:0;padding:0;list-style:none}
         <div class="proj__crumb"><b>Design Lead</b><span class="sep"></span>Web &amp; Native</div>
       </a>
 
-      <a class="proj" href="project.html">
+      <a class="proj is-soon" href="#" aria-disabled="true">
         <div class="proj__media proj__media--02">
+          <span class="proj__badge">Coming soon</span>
           <span class="proj__logo" style="background:#0a0a0a;color:#fde68a">Y</span>
           <div class="phone">
             <div class="phone__screen">
@@ -1218,12 +1274,12 @@ ul,ol{margin:0;padding:0;list-style:none}
         </div>
         <div class="proj__caption">
           <h3 class="proj__name">Yoppie <em>— Brand &amp; App</em></h3>
-          <span class="proj__year">2022</span>
+          <span class="proj__year">2021 – 2022</span>
         </div>
-        <div class="proj__crumb"><b>Creative Director</b><span class="sep"></span>Subscription</div>
+        <div class="proj__crumb"><b>Lead Product Designer</b><span class="sep"></span>Subscription</div>
       </a>
 
-      <a class="proj" href="project.html">
+      <a class="proj" href="lifecake.html">
         <div class="proj__media proj__media--03">
           <span class="proj__logo" style="background:#fff;color:#7f1d1d">L</span>
           <div class="phone">
@@ -1245,7 +1301,7 @@ ul,ol{margin:0;padding:0;list-style:none}
         <div class="proj__crumb"><b>Lead Designer</b><span class="sep"></span>iOS &amp; Android</div>
       </a>
 
-      <a class="proj" href="project.html">
+      <a class="proj" href="collective.html">
         <div class="proj__media proj__media--04">
           <span class="proj__logo" style="background:#fff;color:#1e293b">TC</span>
           <div class="laptop">
@@ -1259,9 +1315,32 @@ ul,ol{margin:0;padding:0;list-style:none}
         </div>
         <div class="proj__caption">
           <h3 class="proj__name">The Collective <em>— editorial</em></h3>
-          <span class="proj__year">2021</span>
+          <span class="proj__year">2020 – 2021</span>
         </div>
         <div class="proj__crumb"><b>Lead Designer</b><span class="sep"></span>Editorial · CMS</div>
+      </a>
+
+      <a class="proj" href="skatefarm.html">
+        <div class="proj__media proj__media--06">
+          <span class="proj__logo" style="background:#0f4d3a;color:#fff">SF</span>
+          <div class="phone">
+            <div class="phone__screen dk">
+              <div class="mock-line s"></div>
+              <div class="mock-grid" style="grid-template-columns:repeat(2,1fr)">
+                <span style="background:#34d399"></span><span style="background:#0a0a0a"></span>
+                <span style="background:#0f4d3a"></span><span style="background:#34d399"></span>
+              </div>
+              <div class="mock-line"></div>
+              <div class="mock-line s"></div>
+              <div class="mock-line d" style="margin-top:auto;height:30px;border-radius:999px;background:#34d399"></div>
+            </div>
+          </div>
+        </div>
+        <div class="proj__caption">
+          <h3 class="proj__name">The Skate Farm <em>— brand &amp; app</em></h3>
+          <span class="proj__year">2024</span>
+        </div>
+        <div class="proj__crumb"><b>Designer</b><span class="sep"></span>Side project</div>
       </a>
 
     </div>
@@ -1301,7 +1380,7 @@ ul,ol{margin:0;padding:0;list-style:none}
     <div class="about__exp" data-img="assets/landrover-s44.jpg" data-rot="11deg" data-h="245px" data-w="363px">
       <div class="about__exp__when">2020 – 2021</div>
       <div class="about__exp__role">Spark44 (Jaguar Land Rover), Lead Product Designer (Contract). <span>London · NDA</span></div>
-      <div class="about__exp__desc">Led ground-up component rebuild with efficiency at its core. We identified poor-performing components caused by responsive breakpoint issues and text overlays constraining vehicle imagery. As one of two senior leads on a six-person team, rebuilt the site piece-by-piece over 6 months, creating reusable components to ensure the platform was future-proof and scalable. Contracted in to run Figma workshops, set up the component library, and established Principle animation patterns for interactive states and transitions.</div>
+      <div class="about__exp__desc"><p>Led ground-up component rebuild with efficiency at its core. We identified poor-performing components caused by responsive breakpoint issues and text overlays constraining vehicle imagery. As one of two senior leads on a six-person team, rebuilt the site piece-by-piece over 6 months, creating reusable components to ensure the platform was future-proof and scalable. Contracted in to run Figma workshops, set up the component library, and established Principle animation patterns for interactive states and transitions.</p><p>Overhauled 'Models &amp; Specifications' pages for JLR's global site across 27 markets. Led the design, ran competitor analysis, and made data-driven UX/UI calls. The trick was surfacing what users needed to pick the right vehicle while staying flexible across both brands' complex model ranges. Every decision served the user first.</p></div>
     </div>
 
     <div class="about__exp about__exp--continued" data-img="assets/collective.jpg" data-rot="-7deg" data-h="210px">
@@ -1457,7 +1536,10 @@ ul,ol{margin:0;padding:0;list-style:none}
     </div>
   </div>
 
-  <h2 class="foot__giant" aria-hidden="true">luxford.</h2>
+  <div class="foot__giant-row">
+    <h2 class="foot__giant" aria-hidden="true">luxford.</h2>
+    <img class="foot__giant-gif" src="assets/luxford-footer.gif" alt="" loading="lazy" />
+  </div>
 
   <div class="foot__bottom">
     <span>© 2026 Matthew Luxford</span>

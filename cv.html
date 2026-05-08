@@ -50,12 +50,22 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* ============================================================== nav */
 .nav{
-  position:sticky;top:0;left:0;right:0;z-index:60;
+  position:fixed;top:0;left:0;right:0;z-index:60;
   display:flex;align-items:flex-start;justify-content:space-between;
   padding:32px var(--pad) 18px;
-  background:linear-gradient(var(--bg) 70%, transparent);
   gap:2rem;
+  transition:transform .45s var(--ease), background .35s var(--ease), border-color .35s var(--ease), backdrop-filter .35s var(--ease), padding .35s var(--ease);
+  border-bottom:1px solid transparent;
 }
+.nav.is-pinned{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+.nav.is-floating{
+  background:rgba(250,250,247,.78);
+  backdrop-filter:saturate(160%) blur(14px);
+  -webkit-backdrop-filter:saturate(160%) blur(14px);
+  border-bottom-color:rgba(20,20,20,.06);
+  padding-top:18px;
+}
+.nav.is-hidden{transform:translateY(-110%)}
 .nav__brand{
   font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:var(--ink);
   flex-shrink:0;
@@ -701,6 +711,32 @@ ul,ol{margin:0;padding:0;list-style:none}
 (() => {
   // download CTA → triggers print dialog (user picks Save as PDF)
   document.getElementById("cv-download")?.addEventListener("click", () => window.print());
+
+  // nav: hide on scroll down, reveal with blur on scroll up
+  const nav = document.querySelector(".nav");
+  if (nav) {
+    let lastY = window.scrollY, ticking = false;
+    const updateNav = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      if (y < 24) {
+        nav.classList.remove("is-floating", "is-hidden");
+        nav.classList.add("is-pinned");
+      } else if (delta > 6) {
+        nav.classList.add("is-hidden");
+        nav.classList.remove("is-floating", "is-pinned");
+      } else if (delta < -6) {
+        nav.classList.remove("is-hidden", "is-pinned");
+        nav.classList.add("is-floating");
+      }
+      lastY = y;
+      ticking = false;
+    };
+    window.addEventListener("scroll", () => {
+      if (!ticking) { requestAnimationFrame(updateNav); ticking = true; }
+    }, { passive: true });
+    updateNav();
+  }
 
   // secret footer reveal
   const secretEl = document.querySelector(".secret-footer");
