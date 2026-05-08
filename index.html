@@ -667,9 +667,37 @@ ul,ol{margin:0;padding:0;list-style:none}
   .about__intro{grid-template-columns:1fr}
   .about__exp{
     grid-template-columns:1fr;
-    grid-template-areas:"when" "role" "desc";
+    grid-template-areas:"when" "role" "desc" "more";
     row-gap:.5rem;
   }
+  /* collapsed description on mobile, tap row to expand */
+  .about__exp__desc{
+    position:relative;
+    overflow:hidden;
+    max-height:5em;
+    transition:max-height .4s var(--ease);
+  }
+  .about__exp__desc::after{
+    content:"";position:absolute;bottom:0;left:0;right:0;
+    height:2em;
+    background:linear-gradient(transparent, var(--bg));
+    pointer-events:none;
+    transition:opacity .25s var(--ease);
+  }
+  .about__exp__more{
+    grid-area:more;
+    margin-top:.65rem;
+    font-size:.82rem;font-weight:600;
+    color:var(--ink);
+    text-decoration:underline;
+    text-decoration-color:rgba(20,17,15,.4);
+    text-underline-offset:3px;
+  }
+  .about__exp.is-expanded .about__exp__desc{max-height:60em}
+  .about__exp.is-expanded .about__exp__desc::after{opacity:0}
+}
+@media (min-width:881px){
+  .about__exp__more{display:none}
 }
 
 /* =========================================================== foot */
@@ -847,6 +875,23 @@ ul,ol{margin:0;padding:0;list-style:none}
 .testimonial__by strong{color:#fff;font-weight:600;display:block;letter-spacing:-.005em;font-size:.95rem}
 .testimonial__by span{font-family:var(--serif);font-style:italic}
 
+.testimonials__more{display:none}
+@media (max-width:680px){
+  .testimonial.is-extra{display:none}
+  .testimonials.is-expanded .testimonial.is-extra{display:block}
+  .testimonials__more{
+    display:inline-flex;align-items:center;gap:8px;
+    margin-top:1.5rem;
+    padding:14px 22px;border-radius:999px;
+    background:#fff;color:#000;border:0;
+    font-family:var(--sans);font-weight:600;font-size:.92rem;
+    cursor:pointer;
+    transition:transform .25s var(--ease),background .25s var(--ease);
+  }
+  .testimonials__more:hover{transform:translateY(-2px);background:#ffe600}
+  .testimonials.is-expanded .testimonials__more{display:none}
+}
+
 /* ===================================================== secret footer */
 .secret-footer{
   position:fixed;left:0;right:0;bottom:0;
@@ -989,6 +1034,39 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* boost grain z-index above the page wrapper */
 .grain{z-index:50}
+
+/* secret footer mobile fixes */
+@media (max-width:720px){
+  body{padding-bottom:78vh}
+  .secret-footer{
+    height:78vh;
+    padding:6vh 1rem;
+  }
+  .secret-footer__eyebrow{
+    top:4vh;
+    font-size:.7rem;
+    letter-spacing:.06em;
+    line-height:1.4;
+  }
+  .secret-footer__head{
+    font-size:clamp(1.9rem,8.5vw,3rem);
+    line-height:1.05;
+    padding:0 .5rem;
+  }
+  /* hide the floating pills on mobile - they overlap the headline */
+  .secret-pill{display:none}
+  .secret-footer__bottom{
+    bottom:5vh;width:100%;left:0;transform:none;
+    align-items:center;
+  }
+  .secret-footer__cta{
+    padding:13px 24px;font-size:.9rem;
+  }
+  .secret-footer__tag{
+    font-size:.72rem;
+    white-space:normal;text-align:center;max-width:24ch;
+  }
+}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
@@ -1202,9 +1280,9 @@ ul,ol{margin:0;padding:0;list-style:none}
         Eighteen years building thoughtful digital products that scale.
       </div>
       <div class="about__body">
-        <p>I'm <strong>Matthew Luxford</strong>, a senior web designer, design lead and go-to designer based in <strong>Surrey, UK</strong>. I work end-to-end across UX, UI, brand and design systems, sitting comfortably between users, business and engineering. Currently freelance and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
-        <p>I'm a dad of two and a recently converted <a class="gif-link" href="#" onclick="event.preventDefault()">road cyclist<img class="gif-link__pop" src="assets/cyclist.gif" alt="" loading="lazy" /></a> <em>(apologies in advance)</em>. When I was permanent, I was always chasing the next job title, grinding towards design director. Since going contract, that's changed — <strong>any role is a role</strong>, and I genuinely love getting stuck in. Full-cycle work from the first kickoff brief through to delivery is where I'm happiest. I've worn a lot of different hats across my career, and that's given me real experience communicating with developers, helping teams build in various CMSs, and translating between design and code without the ego.</p>
-        <p>More recently, I've been actively exploring <strong>AI</strong> — not as a replacement, but as a tool. I'll use it wherever it makes me more efficient and helps deliver better work, whether that's design, code generation, or anything in between.</p>
+        <p>I'm <strong>Matthew Luxford</strong>, a senior web designer, design lead and go-to designer based in <strong>Surrey, UK</strong>. I work end-to-end across UX, UI, brand and design systems. Currently freelance and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
+        <p>Dad of two, recently converted <a class="gif-link" href="#" onclick="event.preventDefault()">road cyclist<img class="gif-link__pop" src="assets/cyclist.gif" alt="" loading="lazy" /></a>. When permanent, I chased design director titles. Since going contract (10 years ago), <strong>any role is a role</strong> — full-cycle work from brief to delivery is where I'm happiest. I've got real experience communicating with clients, developers and translating between design and code.</p>
+        <p>More recently, exploring <strong>AI</strong> as a tool to work more efficiently and deliver better work.</p>
       </div>
     </div>
 
@@ -1267,8 +1345,8 @@ ul,ol{margin:0;padding:0;list-style:none}
 
         <article class="testimonial">
           <div class="testimonial__quote">
-            <p>"Matt's a fantastic designer, created some great work for The Collective. He has a keen eye for beautiful design, the technical knowhow to bring it to life and the passion and energy to work fast and collaboratively. He helped us take our app to the next level, from UI and UX design to animating screens. He also worked closely with my team helping to update our brand's visual identity, quickly mocking up digital opportunities that pushed our thinking."</p>
-            <p>"I'd love to work with Matt again if I get the chance."</p>
+            <p>"Matt's a fantastic designer, created some great work for The Collective. He has a keen eye for beautiful design, the technical knowhow to bring it to life and the passion and energy to work fast and collaboratively. He helped us take our app to the next level, from UI and UX design to animating screens. He also worked closely with my team helping to update our brand's visual identity, quickly mocking up digital opportunities that pushed our thinking.</p>
+            <p>I'd love to work with Matt again if I get the chance."</p>
           </div>
           <div class="testimonial__by">
             <strong>Jack Haslehurst</strong>
@@ -1278,9 +1356,9 @@ ul,ol{margin:0;padding:0;list-style:none}
 
         <article class="testimonial">
           <div class="testimonial__quote">
-            <p>"Matt's work on Lifecake has been excellent, resulting in the product winning an Apple end of year award and appearing in a showcase at the end of 2019. He is constantly iterating his designs to keep up with the latest patterns and approaches, and has worked well both by himself and as the lead of the design team when additional freelancers have been brought in."</p>
-            <p>"On a personal level, Matt is a pleasure to work with — always positive, taking notes and critique on board, and working well both with product leads and developers to discover what is possible and what should be the path ahead for whatever we are trying to achieve."</p>
-            <p>"Matt is someone I would have no hesitation in both working with again, or recommending to others. You will get a positive hard working talent who can add a great deal of pizazz to your product."</p>
+            <p>"Matt's work on Lifecake has been excellent, resulting in the product winning an Apple end of year award and appearing in a showcase at the end of 2019. He is constantly iterating his designs to keep up with the latest patterns and approaches, and has worked well both by himself and as the lead of the design team when additional freelancers have been brought in.</p>
+            <p>On a personal level, Matt is a pleasure to work with — always positive, taking notes and critique on board, and working well both with product leads and developers to discover what is possible and what should be the path ahead for whatever we are trying to achieve.</p>
+            <p>Matt is someone I would have no hesitation in both working with again, or recommending to others. You will get a positive hard working talent who can add a great deal of pizazz to your product."</p>
           </div>
           <div class="testimonial__by">
             <strong>Pete Triplow</strong>
@@ -1288,7 +1366,7 @@ ul,ol{margin:0;padding:0;list-style:none}
           </div>
         </article>
 
-        <article class="testimonial">
+        <article class="testimonial is-extra">
           <div class="testimonial__quote">
             <p>"Matt is an extremely talented designer with his finger on the pulse of current trends. His work is of a very high standard and his knowledge of all new software means he is able to find solutions quickly and effectively. And to add to all of this, he is also a really nice guy with it."</p>
           </div>
@@ -1298,7 +1376,7 @@ ul,ol{margin:0;padding:0;list-style:none}
           </div>
         </article>
 
-        <article class="testimonial">
+        <article class="testimonial is-extra">
           <div class="testimonial__quote">
             <p>"Not all creatives are allowed to be client facing, but Matthew's collaborative nature, sharp eye for detail (matched by a set of very sharp ears when feedback comes his way), set him apart from many creatives I've worked with through the years. Highly talented, detail oriented and a pleasure to work with. I'm proud of the digital project we worked on together and I hope our paths cross again soon."</p>
           </div>
@@ -1308,10 +1386,10 @@ ul,ol{margin:0;padding:0;list-style:none}
           </div>
         </article>
 
-        <article class="testimonial">
+        <article class="testimonial is-extra">
           <div class="testimonial__quote">
-            <p>"Matt has a great eye for what works, and really knows how to nail briefs. He's a Figma ninja and has a fantastic work ethic. He comes in with a positivity that spreads across every team member. He has extensive knowledge in UI and UX design which he willingly shares with everyone. Matt has delivered successful projects every time, whilst simultaneously leading the rest of the team."</p>
-            <p>"Matt will be missed by us all, and I'm sure he'll do very well in his future endeavours."</p>
+            <p>"Matt has a great eye for what works, and really knows how to nail briefs. He's a Figma ninja and has a fantastic work ethic. He comes in with a positivity that spreads across every team member. He has extensive knowledge in UI and UX design which he willingly shares with everyone. Matt has delivered successful projects every time, whilst simultaneously leading the rest of the team.</p>
+            <p>Matt will be missed by us all, and I'm sure he'll do very well in his future endeavours."</p>
           </div>
           <div class="testimonial__by">
             <strong>Emma Hicks</strong>
@@ -1329,7 +1407,7 @@ ul,ol{margin:0;padding:0;list-style:none}
           </div>
         </article>
 
-        <article class="testimonial">
+        <article class="testimonial is-extra">
           <div class="testimonial__quote">
             <p>"Matt was a superb hire for us at Global Beach, he immediately hit the ground running with design work of a very high standard yet was also instrumental in introducing more efficient working practices at the same time. He was unflappable under pressure and had exactly the right kind of personality you need in a fast-paced agency team. Always delivered and highly reliable. Would work with him again without hesitation."</p>
           </div>
@@ -1339,10 +1417,10 @@ ul,ol{margin:0;padding:0;list-style:none}
           </div>
         </article>
 
-        <article class="testimonial">
+        <article class="testimonial is-extra">
           <div class="testimonial__quote">
-            <p>"Matt is an asset to any creative team; he's a skilled digital designer with a can-do attitude. A versatile designer who is highly creative both on and offline, but it's in the digital realm that he excels. He's a perfectionist who takes pride in creating clean, beautiful code that works — but he's always focused on achieving the most intuitive user experience: for Matt, it's about the user and the client, not the code."</p>
-            <p>"He finds ways to make ideas work, and is a popular member of the team. Matt also makes clients feel relaxed and that things are possible. He's been a pleasure to work with and I have learnt a lot from him."</p>
+            <p>"Matt is an asset to any creative team; he's a skilled digital designer with a can-do attitude. A versatile designer who is highly creative both on and offline, but it's in the digital realm that he excels. He's a perfectionist who takes pride in creating clean, beautiful code that works — but he's always focused on achieving the most intuitive user experience: for Matt, it's about the user and the client, not the code.</p>
+            <p>He finds ways to make ideas work, and is a popular member of the team. Matt also makes clients feel relaxed and that things are possible. He's been a pleasure to work with and I have learnt a lot from him."</p>
           </div>
           <div class="testimonial__by">
             <strong>Ian Allison</strong>
@@ -1351,6 +1429,8 @@ ul,ol{margin:0;padding:0;list-style:none}
         </article>
 
       </div>
+
+      <button class="testimonials__more" type="button" aria-label="Read all testimonials">Read them all →</button>
 
     </div>
    </div>
@@ -1466,6 +1546,23 @@ ul,ol{margin:0;padding:0;list-style:none}
   window.addEventListener("scroll", setActive, { passive: true });
   setActive();
 
+  // about: collapsible rows on mobile (≤880px)
+  const mqMobile = window.matchMedia("(max-width: 880px)");
+  document.querySelectorAll(".about__exp").forEach((row) => {
+    const desc = row.querySelector(".about__exp__desc");
+    if (!desc) return;
+    const more = document.createElement("span");
+    more.className = "about__exp__more";
+    more.textContent = "Read more →";
+    row.appendChild(more);
+    row.addEventListener("click", (e) => {
+      if (!mqMobile.matches) return;
+      if (e.target.closest("a")) return;
+      const expanded = row.classList.toggle("is-expanded");
+      more.textContent = expanded ? "Show less ←" : "Read more →";
+    });
+  });
+
   // about: hover image follows cursor over experience rows
   const hoverImg = document.querySelector(".about__hover-img");
   const hoverPic = hoverImg?.querySelector("img");
@@ -1509,6 +1606,12 @@ ul,ol{margin:0;padding:0;list-style:none}
       });
     });
   }
+
+  // testimonials: "Read them all" reveals hidden ones (mobile only)
+  const tMore = document.querySelector(".testimonials__more");
+  tMore?.addEventListener("click", () => {
+    document.querySelector(".testimonials")?.classList.add("is-expanded");
+  });
 
   // secret footer reveal: trigger when within 40vh of document end
   const secretEl = document.querySelector(".secret-footer");
