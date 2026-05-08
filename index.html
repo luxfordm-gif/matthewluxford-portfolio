@@ -519,7 +519,6 @@ ul,ol{margin:0;padding:0;list-style:none}
   background:transparent;
   z-index:-1;
   transition:background .35s var(--ease);
-  pointer-events:none;
 }
 .about__exp:hover::before{
   background:rgba(236, 224, 188, .15);
@@ -743,6 +742,110 @@ ul,ol{margin:0;padding:0;list-style:none}
   .foot__sig{transform:rotate(-3deg) translateX(0)}
   .foot__status{flex-wrap:wrap;gap:1rem}
 }
+
+/* ===================================================== testimonials */
+.testimonials{
+  position:relative;z-index:2;
+  padding:clamp(2rem,4vw,3rem) 0;
+}
+.testimonials__shell{
+  background:#0a0a0a;color:#fff;
+  position:relative;
+  padding:clamp(4rem,8vw,7rem) 0;
+  clip-path:inset(0 40px round 32px);
+  animation:expandCard linear both;
+  animation-timeline:view();
+  animation-range:entry 30% cover 25%;
+}
+@keyframes expandCard{
+  to{clip-path:inset(0 0 round 0)}
+}
+@media (max-width:880px){
+  .testimonials__shell{clip-path:inset(0 20px round 28px)}
+}
+.testimonials__shell::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:40px 40px;
+  mask-image:radial-gradient(ellipse 80% 60% at 80% 30%, #000 0%, transparent 80%);
+}
+.testimonials__card{
+  position:relative;z-index:1;
+  max-width:1900px;margin:0 auto;
+  padding:0 clamp(2rem,5vw,5rem);
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1000px);
+  gap:clamp(2.5rem,6vw,6rem);
+  align-items:start;
+}
+@media (max-width:880px){
+  .testimonials__card{grid-template-columns:1fr;gap:clamp(2rem,5vw,3rem)}
+}
+.testimonials__head{
+  position:sticky;
+  top:clamp(4rem,8vw,7rem);
+  bottom:auto;
+  align-self:start;
+  display:flex;flex-direction:column;
+  max-width:24ch;
+}
+@media (max-width:880px){
+  .testimonials__head{position:static;top:auto;margin-bottom:2rem}
+}
+.testimonials__gif{
+  width:170px;height:auto;
+  border-radius:12px;
+  margin-bottom:1.5rem;
+  display:block;
+  filter:grayscale(.15) contrast(1.05);
+  box-shadow:0 16px 32px -10px rgba(0,0,0,.6);
+}
+.testimonials__title{
+  font-family:var(--sans);font-weight:800;
+  font-size:clamp(2.4rem,6vw,5rem);
+  letter-spacing:-.04em;line-height:.95;
+  margin:0;color:#fff;
+}
+.testimonials__title sup{
+  color:#ffe600;
+  font-size:.65em;
+  font-weight:600;
+  top:-.45em;
+}
+.testimonials__sub{
+  font-size:.88rem;
+  color:#999;
+  font-family:var(--serif);font-style:italic;
+  margin:1rem 0 0;line-height:1.45;
+}
+.testimonials__list{
+  column-count:2;
+  column-gap:clamp(2rem,3.5vw,3.75rem);
+}
+@media (max-width:680px){.testimonials__list{column-count:1}}
+.testimonial{
+  break-inside:avoid;
+  margin-bottom:clamp(2.5rem,3.5vw,3.25rem);
+  padding-bottom:clamp(1.5rem,3vw,2rem);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.testimonial:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+.testimonial__quote{
+  font-size:clamp(.92rem,.88rem + .15vw,1rem);
+  line-height:1.55;
+  color:#d4d4d4;
+  margin:0 0 .85rem;
+}
+.testimonial__quote p{margin:0 0 .85rem}
+.testimonial__quote p:last-child{margin-bottom:0}
+.testimonial__by{
+  font-size:.85rem;
+  color:#888;line-height:1.4;
+}
+.testimonial__by strong{color:#fff;font-weight:600;display:block;letter-spacing:-.005em;font-size:.95rem}
+.testimonial__by span{font-family:var(--serif);font-style:italic}
 
 /* ===================================================== secret footer */
 .secret-footer{
@@ -1145,6 +1248,110 @@ ul,ol{margin:0;padding:0;list-style:none}
       <div class="about__exp__when">2007 – 2016</div>
       <div class="about__exp__role">A decade of agency &amp; in-house. <span>London</span></div>
       <div class="about__exp__desc">Design Director at LONO Creative and Totally Communications. Senior Designer at Big Group and Global Beach. Digital Creative Lead at JPMH and Bell Design. Plus contracts at OLIVER, EY-Seren, and Digital Designer roles at Galileo London and Wickedweb. Where the craft was sharpened.</div>
+    </div>
+   </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" aria-label="Testimonials">
+   <div class="testimonials__shell">
+    <div class="testimonials__card">
+
+      <div class="testimonials__head">
+        <img class="testimonials__gif" src="assets/giphy.gif" alt="" loading="lazy" />
+        <h2 class="testimonials__title">Testimonials<sup>*</sup></h2>
+        <p class="testimonials__sub">* I didn't force them to write these..<br/>trust me</p>
+      </div>
+
+      <div class="testimonials__list">
+
+        <article class="testimonial">
+          <div class="testimonial__quote">
+            <p>"Matt's a fantastic designer, created some great work for The Collective. He has a keen eye for beautiful design, the technical knowhow to bring it to life and the passion and energy to work fast and collaboratively. He helped us take our app to the next level, from UI and UX design to animating screens. He also worked closely with my team helping to update our brand's visual identity, quickly mocking up digital opportunities that pushed our thinking."</p>
+            <p>"I'd love to work with Matt again if I get the chance."</p>
+          </div>
+          <div class="testimonial__by">
+            <strong>Jack Haslehurst</strong>
+            <span>VP — Design &amp; Experience</span>
+          </div>
+        </article>
+
+        <article class="testimonial">
+          <div class="testimonial__quote">
+            <p>"Matt's work on Lifecake has been excellent, resulting in the product winning an Apple end of year award and appearing in a showcase at the end of 2019. He is constantly iterating his designs to keep up with the latest patterns and approaches, and has worked well both by himself and as the lead of the design team when additional freelancers have been brought in."</p>
+            <p>"On a personal level, Matt is a pleasure to work with — always positive, taking notes and critique on board, and working well both with product leads and developers to discover what is possible and what should be the path ahead for whatever we are trying to achieve."</p>
+            <p>"Matt is someone I would have no hesitation in both working with again, or recommending to others. You will get a positive hard working talent who can add a great deal of pizazz to your product."</p>
+          </div>
+          <div class="testimonial__by">
+            <strong>Pete Triplow</strong>
+            <span>Founder &amp; Director, BackThen Digital</span>
+          </div>
+        </article>
+
+        <article class="testimonial">
+          <div class="testimonial__quote">
+            <p>"Matt is an extremely talented designer with his finger on the pulse of current trends. His work is of a very high standard and his knowledge of all new software means he is able to find solutions quickly and effectively. And to add to all of this, he is also a really nice guy with it."</p>
+          </div>
+          <div class="testimonial__by">
+            <strong>Jake Scully</strong>
+            <span>Design Director</span>
+          </div>
+        </article>
+
+        <article class="testimonial">
+          <div class="testimonial__quote">
+            <p>"Not all creatives are allowed to be client facing, but Matthew's collaborative nature, sharp eye for detail (matched by a set of very sharp ears when feedback comes his way), set him apart from many creatives I've worked with through the years. Highly talented, detail oriented and a pleasure to work with. I'm proud of the digital project we worked on together and I hope our paths cross again soon."</p>
+          </div>
+          <div class="testimonial__by">
+            <strong>Iain G. Morrison</strong>
+            <span>Senior Marketing Director</span>
+          </div>
+        </article>
+
+        <article class="testimonial">
+          <div class="testimonial__quote">
+            <p>"Matt has a great eye for what works, and really knows how to nail briefs. He's a Figma ninja and has a fantastic work ethic. He comes in with a positivity that spreads across every team member. He has extensive knowledge in UI and UX design which he willingly shares with everyone. Matt has delivered successful projects every time, whilst simultaneously leading the rest of the team."</p>
+            <p>"Matt will be missed by us all, and I'm sure he'll do very well in his future endeavours."</p>
+          </div>
+          <div class="testimonial__by">
+            <strong>Emma Hicks</strong>
+            <span>Design Director, FT Longitude</span>
+          </div>
+        </article>
+
+        <article class="testimonial">
+          <div class="testimonial__quote">
+            <p>"Matt is one of those designers Account Managers absolutely love to work with. He has this amazing ability to nail the brief every time and our clients loved his work. He's also a really strong communicator of ideas and a great listener. Never misses a deadline or drops a ball, and brings out the best in a team with his easy-going, get-it-done attitude."</p>
+          </div>
+          <div class="testimonial__by">
+            <strong>Catherine Nolan</strong>
+            <span>Group Account Director, Dentsu</span>
+          </div>
+        </article>
+
+        <article class="testimonial">
+          <div class="testimonial__quote">
+            <p>"Matt was a superb hire for us at Global Beach, he immediately hit the ground running with design work of a very high standard yet was also instrumental in introducing more efficient working practices at the same time. He was unflappable under pressure and had exactly the right kind of personality you need in a fast-paced agency team. Always delivered and highly reliable. Would work with him again without hesitation."</p>
+          </div>
+          <div class="testimonial__by">
+            <strong>Martin Ollivere</strong>
+            <span>Creative Director</span>
+          </div>
+        </article>
+
+        <article class="testimonial">
+          <div class="testimonial__quote">
+            <p>"Matt is an asset to any creative team; he's a skilled digital designer with a can-do attitude. A versatile designer who is highly creative both on and offline, but it's in the digital realm that he excels. He's a perfectionist who takes pride in creating clean, beautiful code that works — but he's always focused on achieving the most intuitive user experience: for Matt, it's about the user and the client, not the code."</p>
+            <p>"He finds ways to make ideas work, and is a popular member of the team. Matt also makes clients feel relaxed and that things are possible. He's been a pleasure to work with and I have learnt a lot from him."</p>
+          </div>
+          <div class="testimonial__by">
+            <strong>Ian Allison</strong>
+            <span>Creative Director &amp; Strategist</span>
+          </div>
+        </article>
+
+      </div>
+
     </div>
    </div>
   </section>
