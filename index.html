@@ -528,8 +528,8 @@ ul,ol{margin:0;padding:0;list-style:none}
 /* hover-follow preview image */
 .about__hover-img{
   position:fixed;left:0;top:0;
-  --h:225px;
-  width:300px;height:var(--h);
+  --w:330px;
+  width:var(--w);
   background:#fff;
   border-radius:6px;padding:6px;
   pointer-events:none;
@@ -537,17 +537,16 @@ ul,ol{margin:0;padding:0;list-style:none}
   --rot:10deg;
   transform:translate(-50%, -50%) rotate(var(--rot)) scale(.86);
   transform-origin:center;
-  transition:opacity .3s var(--ease), transform .4s var(--ease), height .4s var(--ease);
+  transition:opacity .3s var(--ease), transform .4s var(--ease);
   box-shadow:
     0 0 0 1px rgba(0,0,0,.04),
     0 35px 70px -25px rgba(0,0,0,.4),
     0 12px 24px -10px rgba(0,0,0,.18);
   z-index:30;
-  overflow:hidden;
 }
 .about__hover-img img{
-  width:100%;height:100%;object-fit:cover;
-  border-radius:3px;display:block;
+  width:100%;height:auto;
+  display:block;border-radius:3px;
 }
 .about__hover-img.is-active{
   opacity:1;
@@ -641,6 +640,12 @@ ul,ol{margin:0;padding:0;list-style:none}
   border-top:1px solid var(--line);
 }
 .about__exp:last-of-type{border-bottom:1px solid var(--line)}
+/* continuation row — same date column, no top border, tighter spacing */
+.about__exp--continued{
+  border-top:none!important;
+  padding-top:1.5rem;
+}
+.about__exp--continued .about__exp__when{visibility:hidden}
 .about__exp__when{
   grid-area:when;
   font-size:clamp(.95rem,.9rem + .2vw,1.1rem);
@@ -1106,31 +1111,37 @@ ul,ol{margin:0;padding:0;list-style:none}
       <div class="about__exp__desc">Designing for the global crypto exchange — trading, onboarding and the systems that make complex finance feel obvious.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/about-yoppie.jpg" data-rot="-8deg" data-h="200px">
+    <div class="about__exp" data-img="assets/yoppie.jpg" data-rot="-8deg" data-h="200px">
       <div class="about__exp__when">2021 – 2022</div>
       <div class="about__exp__role">Yoppie, Lead Product Designer (Contract). <span>London</span></div>
       <div class="about__exp__desc">Head of design and creative oversight across all digital comms for the women's-health DTC.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/about-collective.jpg" data-rot="12deg" data-h="245px">
+    <div class="about__exp" data-img="assets/landrover-s44.jpg" data-rot="11deg" data-h="245px" data-w="363px">
       <div class="about__exp__when">2020 – 2021</div>
-      <div class="about__exp__role">The Collective &amp; Spark44, Lead Product Designer (Contract). <span>London</span></div>
-      <div class="about__exp__desc">Strategic redesign of The Collective's booking flow (+500% enquiries in the first month), brand refresh and native app overhaul. In parallel, JLR work via Spark44 — Models &amp; Specifications across 27 global markets.</div>
+      <div class="about__exp__role">Spark44 (Jaguar Land Rover), Lead Product Designer (Contract). <span>London · NDA</span></div>
+      <div class="about__exp__desc">Led ground-up component rebuild with efficiency at its core. We identified poor-performing components caused by responsive breakpoint issues and text overlays constraining vehicle imagery. As one of two senior leads on a six-person team, rebuilt the site piece-by-piece over 6 months, creating reusable components to ensure the platform was future-proof and scalable. Contracted in to run Figma workshops, set up the component library, and established Principle animation patterns for interactive states and transitions.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/about-lifecake.jpg" data-rot="-11deg" data-h="215px">
+    <div class="about__exp about__exp--continued" data-img="assets/collective.jpg" data-rot="-7deg" data-h="210px">
+      <div class="about__exp__when">2020 – 2021</div>
+      <div class="about__exp__role">The Collective, Lead Product Designer (Contract). <span>London</span></div>
+      <div class="about__exp__desc">Strategic redesign of the booking flow — analytics showed a <strong>500% increase in booking enquiries</strong> in the first month post-launch. Brand refresh and native iOS/Android app overhaul.</div>
+    </div>
+
+    <div class="about__exp" data-img="assets/lifecake.jpg" data-rot="-11deg" data-h="215px">
       <div class="about__exp__when">2018 – 2020</div>
       <div class="about__exp__role">Lifecake, Lead Product Designer. <span>London</span></div>
       <div class="about__exp__desc">Family memory app reimagined across iOS, Android and web. Awarded Apple's "Best Storytelling App 2019" with 3.4M users worldwide.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/about-spark44.jpg" data-rot="9deg" data-h="235px">
+    <div class="about__exp" data-img="assets/rr-s44.jpg" data-rot="9deg" data-h="235px" data-w="363px">
       <div class="about__exp__when">2016 – 2018</div>
       <div class="about__exp__role">Spark44 (Jaguar Land Rover), Lead Product Designer (Contract). <span>London</span></div>
-      <div class="about__exp__desc">Long-term JLR programme — global website, configurator and product tools across 27 markets and both brands.</div>
+      <div class="about__exp__desc">Long-term JLR programme designing global website, configurator and product tools across 27 markets and both brands. Key projects included the 'Help Me Choose' tool and overhauled 'Models &amp; Specifications' pages — both informed by data-driven decisions for dual-brand global rollout.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/about-agency.jpg" data-rot="-13deg" data-h="195px">
+    <div class="about__exp">
       <div class="about__exp__when">2007 – 2016</div>
       <div class="about__exp__role">A decade of agency &amp; in-house. <span>London</span></div>
       <div class="about__exp__desc">Design Director at LONO Creative and Totally Communications. Senior Designer at Big Group and Global Beach. Digital Creative Lead at JPMH and Bell Design. Plus contracts at OLIVER, EY-Seren, and Digital Designer roles at Galileo London and Wickedweb. Where the craft was sharpened.</div>
@@ -1271,7 +1282,7 @@ ul,ol{margin:0;padding:0;list-style:none}
     document.querySelectorAll(".about__exp").forEach((row) => {
       const src = row.dataset.img;
       const rot = row.dataset.rot || "10deg";
-      const h = row.dataset.h || "225px";
+      const w = row.dataset.w || "330px";
       // warm cache
       tryLoad(src);
       row.addEventListener("mouseenter", async (e) => {
@@ -1279,7 +1290,7 @@ ul,ol{margin:0;padding:0;list-style:none}
         hoverImg.style.left = e.clientX + "px";
         hoverImg.style.top = e.clientY + "px";
         hoverImg.style.setProperty("--rot", rot);
-        hoverImg.style.setProperty("--h", h);
+        hoverImg.style.setProperty("--w", w);
         const ok = await tryLoad(src);
         hoverPic.src = ok || fallbackSrc;
         hoverImg.classList.add("is-active");
