@@ -769,7 +769,7 @@ body.near-secret-footer .cv-download-fade{
       </div>
     </section>
 
-    <section class="cv-section">
+    <section class="cv-section" id="cv-contact-section">
       <h2 class="cv-section__h">Contact</h2>
       <div class="cv-contact">
         <span class="lab">Email</span>
@@ -851,13 +851,22 @@ body.near-secret-footer .cv-download-fade{
       const winH = window.innerHeight;
       const remaining = docH - winH - window.scrollY;
       secretEl.classList.toggle("is-revealed", remaining < winH * 0.18);
-      // start fading the floating Download CV CTA + blur a touch earlier
-      // so it's gone before the dark reveal becomes visible
-      document.body.classList.toggle("near-secret-footer", remaining < winH * 0.4);
     };
     window.addEventListener("scroll", checkReveal, { passive: true });
     window.addEventListener("resize", checkReveal);
     checkReveal();
+  }
+
+  // fade the floating Download CV CTA + blur once the Contact section
+  // scrolls into view, so it's gone well before the dark footer reveal
+  const contactEl = document.getElementById("cv-contact-section");
+  if (contactEl && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        document.body.classList.toggle("near-secret-footer", e.isIntersecting);
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0 });
+    io.observe(contactEl);
   }
 })();
 </script>
