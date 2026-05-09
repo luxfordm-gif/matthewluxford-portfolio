@@ -494,8 +494,8 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* secret footer mobile fixes — keep the headline inside the viewport */
 @media (max-width:720px){
-  body{padding-bottom:78vh}
-  .secret-footer{height:78vh;padding:6vh 1rem}
+  body{padding-bottom:54vh}
+  .secret-footer{height:54vh;padding:4vh 1rem}
   .secret-footer__eyebrow{
     top:4vh;font-size:.7rem;letter-spacing:.06em;line-height:1.4;
   }
@@ -506,7 +506,8 @@ ul,ol{margin:0;padding:0;list-style:none}
   }
   .secret-pill{display:none}
   .secret-footer__bottom{
-    bottom:5vh;width:100%;left:0;transform:none;
+    bottom:calc(env(safe-area-inset-bottom, 0px) + 36px);
+    width:100%;left:0;transform:none;
     align-items:center;
   }
   .secret-footer__cta{padding:13px 24px;font-size:.9rem}
