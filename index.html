@@ -1188,13 +1188,13 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* secret footer mobile fixes */
 @media (max-width:720px){
-  body{padding-bottom:78vh}
+  body{padding-bottom:62vh}
   .secret-footer{
-    height:78vh;
-    padding:6vh 1rem;
+    height:62vh;
+    padding:5vh 1rem;
   }
   .secret-footer__eyebrow{
-    top:4vh;
+    top:5vh;
     font-size:.7rem;
     letter-spacing:.06em;
     line-height:1.4;
@@ -1204,11 +1204,42 @@ ul,ol{margin:0;padding:0;list-style:none}
     line-height:1.1;
     padding:0 1.25rem;
     max-width:100%;
-    word-break:normal;
     overflow-wrap:break-word;
   }
-  /* hide the floating pills on mobile - they overlap the headline */
-  .secret-pill{display:none}
+  /* faster, snappier reveal so it doesn't sit on a black void */
+  .secret-footer.is-revealed .secret-footer__head{
+    animation:
+      headReveal .55s cubic-bezier(.34,1.6,.64,1) forwards,
+      headBounce 4.5s ease-in-out .6s infinite;
+  }
+  .secret-footer.is-revealed .secret-footer__eyebrow{
+    animation:eyebrowIn .5s cubic-bezier(.34,1.6,.64,1) .15s forwards;
+  }
+  .secret-footer.is-revealed .secret-footer__cta{
+    animation:elemIn .55s cubic-bezier(.34,1.6,.64,1) .3s forwards;
+  }
+  .secret-footer.is-revealed .secret-footer__tag{
+    animation:elemIn .55s var(--ease) .45s forwards;
+  }
+  /* keep the floating pills on mobile for the magic — just reposition
+     so they sit clear of the headline */
+  .secret-pill{
+    display:inline-flex;
+    font-size:.62rem;
+    padding:6px 12px;
+  }
+  .secret-pill--cmon{top:-46%;left:4%}
+  .secret-pill--just{bottom:-46%;left:auto;right:4%}
+  .secret-footer.is-revealed .secret-pill--cmon{
+    animation:
+      pillIn .5s cubic-bezier(.34,1.6,.64,1) .3s forwards,
+      floatA 3.4s ease-in-out .85s infinite;
+  }
+  .secret-footer.is-revealed .secret-pill--just{
+    animation:
+      pillIn .5s cubic-bezier(.34,1.6,.64,1) .42s forwards,
+      floatB 3.8s ease-in-out 1s infinite;
+  }
   .secret-footer__bottom{
     bottom:5vh;width:100%;left:0;transform:none;
     align-items:center;
