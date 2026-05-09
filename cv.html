@@ -110,7 +110,7 @@ ul,ol{margin:0;padding:0;list-style:none}
     -webkit-backdrop-filter:none;
     border-bottom-color:transparent;
     flex-wrap:wrap;
-    padding:20px var(--pad) 0;
+    padding:14px var(--pad) 0;
   }
   .nav__brand{order:1}
   .nav__close{
@@ -367,9 +367,9 @@ ul,ol{margin:0;padding:0;list-style:none}
     left:50%;right:auto;
     transform:translateX(-50%);
     /* iOS notched phones report safe-area-inset-bottom = 34px;
-       28px above that gives a comfortable visual margin and clears
+       36px above that gives a comfortable visual margin and clears
        Android Chrome's gesture bar */
-    bottom:calc(env(safe-area-inset-bottom, 0px) + 28px);
+    bottom:calc(env(safe-area-inset-bottom, 0px) + 36px);
     z-index:55;
   }
   .cv-download:hover{transform:translateX(-50%) translateY(-3px) scale(1.04)}
@@ -511,7 +511,7 @@ ul,ol{margin:0;padding:0;list-style:none}
   }
   .secret-footer__cta{padding:13px 24px;font-size:.9rem}
   .secret-footer__tag{
-    font-size:.72rem;white-space:normal;text-align:center;max-width:24ch;
+    font-size:.7rem;white-space:nowrap;text-align:center;
   }
 }
 
