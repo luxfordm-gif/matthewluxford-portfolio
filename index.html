@@ -440,6 +440,24 @@ ul,ol{margin:0;padding:0;list-style:none}
   text-decoration:none;color:inherit;
 }
 
+/* pagination dots under the work rail (mobile) */
+.work__dots{display:none}
+@media (max-width:760px){
+  .work__dots{
+    display:flex;justify-content:center;gap:8px;
+    padding:0 var(--pad) clamp(2rem,5vw,3rem);
+  }
+  .work__dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--dot);border:0;padding:0;cursor:pointer;
+    transition:background .3s var(--ease), transform .3s var(--ease), width .3s var(--ease);
+  }
+  .work__dot.is-active{
+    background:var(--ink);
+    width:22px;border-radius:999px;
+  }
+}
+
 /* ===== Apple-style snap carousel on mobile ===== */
 @media (max-width:760px){
   .work__rail{
@@ -1495,6 +1513,7 @@ ul,ol{margin:0;padding:0;list-style:none}
       </a>
 
     </div>
+    <div class="work__dots" aria-hidden="true"></div>
   </section>
 
   <!-- ABOUT -->
@@ -1718,6 +1737,38 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 <script>
 (() => {
+  // pagination dots for the work rail (mobile)
+  const workRail = document.querySelector(".work__rail");
+  const workDots = document.querySelector(".work__dots");
+  if (workRail && workDots) {
+    const projs = [...workRail.querySelectorAll(".proj")];
+    projs.forEach((_, i) => {
+      const b = document.createElement("button");
+      b.className = "work__dot";
+      b.type = "button";
+      b.setAttribute("aria-label", `Go to slide ${i + 1}`);
+      b.addEventListener("click", () => {
+        projs[i]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      });
+      workDots.appendChild(b);
+    });
+    const dots = [...workDots.querySelectorAll(".work__dot")];
+    const updateDots = () => {
+      const r = workRail.getBoundingClientRect();
+      const center = r.left + r.width / 2;
+      let best = 0, dist = Infinity;
+      projs.forEach((p, i) => {
+        const pr = p.getBoundingClientRect();
+        const d = Math.abs(pr.left + pr.width / 2 - center);
+        if (d < dist) { dist = d; best = i; }
+      });
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === best));
+    };
+    workRail.addEventListener("scroll", updateDots, { passive: true });
+    window.addEventListener("resize", updateDots);
+    updateDots();
+  }
+
   // drag-to-scroll on the work rail
   // (vertical wheel is left alone so it scrolls the page; trackpad horizontal swipes
   //  and shift+wheel still scroll the rail natively.)
