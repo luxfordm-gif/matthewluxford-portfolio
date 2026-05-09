@@ -116,7 +116,7 @@ ul,ol{margin:0;padding:0;list-style:none}
   .nav__close{
     order:2;
     display:inline-flex;align-items:center;justify-content:center;
-    width:40px;height:40px;border-radius:999px;
+    width:40px;height:40px;border-radius:8px;
     background:var(--ink);color:var(--paper);
     transition:background .25s var(--ease),transform .2s var(--ease);
   }
@@ -125,11 +125,14 @@ ul,ol{margin:0;padding:0;list-style:none}
   .nav__contact{
     order:3;flex-basis:100%;
     text-align:left;align-items:flex-start;
-    margin:48px 0;
+    margin:18px 0 0;
+    padding-bottom:22px;
+    border-bottom:1px solid var(--line);
+    font-size:.92rem;line-height:1.7;color:var(--ink);
   }
-  .nav__contact .status{margin-top:6px}
-  /* hero already has its own padding-top — no need for extra spacing */
-  .cv-hero{padding-top:0}
+  .nav__contact .status{margin-top:6px;font-weight:500}
+  /* tighter top spacing under the divider before the hero */
+  .cv-hero{padding-top:clamp(1.25rem,4vw,2rem)}
 }
 
 /* ============================================================ hero */
