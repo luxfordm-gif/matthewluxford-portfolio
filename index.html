@@ -793,22 +793,27 @@ ul,ol{margin:0;padding:0;list-style:none}
 .about__exp__desc p:last-child{margin-bottom:0}
 @media (max-width:880px){
   .about__intro{grid-template-columns:1fr}
+  /* compact mobile row: when + chevron on top, place/job below, desc reveals */
   .about__exp{
-    grid-template-columns:1fr;
-    grid-template-areas:"when" "role" "desc" "more";
-    row-gap:.4rem;
+    grid-template-columns:1fr 36px;
+    grid-template-areas:
+      "when chev"
+      "role chev"
+      "desc desc";
+    column-gap:.75rem;row-gap:.25rem;
+    padding:1.4rem 0;
+    cursor:pointer;
+    align-items:start;
   }
-  /* mobile experience row: date / place (large) / job title (lighter) / loc */
   .about__exp__when{
-    font-size:.85rem;color:var(--muted);font-weight:500;
+    font-size:.78rem;color:var(--muted);font-weight:500;
     letter-spacing:.02em;
   }
   .about__exp__role{font-size:1rem;line-height:1.2}
   .about__exp__place,
-  .about__exp__job,
-  .about__exp__loc{display:block}
+  .about__exp__job{display:block}
   .about__exp__place{
-    font-size:1.55rem;
+    font-size:1.35rem;
     font-weight:700;
     letter-spacing:-.02em;
     line-height:1.15;
@@ -816,35 +821,51 @@ ul,ol{margin:0;padding:0;list-style:none}
   }
   .about__exp__job{
     font-weight:400;
-    font-size:.95rem;
+    font-size:.92rem;
     color:var(--ink-2);
     letter-spacing:-.005em;
   }
-  .about__exp__loc{
-    margin-top:.2rem;
-    font-size:.82rem;
-    color:var(--muted);
-  }
+  /* hide location on mobile per design */
+  .about__exp__loc{display:none}
   .about__exp__role .sep{display:none}
-  /* description fully hidden until "Read more" tapped */
+  /* description fully hidden until row is tapped */
   .about__exp__desc{
     overflow:hidden;
     max-height:0;
     margin:0;
     transition:max-height .45s var(--ease), margin .45s var(--ease);
   }
+  /* chevron toggle replaces "Read more" copy */
   .about__exp__more{
-    grid-area:more;
-    margin-top:.55rem;
-    font-size:.82rem;font-weight:600;
-    color:var(--ink);
-    text-decoration:underline;
-    text-decoration-color:rgba(20,17,15,.4);
-    text-underline-offset:3px;
+    grid-area:chev;
+    align-self:start;
+    width:36px;height:36px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:transparent;
+    display:flex;align-items:center;justify-content:center;
+    font-size:0;color:transparent;
+    text-decoration:none;
+    transition:background .25s var(--ease), border-color .25s var(--ease);
+  }
+  .about__exp__more::before{
+    content:"";
+    width:8px;height:8px;
+    border-right:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+    transform:rotate(45deg) translate(-1px,-1px);
+    transition:transform .35s var(--ease), border-color .25s var(--ease);
+  }
+  .about__exp.is-expanded .about__exp__more{
+    background:var(--ink);border-color:var(--ink);
+  }
+  .about__exp.is-expanded .about__exp__more::before{
+    border-color:var(--paper);
+    transform:rotate(225deg) translate(-1px,-1px);
   }
   .about__exp.is-expanded .about__exp__desc{
     max-height:60em;
-    margin-top:.75rem;
+    margin-top:.85rem;
   }
 }
 @media (min-width:881px){
