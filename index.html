@@ -854,7 +854,7 @@ ul,ol{margin:0;padding:0;list-style:none}
     margin-top:2px;
     width:36px;height:36px;
     border-radius:8px;
-    border:1.5px solid var(--ink-2);
+    border:1px solid var(--dot);
     background:transparent;
     display:flex;align-items:center;justify-content:center;
     font-size:0;color:transparent;
@@ -864,8 +864,8 @@ ul,ol{margin:0;padding:0;list-style:none}
   .about__exp__more::before{
     content:"";
     width:9px;height:9px;
-    border-right:2.5px solid var(--ink);
-    border-bottom:2.5px solid var(--ink);
+    border-right:2px solid var(--ink-2);
+    border-bottom:2px solid var(--ink-2);
     transform:rotate(45deg) translate(-1.5px,-1.5px);
     transition:transform .35s var(--ease), border-color .25s var(--ease);
   }
@@ -979,6 +979,12 @@ ul,ol{margin:0;padding:0;list-style:none}
   .foot__right{align-items:flex-start;gap:clamp(1.25rem,3vw,1.75rem)}
   .foot__sig{transform:rotate(-3deg) translateX(0)}
   .foot__status{flex-wrap:wrap;gap:.85rem 1.25rem}
+  /* copyright + built-with sit close together on mobile */
+  .foot__bottom{
+    gap:.25rem;
+    padding:1rem 0 1.5rem;
+    margin-top:.75rem;
+  }
 }
 
 /* ===================================================== testimonials */
@@ -1064,11 +1070,12 @@ ul,ol{margin:0;padding:0;list-style:none}
 }
 @media (max-width:680px){
   .testimonials__list{column-count:1}
-  .testimonials__title{font-size:clamp(2.8rem,8vw,3.6rem);letter-spacing:-.045em}
-  .testimonials__sub{font-size:1rem;color:#bdbdbd;line-height:1.5}
-  .testimonial__quote{font-size:1.02rem;line-height:1.6;color:#e2e2e2}
-  .testimonial__by strong{font-size:1rem}
-  .testimonial__by span{font-size:.9rem}
+  .testimonials__title{font-size:clamp(3.2rem,9.5vw,4.2rem);letter-spacing:-.045em}
+  .testimonials__sub{font-size:1.1rem;color:#bdbdbd;line-height:1.5}
+  .testimonial__stars{font-size:16px;gap:6px;margin-bottom:18px}
+  .testimonial__quote{font-size:1.12rem;line-height:1.6;color:#e2e2e2;margin:0 0 1.5rem}
+  .testimonial__by strong{font-size:1.05rem}
+  .testimonial__by span{font-size:.95rem}
 }
 .testimonial{
   break-inside:avoid;
@@ -1076,24 +1083,42 @@ ul,ol{margin:0;padding:0;list-style:none}
   padding-bottom:clamp(1.5rem,3vw,2rem);
   border-bottom:1px solid rgba(255,255,255,.08);
 }
-/* fade each testimonial in once as it enters the viewport */
-@supports (animation-timeline:view()){
-  .testimonial{
-    animation:testimonialIn linear both;
-    animation-timeline:view();
-    animation-range:entry 0% entry 65%;
-  }
-  @keyframes testimonialIn{
-    from{opacity:0;transform:translateY(28px)}
-    to{opacity:1;transform:translateY(0)}
-  }
+/* fade each testimonial in once as it enters the viewport (IntersectionObserver-driven) */
+.testimonial{
+  opacity:0;transform:translateY(24px);
+  transition:opacity .65s var(--ease), transform .65s var(--ease);
 }
+.testimonial.is-visible{opacity:1;transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){
+  .testimonial{opacity:1;transform:none;transition:none}
+}
+
+/* 5-star row above each testimonial — staggers in after the testimonial fades */
+.testimonial__stars{
+  display:flex;gap:5px;
+  margin-bottom:14px;
+  font-size:14px;line-height:1;
+  color:#fde047;
+}
+.testimonial__star{
+  display:inline-block;
+  opacity:0;transform:scale(.4) rotate(-25deg);
+  transition:opacity .45s cubic-bezier(.34,1.6,.64,1), transform .45s cubic-bezier(.34,1.6,.64,1);
+}
+.testimonial.is-visible .testimonial__star{
+  opacity:1;transform:scale(1) rotate(0);
+  transition-delay:calc(.15s + var(--i, 0) * .08s);
+}
+@media (prefers-reduced-motion:reduce){
+  .testimonial__star{opacity:1;transform:none;transition:none}
+}
+
 .testimonial:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
 .testimonial__quote{
   font-size:clamp(.92rem,.88rem + .15vw,1rem);
   line-height:1.55;
   color:#d4d4d4;
-  margin:0 0 .85rem;
+  margin:0 0 1.4rem;
 }
 .testimonial__quote p{margin:0 0 .85rem}
 .testimonial__quote p:last-child{margin-bottom:0}
@@ -1951,6 +1976,38 @@ ul,ol{margin:0;padding:0;list-style:none}
         hoverImg.style.top = e.clientY + "px";
       });
     });
+  }
+
+  // testimonials: inject 5 stars at the top of each, then fade + stagger-in on scroll
+  const tCards = [...document.querySelectorAll(".testimonial")];
+  tCards.forEach((card) => {
+    const stars = document.createElement("div");
+    stars.className = "testimonial__stars";
+    stars.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 5; i++) {
+      const s = document.createElement("span");
+      s.className = "testimonial__star";
+      s.style.setProperty("--i", i);
+      s.textContent = "★";
+      stars.appendChild(s);
+    }
+    card.insertBefore(stars, card.firstChild);
+  });
+  if ("IntersectionObserver" in window && tCards.length) {
+    const tIO = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            tIO.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.18 }
+    );
+    tCards.forEach((c) => tIO.observe(c));
+  } else {
+    tCards.forEach((c) => c.classList.add("is-visible"));
   }
 
   // testimonials: "Read them all" reveals hidden ones (mobile only)
