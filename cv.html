@@ -76,9 +76,9 @@ ul,ol{margin:0;padding:0;list-style:none}
 p,li{text-wrap:pretty}
 
 /* ============================================================== nav */
-/* close button pinned to the top-right, sharing the same right edge as Download CV */
+/* close button pinned to the top-right, mirroring the Resume CTA position used across the site */
 .nav__close{
-  position:fixed;top:clamp(1rem,2.5vw,2rem);right:clamp(1rem,2.5vw,2rem);z-index:60;
+  position:fixed;top:32px;right:var(--pad);z-index:60;
   display:inline-flex;align-items:center;justify-content:center;
   width:40px;height:40px;border-radius:8px;
   background:var(--ink);color:var(--paper);
