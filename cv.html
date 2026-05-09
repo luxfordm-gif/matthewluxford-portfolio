@@ -327,7 +327,12 @@ p,li{text-wrap:pretty}
   border:0;cursor:pointer;
   font-family:var(--sans);font-weight:600;font-size:.92rem;
   box-shadow:0 18px 40px -18px rgba(20,17,15,.5),0 6px 14px -6px rgba(20,17,15,.2);
-  transition:transform .35s var(--ease),background .25s var(--ease);
+  transition:transform .35s var(--ease),background .25s var(--ease),opacity .35s var(--ease),visibility .35s var(--ease);
+}
+/* fade out the floating CTA + its blur once the secret-footer reveal is in view */
+body.near-secret-footer .cv-download,
+body.near-secret-footer .cv-download-fade{
+  opacity:0;visibility:hidden;pointer-events:none;
 }
 .cv-download:hover{
   transform:translateY(-3px) scale(1.04);
@@ -340,6 +345,7 @@ p,li{text-wrap:pretty}
 @media (max-width:680px){
   .cv-download-fade{
     display:block;
+    transition:opacity .35s var(--ease),visibility .35s var(--ease);
     position:fixed;left:0;right:0;
     /* extend below the safe area so the gradient covers the iOS home indicator
        and any browser chrome, then we offset upward via height */
@@ -845,6 +851,9 @@ p,li{text-wrap:pretty}
       const winH = window.innerHeight;
       const remaining = docH - winH - window.scrollY;
       secretEl.classList.toggle("is-revealed", remaining < winH * 0.18);
+      // start fading the floating Download CV CTA + blur a touch earlier
+      // so it's gone before the dark reveal becomes visible
+      document.body.classList.toggle("near-secret-footer", remaining < winH * 0.4);
     };
     window.addEventListener("scroll", checkReveal, { passive: true });
     window.addEventListener("resize", checkReveal);
