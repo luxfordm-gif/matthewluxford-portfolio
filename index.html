@@ -1028,15 +1028,17 @@ ul,ol{margin:0;padding:0;list-style:none}
   .testimonials__card{grid-template-columns:1fr;gap:clamp(2rem,5vw,3rem)}
 }
 .testimonials__head{
+  align-self:stretch;
+  display:block;
+}
+.testimonials__head-inner{
   position:sticky;
   top:clamp(4rem,8vw,7rem);
-  bottom:auto;
-  align-self:start;
   display:flex;flex-direction:column;
   max-width:24ch;
 }
 @media (max-width:880px){
-  .testimonials__head{position:static;top:auto;margin-bottom:2rem}
+  .testimonials__head-inner{position:static;top:auto;margin-bottom:2rem}
 }
 .testimonials__gif{
   width:170px;height:auto;
@@ -1086,7 +1088,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 /* fade each testimonial in once as it enters the viewport (IntersectionObserver-driven) */
 .testimonial{
   opacity:0;transform:translateY(24px);
-  transition:opacity .65s var(--ease), transform .65s var(--ease);
+  transition:opacity 1s var(--ease) .25s, transform 1s var(--ease) .25s;
 }
 .testimonial.is-visible{opacity:1;transform:translateY(0)}
 @media (prefers-reduced-motion:reduce){
@@ -1107,7 +1109,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 }
 .testimonial.is-visible .testimonial__star{
   opacity:1;transform:scale(1) rotate(0);
-  transition-delay:calc(.15s + var(--i, 0) * .08s);
+  transition-delay:calc(.7s + var(--i, 0) * .14s);
 }
 @media (prefers-reduced-motion:reduce){
   .testimonial__star{opacity:1;transform:none;transition:none}
@@ -1161,6 +1163,9 @@ ul,ol{margin:0;padding:0;list-style:none}
   padding:6vh var(--pad);
   cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23fde047' stroke='%23000' stroke-width='1.6'/><circle cx='12' cy='13' r='1.6' fill='%23000'/><circle cx='20' cy='13' r='1.6' fill='%23000'/><path d='M10.5 18.5 Q16 24 21.5 18.5' stroke='%23000' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>") 16 16, default;
 }
+.secret-footer *{
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23fde047' stroke='%23000' stroke-width='1.6'/><circle cx='12' cy='13' r='1.6' fill='%23000'/><circle cx='20' cy='13' r='1.6' fill='%23000'/><path d='M10.5 18.5 Q16 24 21.5 18.5' stroke='%23000' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>") 16 16, pointer;
+}
 .secret-footer__eyebrow{
   position:absolute;top:9vh;left:50%;
   width:max-content;max-width:90vw;
@@ -1203,8 +1208,8 @@ ul,ol{margin:0;padding:0;list-style:none}
   text-transform:uppercase;white-space:nowrap;
   opacity:0;
 }
-.secret-pill--cmon{top:-22%;left:6%}
-.secret-pill--just{bottom:-28%;left:18%}
+.secret-pill--cmon{top:-30%;left:6%}
+.secret-pill--just{top:-12%;left:14%;bottom:auto}
 .secret-footer.is-revealed .secret-pill--cmon{
   animation:
     pillIn .6s cubic-bezier(.34,1.6,.64,1) .55s forwards,
@@ -1332,8 +1337,8 @@ ul,ol{margin:0;padding:0;list-style:none}
     font-size:.62rem;
     padding:6px 12px;
   }
-  .secret-pill--cmon{top:-46%;left:4%}
-  .secret-pill--just{bottom:-46%;left:auto;right:4%}
+  .secret-pill--cmon{top:-58%;left:4%}
+  .secret-pill--just{top:-30%;left:18%;bottom:auto;right:auto}
   .secret-footer.is-revealed .secret-pill--cmon{
     animation:
       pillIn .5s cubic-bezier(.34,1.6,.64,1) .3s forwards,
@@ -1672,9 +1677,11 @@ ul,ol{margin:0;padding:0;list-style:none}
     <div class="testimonials__card">
 
       <div class="testimonials__head">
-        <img class="testimonials__gif" src="assets/giphy.gif" alt="" loading="lazy" />
-        <h2 class="testimonials__title">Testimonials<sup>*</sup></h2>
-        <p class="testimonials__sub">* I didn't force them to write these..<br/>trust me</p>
+        <div class="testimonials__head-inner">
+          <img class="testimonials__gif" src="assets/giphy.gif" alt="" loading="lazy" />
+          <h2 class="testimonials__title">Testimonials<sup>*</sup></h2>
+          <p class="testimonials__sub">* I didn't force them to write these... trust me</p>
+        </div>
       </div>
 
       <div class="testimonials__list">
