@@ -1005,8 +1005,10 @@ p,li{text-wrap:pretty}
   .foot__right{align-items:flex-start;gap:clamp(1.25rem,3vw,1.75rem)}
   .foot__sig{transform:rotate(-3deg) translateX(0)}
   .foot__status{flex-wrap:wrap;gap:.85rem 1.25rem}
-  /* copyright + built-with sit close together on mobile */
+  /* copyright + built-with sit close together, centered on mobile */
   .foot__bottom{
+    justify-content:center;
+    text-align:center;
     gap:.25rem;
     padding:1rem 0 1.5rem;
     margin-top:.75rem;
