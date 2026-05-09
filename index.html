@@ -26,13 +26,13 @@
   --ease:cubic-bezier(.2,.7,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
 html,body{margin:0;padding:0;max-width:100%}
 body{
   font-family:var(--sans);
   font-size:clamp(.95rem,.9rem + .25vw,1.05rem);
   line-height:1.55;color:var(--ink);
-  overflow-x:hidden;
+  overflow-x:clip;
   background:#070707;
   padding-bottom:62vh;
 }
@@ -53,6 +53,7 @@ a{color:inherit;text-decoration:none}
 button{font:inherit;background:none;border:0;cursor:pointer}
 ul,ol{margin:0;padding:0;list-style:none}
 ::selection{background:var(--ink);color:var(--paper)}
+p,li{text-wrap:pretty}
 
 /* ============================================================== nav */
 .nav{
@@ -1065,6 +1066,7 @@ ul,ol{margin:0;padding:0;list-style:none}
   color:#999;
   font-family:var(--serif);font-style:italic;
   margin:1rem 0 0;line-height:1.45;
+  white-space:nowrap;
 }
 .testimonials__list{
   column-count:2;
@@ -1074,7 +1076,7 @@ ul,ol{margin:0;padding:0;list-style:none}
   .testimonials__list{column-count:1}
   .testimonials__title{font-size:clamp(3.2rem,9.5vw,4.2rem);letter-spacing:-.045em}
   .testimonials__sub{font-size:1.1rem;color:#bdbdbd;line-height:1.5}
-  .testimonial__stars{font-size:16px;gap:6px;margin-bottom:18px}
+  .testimonial__stars{font-size:18.5px;gap:4px;margin-bottom:18px}
   .testimonial__quote{font-size:1.12rem;line-height:1.6;color:#e2e2e2;margin:0 0 1.5rem}
   .testimonial__by strong{font-size:1.05rem}
   .testimonial__by span{font-size:.95rem}
@@ -1097,9 +1099,9 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* 5-star row above each testimonial — staggers in after the testimonial fades */
 .testimonial__stars{
-  display:flex;gap:5px;
+  display:flex;gap:3px;
   margin-bottom:14px;
-  font-size:14px;line-height:1;
+  font-size:16.2px;line-height:1;
   color:#fde047;
 }
 .testimonial__star{
@@ -1917,7 +1919,7 @@ ul,ol{margin:0;padding:0;list-style:none}
   const sections = [...links].map((a) => document.querySelector(a.getAttribute("href")));
   const setActive = () => {
     const y = window.scrollY + 140;
-    let i = 0;
+    let i = -1;
     sections.forEach((s, idx) => { if (s && s.offsetTop <= y) i = idx; });
     links.forEach((l, idx) => l.classList.toggle("is-active", idx === i));
   };
