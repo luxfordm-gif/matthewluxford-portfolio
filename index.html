@@ -26,8 +26,8 @@
   --ease:cubic-bezier(.2,.7,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-html,body{margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+html,body{margin:0;padding:0;max-width:100%}
 body{
   font-family:var(--sans);
   font-size:clamp(.95rem,.9rem + .25vw,1.05rem);
@@ -36,6 +36,8 @@ body{
   background:#070707;
   padding-bottom:62vh;
 }
+.page{overflow-x:clip}
+.hero{overflow-x:clip}
 .page{
   position:relative;z-index:2;
   background-color:var(--bg);
@@ -96,7 +98,31 @@ ul,ol{margin:0;padding:0;list-style:none}
 }
 .nav.is-floating .nav__cta{background:var(--ink);color:var(--paper)}
 .nav__cta:hover{transform:translateY(-2px)}
-@media (max-width:760px){.nav__links{display:none}}
+@media (max-width:760px){
+  .nav__links{display:none}
+  /* mobile: drop mix-blend-mode (flaky w/ position:fixed on iOS),
+     tighten paddings so the Resume CTA stays on-screen */
+  .nav{
+    mix-blend-mode:normal;
+    color:var(--ink);
+    padding:14px 16px;
+  }
+  .nav.is-floating{padding-top:14px}
+  .nav.is-pinned{
+    background:rgba(250,250,247,.78);
+    backdrop-filter:saturate(160%) blur(10px);
+    -webkit-backdrop-filter:saturate(160%) blur(10px);
+  }
+  .nav__brand{font-size:1rem}
+  .nav__right{gap:0}
+  .nav__cta,
+  .nav.is-floating .nav__cta{
+    padding:9px 16px;
+    font-size:.85rem;
+    background:var(--ink);
+    color:var(--paper);
+  }
+}
 
 /* ============================================================ hero */
 .hero{
@@ -115,8 +141,17 @@ ul,ol{margin:0;padding:0;list-style:none}
   font-size:clamp(1.9rem,1.2rem + 3.8vw,4.6rem);
   line-height:1.05;letter-spacing:-.035em;
   margin:0 auto;max-width:22ch;color:var(--ink);
+  text-wrap:balance;
 }
-.hero__title .ln{display:block;overflow:visible;padding:.05em 0 .12em}
+.hero__title .ln{display:block;overflow:visible;padding:.05em 0 .12em;text-wrap:balance}
+@media (max-width:760px){
+  .hero__title{
+    font-size:clamp(2.15rem,1.3rem + 4.6vw,3rem);
+    max-width:14ch;
+    text-wrap:balance;
+    -webkit-text-wrap:balance;
+  }
+}
 .hero__title .ln>span{
   display:inline-block;
   opacity:0;transform:translateY(40%);
@@ -404,6 +439,78 @@ ul,ol{margin:0;padding:0;list-style:none}
   scroll-snap-align:start;display:flex;flex-direction:column;gap:1rem;
   text-decoration:none;color:inherit;
 }
+
+/* pagination dots under the work rail (mobile) */
+.work__dots{display:none}
+@media (max-width:760px){
+  .work__dots{
+    display:flex;justify-content:center;gap:8px;
+    padding:0 var(--pad) clamp(2rem,5vw,3rem);
+  }
+  .work__dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--dot);border:0;padding:0;cursor:pointer;
+    transition:background .3s var(--ease), transform .3s var(--ease), width .3s var(--ease);
+  }
+  .work__dot.is-active{
+    background:var(--ink);
+    width:22px;border-radius:999px;
+  }
+}
+
+/* ===== Apple-style snap carousel on mobile ===== */
+@media (max-width:760px){
+  .work__rail{
+    grid-auto-columns:78vw;
+    gap:clamp(.6rem,2vw,1rem);
+    padding-left:11vw;
+    padding-right:11vw;
+    scroll-padding-left:11vw;
+    scroll-padding-inline:11vw;
+    scroll-behavior:smooth;
+    overscroll-behavior-x:contain;
+  }
+  .work__rail::-webkit-scrollbar{display:none}
+  .work__rail{scrollbar-width:none}
+  .proj{
+    scroll-snap-align:center;
+    scroll-snap-stop:always;
+  }
+  .proj__media{
+    border-radius:28px;
+    transform-origin:center;
+    will-change:transform;
+  }
+  /* gooey scale + fade as cards scroll across the viewport */
+  @supports (animation-timeline:view()){
+    .proj__media{
+      animation:projGooey linear both;
+      animation-timeline:view(inline);
+      animation-range:cover 5% cover 95%;
+    }
+    @keyframes projGooey{
+      0%,100%{
+        transform:scale(.86);
+        filter:saturate(.8) brightness(.92);
+        opacity:.55;
+      }
+      50%{
+        transform:scale(1);
+        filter:saturate(1) brightness(1);
+        opacity:1;
+      }
+    }
+    .proj__caption,.proj__crumb{
+      animation:projGooeyCaption linear both;
+      animation-timeline:view(inline);
+      animation-range:cover 5% cover 95%;
+    }
+    @keyframes projGooeyCaption{
+      0%,100%{opacity:.45;transform:translateY(4px)}
+      50%{opacity:1;transform:translateY(0)}
+    }
+  }
+}
 .proj__media{
   position:relative;aspect-ratio:5/4;border-radius:24px;overflow:hidden;
   display:grid;place-items:center;
@@ -579,6 +686,9 @@ ul,ol{margin:0;padding:0;list-style:none}
   margin:0 0 clamp(5rem,11vw,9rem);
   color:var(--ink);
 }
+@media (max-width:760px){
+  .about__title{font-size:clamp(3.3rem,1.65rem + 6.6vw,5rem)}
+}
 .about__intro{
   display:grid;grid-template-columns:1fr 1fr;
   gap:clamp(2rem,5vw,5rem);
@@ -671,7 +781,8 @@ ul,ol{margin:0;padding:0;list-style:none}
   color:var(--ink);font-weight:600;letter-spacing:-.005em;
   line-height:1.3;
 }
-.about__exp__role span{display:block;color:var(--ink);font-weight:400;font-size:1em}
+.about__exp__role .sep{color:inherit;font-weight:inherit}
+.about__exp__loc{display:block;color:var(--ink);font-weight:400;font-size:1em}
 .about__exp__desc{
   grid-area:desc;
   font-size:clamp(.95rem,.9rem + .2vw,1.1rem);
@@ -682,36 +793,80 @@ ul,ol{margin:0;padding:0;list-style:none}
 .about__exp__desc p:last-child{margin-bottom:0}
 @media (max-width:880px){
   .about__intro{grid-template-columns:1fr}
+  /* compact mobile row: when + chevron on top, place/job below, desc reveals */
   .about__exp{
-    grid-template-columns:1fr;
-    grid-template-areas:"when" "role" "desc" "more";
-    row-gap:.5rem;
+    grid-template-columns:1fr 36px;
+    grid-template-areas:
+      "when chev"
+      "role chev"
+      "desc desc";
+    column-gap:.75rem;row-gap:.25rem;
+    padding:1.4rem 0;
+    cursor:pointer;
+    align-items:start;
   }
-  /* collapsed description on mobile, tap row to expand */
+  .about__exp__when{
+    font-size:.78rem;color:var(--muted);font-weight:500;
+    letter-spacing:.02em;
+  }
+  .about__exp__role{font-size:1rem;line-height:1.2}
+  .about__exp__place,
+  .about__exp__job{display:block}
+  .about__exp__place{
+    font-size:1.35rem;
+    font-weight:700;
+    letter-spacing:-.02em;
+    line-height:1.15;
+    margin-bottom:.1rem;
+  }
+  .about__exp__job{
+    font-weight:400;
+    font-size:.92rem;
+    color:var(--ink-2);
+    letter-spacing:-.005em;
+  }
+  /* hide location on mobile per design */
+  .about__exp__loc{display:none}
+  .about__exp__role .sep{display:none}
+  /* description fully hidden until row is tapped */
   .about__exp__desc{
-    position:relative;
     overflow:hidden;
-    max-height:5em;
-    transition:max-height .4s var(--ease);
+    max-height:0;
+    margin:0;
+    transition:max-height .45s var(--ease), margin .45s var(--ease);
   }
-  .about__exp__desc::after{
-    content:"";position:absolute;bottom:0;left:0;right:0;
-    height:2em;
-    background:linear-gradient(transparent, var(--bg));
-    pointer-events:none;
-    transition:opacity .25s var(--ease);
-  }
+  /* chevron toggle replaces "Read more" copy */
   .about__exp__more{
-    grid-area:more;
-    margin-top:.65rem;
-    font-size:.82rem;font-weight:600;
-    color:var(--ink);
-    text-decoration:underline;
-    text-decoration-color:rgba(20,17,15,.4);
-    text-underline-offset:3px;
+    grid-area:chev;
+    align-self:start;
+    width:36px;height:36px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:transparent;
+    display:flex;align-items:center;justify-content:center;
+    font-size:0;color:transparent;
+    text-decoration:none;
+    transition:background .25s var(--ease), border-color .25s var(--ease);
   }
-  .about__exp.is-expanded .about__exp__desc{max-height:60em}
-  .about__exp.is-expanded .about__exp__desc::after{opacity:0}
+  .about__exp__more::before{
+    content:"";
+    width:8px;height:8px;
+    border-right:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+    transform:rotate(45deg) translate(-1px,-1px);
+    transition:transform .35s var(--ease), border-color .25s var(--ease);
+  }
+  .about__exp.is-expanded .about__exp__more{
+    background:var(--ink);border-color:var(--ink);
+  }
+  .about__exp.is-expanded .about__exp__more::before{
+    border-color:var(--paper);
+    transform:rotate(225deg) translate(-1px,-1px);
+  }
+  .about__exp.is-expanded .about__exp__desc{
+    max-height:60em;
+    margin-top:.85rem;
+  }
 }
 @media (min-width:881px){
   .about__exp__more{display:none}
@@ -915,6 +1070,7 @@ ul,ol{margin:0;padding:0;list-style:none}
   .testimonials.is-expanded .testimonial.is-extra{display:block}
   .testimonials__more{
     display:inline-flex;align-items:center;gap:8px;
+    width:auto;justify-self:start;
     margin-top:1.5rem;
     padding:14px 22px;border-radius:999px;
     background:#fff;color:#000;border:0;
@@ -1071,24 +1227,58 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* secret footer mobile fixes */
 @media (max-width:720px){
-  body{padding-bottom:78vh}
+  body{padding-bottom:62vh}
   .secret-footer{
-    height:78vh;
-    padding:6vh 1rem;
+    height:62vh;
+    padding:5vh 1rem;
   }
   .secret-footer__eyebrow{
-    top:4vh;
+    top:5vh;
     font-size:.7rem;
     letter-spacing:.06em;
     line-height:1.4;
   }
   .secret-footer__head{
-    font-size:clamp(1.9rem,8.5vw,3rem);
-    line-height:1.05;
-    padding:0 .5rem;
+    font-size:clamp(1.55rem,7vw,2.4rem);
+    line-height:1.1;
+    padding:0 1.25rem;
+    max-width:100%;
+    overflow-wrap:break-word;
   }
-  /* hide the floating pills on mobile - they overlap the headline */
-  .secret-pill{display:none}
+  /* faster, snappier reveal so it doesn't sit on a black void */
+  .secret-footer.is-revealed .secret-footer__head{
+    animation:
+      headReveal .55s cubic-bezier(.34,1.6,.64,1) forwards,
+      headBounce 4.5s ease-in-out .6s infinite;
+  }
+  .secret-footer.is-revealed .secret-footer__eyebrow{
+    animation:eyebrowIn .5s cubic-bezier(.34,1.6,.64,1) .15s forwards;
+  }
+  .secret-footer.is-revealed .secret-footer__cta{
+    animation:elemIn .55s cubic-bezier(.34,1.6,.64,1) .3s forwards;
+  }
+  .secret-footer.is-revealed .secret-footer__tag{
+    animation:elemIn .55s var(--ease) .45s forwards;
+  }
+  /* keep the floating pills on mobile for the magic — just reposition
+     so they sit clear of the headline */
+  .secret-pill{
+    display:inline-flex;
+    font-size:.62rem;
+    padding:6px 12px;
+  }
+  .secret-pill--cmon{top:-46%;left:4%}
+  .secret-pill--just{bottom:-46%;left:auto;right:4%}
+  .secret-footer.is-revealed .secret-pill--cmon{
+    animation:
+      pillIn .5s cubic-bezier(.34,1.6,.64,1) .3s forwards,
+      floatA 3.4s ease-in-out .85s infinite;
+  }
+  .secret-footer.is-revealed .secret-pill--just{
+    animation:
+      pillIn .5s cubic-bezier(.34,1.6,.64,1) .42s forwards,
+      floatB 3.8s ease-in-out 1s infinite;
+  }
   .secret-footer__bottom{
     bottom:5vh;width:100%;left:0;transform:none;
     align-items:center;
@@ -1344,6 +1534,7 @@ ul,ol{margin:0;padding:0;list-style:none}
       </a>
 
     </div>
+    <div class="work__dots" aria-hidden="true"></div>
   </section>
 
   <!-- ABOUT -->
@@ -1367,43 +1558,43 @@ ul,ol{margin:0;padding:0;list-style:none}
 
     <div class="about__exp" data-img="assets/about-kraken.jpg" data-rot="10deg" data-h="260px">
       <div class="about__exp__when">2024 – Present</div>
-      <div class="about__exp__role">Kraken, Senior Product Designer. <span>Remote · Crypto</span></div>
+      <div class="about__exp__role"><span class="about__exp__place">Kraken</span><span class="sep">, </span><span class="about__exp__job">Senior Product Designer</span><span class="sep">.</span> <span class="about__exp__loc">Remote · Crypto</span></div>
       <div class="about__exp__desc">Designing for the global crypto exchange — trading, onboarding and the systems that make complex finance feel obvious.</div>
     </div>
 
     <div class="about__exp" data-img="assets/yoppie.jpg" data-rot="-8deg" data-h="200px">
       <div class="about__exp__when">2021 – 2022</div>
-      <div class="about__exp__role">Yoppie, Lead Product Designer (Contract). <span>London</span></div>
+      <div class="about__exp__role"><span class="about__exp__place">Yoppie</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Head of design and creative oversight across all digital comms for the women's-health DTC.</div>
     </div>
 
     <div class="about__exp" data-img="assets/landrover-s44.jpg" data-rot="11deg" data-h="245px" data-w="363px">
       <div class="about__exp__when">2020 – 2021</div>
-      <div class="about__exp__role">Spark44 (Jaguar Land Rover), Lead Product Designer (Contract). <span>London · NDA</span></div>
+      <div class="about__exp__role"><span class="about__exp__place">Spark44 (Jaguar Land Rover)</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London · NDA</span></div>
       <div class="about__exp__desc"><p>Led ground-up component rebuild with efficiency at its core. We identified poor-performing components caused by responsive breakpoint issues and text overlays constraining vehicle imagery. As one of two senior leads on a six-person team, rebuilt the site piece-by-piece over 6 months, creating reusable components to ensure the platform was future-proof and scalable. Contracted in to run Figma workshops, set up the component library, and established Principle animation patterns for interactive states and transitions.</p><p>Overhauled 'Models &amp; Specifications' pages for JLR's global site across 27 markets. Led the design, ran competitor analysis, and made data-driven UX/UI calls. The trick was surfacing what users needed to pick the right vehicle while staying flexible across both brands' complex model ranges. Every decision served the user first.</p></div>
     </div>
 
     <div class="about__exp about__exp--continued" data-img="assets/collective.jpg" data-rot="-7deg" data-h="210px">
       <div class="about__exp__when">2020 – 2021</div>
-      <div class="about__exp__role">The Collective, Lead Product Designer (Contract). <span>London</span></div>
+      <div class="about__exp__role"><span class="about__exp__place">The Collective</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Strategic redesign of the booking flow — analytics showed a <strong>500% increase in booking enquiries</strong> in the first month post-launch. Brand refresh and native iOS/Android app overhaul.</div>
     </div>
 
     <div class="about__exp" data-img="assets/lifecake.jpg" data-rot="-11deg" data-h="215px">
       <div class="about__exp__when">2018 – 2020</div>
-      <div class="about__exp__role">Lifecake, Lead Product Designer. <span>London</span></div>
+      <div class="about__exp__role"><span class="about__exp__place">Lifecake</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Family memory app reimagined across iOS, Android and web. Awarded Apple's "Best Storytelling App 2019" with 3.4M users worldwide.</div>
     </div>
 
     <div class="about__exp" data-img="assets/rr-s44.jpg" data-rot="9deg" data-h="235px" data-w="363px">
       <div class="about__exp__when">2016 – 2018</div>
-      <div class="about__exp__role">Spark44 (Jaguar Land Rover), Lead Product Designer (Contract). <span>London</span></div>
+      <div class="about__exp__role"><span class="about__exp__place">Spark44 (Jaguar Land Rover)</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Long-term JLR programme designing global website, configurator and product tools across 27 markets and both brands. Key projects included the 'Help Me Choose' tool and overhauled 'Models &amp; Specifications' pages — both informed by data-driven decisions for dual-brand global rollout.</div>
     </div>
 
     <div class="about__exp">
       <div class="about__exp__when">2007 – 2016</div>
-      <div class="about__exp__role">A decade of agency &amp; in-house. <span>London</span></div>
+      <div class="about__exp__role"><span class="about__exp__place">A decade of agency &amp; in-house</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Design Director at LONO Creative and Totally Communications. Senior Designer at Big Group and Global Beach. Digital Creative Lead at JPMH and Bell Design. Plus contracts at OLIVER, EY-Seren, and Digital Designer roles at Galileo London and Wickedweb. Where the craft was sharpened.</div>
     </div>
    </div>
@@ -1567,6 +1758,38 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 <script>
 (() => {
+  // pagination dots for the work rail (mobile)
+  const workRail = document.querySelector(".work__rail");
+  const workDots = document.querySelector(".work__dots");
+  if (workRail && workDots) {
+    const projs = [...workRail.querySelectorAll(".proj")];
+    projs.forEach((_, i) => {
+      const b = document.createElement("button");
+      b.className = "work__dot";
+      b.type = "button";
+      b.setAttribute("aria-label", `Go to slide ${i + 1}`);
+      b.addEventListener("click", () => {
+        projs[i]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      });
+      workDots.appendChild(b);
+    });
+    const dots = [...workDots.querySelectorAll(".work__dot")];
+    const updateDots = () => {
+      const r = workRail.getBoundingClientRect();
+      const center = r.left + r.width / 2;
+      let best = 0, dist = Infinity;
+      projs.forEach((p, i) => {
+        const pr = p.getBoundingClientRect();
+        const d = Math.abs(pr.left + pr.width / 2 - center);
+        if (d < dist) { dist = d; best = i; }
+      });
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === best));
+    };
+    workRail.addEventListener("scroll", updateDots, { passive: true });
+    window.addEventListener("resize", updateDots);
+    updateDots();
+  }
+
   // drag-to-scroll on the work rail
   // (vertical wheel is left alone so it scrolls the page; trackpad horizontal swipes
   //  and shift+wheel still scroll the rail natively.)
