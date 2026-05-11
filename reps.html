@@ -121,6 +121,7 @@ img,svg{display:block;max-width:100%}
 .case__meta dt{font-size:.75rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;font-weight:500}
 .case__meta dd{margin:0;font-weight:600;font-size:1.05rem}
 @media (max-width:880px){.case__head{grid-template-columns:1fr}}
+@media (max-width:760px){.case__meta{grid-template-columns:1fr;gap:1.25rem}}
 
 .case__hero{
   position:relative;
@@ -167,7 +168,7 @@ img,svg{display:block;max-width:100%}
   backdrop-filter:blur(8px);
 }
 .hero-stat__num{
-  font-family:var(--sans);font-weight:800;
+  font-family:var(--sans);font-weight:500;
   font-size:clamp(1.6rem,1rem + 1.5vw,2.4rem);
   line-height:1.05;letter-spacing:-.02em;color:#fff;
 }
@@ -178,16 +179,16 @@ img,svg{display:block;max-width:100%}
 }
 
 .case__body{
-  padding:clamp(6rem,11vw,9rem) var(--pad) 0;
+  padding:calc(clamp(6rem,11vw,9rem) + 28px) var(--pad) 0;
   display:grid;grid-template-columns:1fr 2fr;
   gap:clamp(2rem,5vw,5rem);
   max-width:1400px;margin:0 auto;
 }
-.case__body + .case__body{padding-top:clamp(5rem,9vw,7rem)}
+.case__body + .case__body{padding-top:calc(clamp(5rem,9vw,7rem) + 40px)}
 .case__body h2{
   font-family:var(--sans);font-weight:700;
-  font-size:clamp(1.6rem,1.2rem + 1.5vw,2.4rem);
-  letter-spacing:-.025em;line-height:1.05;margin:0;
+  font-size:clamp(2rem,1.4rem + 2.2vw,3.2rem);
+  letter-spacing:-.03em;line-height:1.02;margin:0;
 }
 .case__body h2 em{font-family:var(--serif);font-style:italic;font-weight:400}
 .case__body__copy{
@@ -195,10 +196,11 @@ img,svg{display:block;max-width:100%}
   font-size:clamp(1.05rem,1rem + .35vw,1.2rem);
   color:var(--ink-2);line-height:1.7;max-width:62ch;
 }
+@media (min-width:881px){.case__body__copy{line-height:29px}}
 .case__body__copy p{margin:0}
 .case__body__copy strong{color:var(--ink);font-weight:600}
 .case__body__copy em{font-family:var(--serif);font-style:italic}
-.case__body__copy ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.65rem}
+.case__body__copy ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:calc(.65rem - 2px)}
 .case__body__copy ul li{padding-left:1em;position:relative}
 .case__body__copy ul li::before{content:"·";position:absolute;left:0;color:var(--accent);font-weight:800}
 @media (max-width:880px){.case__body{grid-template-columns:1fr}}
@@ -249,19 +251,26 @@ img,svg{display:block;max-width:100%}
 
 /* full-bleed image break */
 .case__bleed{
-  margin:clamp(5rem,9vw,7rem) 0 0;
-  padding:0 var(--pad);
+  margin:calc(clamp(5rem,9vw,7rem) + 40px) 0 0;
+  padding:0;
 }
 .case__bleed--top{margin-top:0}
 .case__bleed img{
-  width:100%;max-width:1600px;margin:0 auto;display:block;
-  border-radius:clamp(16px,2vw,28px);
+  width:100%;margin:0 auto;display:block;
+  border-radius:0;
   box-shadow:0 40px 80px -40px rgba(0,0,0,.25);
+}
+.reveal{opacity:0;transform:translate3d(0,18px,0);transition:opacity .9s var(--ease), transform .9s var(--ease);will-change:opacity,transform}
+.reveal.is-in{opacity:1;transform:translate3d(0,0,0)}
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+@media (max-width:760px){
+  .case__bleed{padding:0 var(--pad)}
+  .case__bleed img{border-radius:clamp(16px,2vw,28px);max-width:1600px}
 }
 
 /* 2-up gallery */
 .case__gallery{
-  max-width:1400px;margin:clamp(5rem,9vw,7rem) auto 0;
+  max-width:1400px;margin:calc(clamp(5rem,9vw,7rem) + 40px) auto 0;
   padding:0 var(--pad);
   display:grid;grid-template-columns:1fr 1fr;
   gap:clamp(1rem,2.5vw,2rem);
@@ -271,7 +280,12 @@ img,svg{display:block;max-width:100%}
   border-radius:clamp(16px,2vw,24px);
   box-shadow:0 30px 60px -35px rgba(0,0,0,.22);
 }
-@media (max-width:760px){.case__gallery{grid-template-columns:1fr}}
+@media (max-width:760px){
+  .case__gallery{grid-template-columns:1fr}
+  .case__gallery .gallery-mobile-move{display:none}
+  .case__body .mobile-only-img{display:block;margin-top:calc(clamp(5rem,9vw,7rem) + 40px);border-radius:clamp(16px,2vw,24px);box-shadow:0 30px 60px -35px rgba(0,0,0,.22);width:100%}
+}
+.mobile-only-img{display:none}
 
 .foot{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:1400px;margin:0 auto}
 .foot__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
@@ -302,7 +316,7 @@ img,svg{display:block;max-width:100%}
     <dl class="case__meta">
       <div><dt>Role</dt><dd>Design &amp; build</dd></div>
       <div><dt>Timeline</dt><dd>2026 – Present</dd></div>
-      <div><dt>Scope</dt><dd>Product · Web app · AI · Supabase</dd></div>
+      <div><dt>Scope</dt><dd>Web app · AI · Supabase</dd></div>
     </dl>
   </div>
 </header>
@@ -322,7 +336,7 @@ img,svg{display:block;max-width:100%}
 <section class="case__hero" style="margin-top:clamp(5rem,9vw,7rem)">
   <div class="case__hero-grid">
     <div>
-      <h2>Designed it. <em>Built it.</em><br />Train with it.</h2>
+      <h2>Design it.<br /><em>Build it.</em><br />Train with it.</h2>
       <p>No brief. No client. Just the app I always wished existed — built around how I actually train, not how someone in a strategy deck thinks people train.</p>
     </div>
     <div class="case__hero-stats">
@@ -371,7 +385,7 @@ img,svg{display:block;max-width:100%}
 
 <div class="case__gallery">
   <img src="assets/reps/two.webp" alt="Reps app — exercise detail" loading="eager" />
-  <img src="assets/reps/three.webp" alt="Reps app — progress view" loading="eager" />
+  <img class="gallery-mobile-move" src="assets/reps/three.webp" alt="Reps app — progress view" loading="eager" />
 </div>
 
 <section class="case__body">
@@ -381,6 +395,7 @@ img,svg{display:block;max-width:100%}
     <p>Get home, day job kicks in. In the gaps, I export the notes into <strong>Claude</strong>, hand it the running list, and let it work through fixes while I'm on calls. Design in Figma, design back, into Claude Code, wire it into <strong>Supabase</strong>, make sure the SQL holds up.</p>
     <p>The loop's tight: <em>train, note, ship, train again</em>. Most days the app I train with at 6am is a bit better than the one I trained with the day before.</p>
     <p>It's been the most enjoyable side quest I've done in years. Designer into Claude into designer into code into database — and the thing at the end of it is something I actually <strong>open every morning</strong>.</p>
+    <img class="mobile-only-img" src="assets/reps/three.webp" alt="Reps app — progress view" loading="lazy" />
   </div>
 </section>
 
@@ -395,7 +410,7 @@ img,svg{display:block;max-width:100%}
 
 <section class="outcomes">
   <div class="outcome">
-    <span class="outcome__num">1<em>×</em></span>
+    <span class="outcome__num">1</span>
     <span class="outcome__lab">Daily user — me. Every session, every day.</span>
   </div>
   <div class="outcome">
@@ -409,9 +424,15 @@ img,svg{display:block;max-width:100%}
 </section>
 
 <section class="next">
-  <p class="next__eyebrow">Next project</p>
+  <p class="next__eyebrow">Previous project</p>
   <h2 class="next__title">The Skate <em>Farm.</em></h2>
-  <a class="next__cta" href="skatefarm.html">View case study →</a>
+  <a class="next__cta" href="skatefarm.html">← View case study</a>
+</section>
+
+<section class="next" style="border-top:none;padding-top:calc(clamp(4rem,8vw,7rem) - 30px)">
+  <p class="next__eyebrow">Next project</p>
+  <h2 class="next__title">Jaguar Land <em>Rover.</em></h2>
+  <a class="next__cta" href="jlr.html">View case study →</a>
 </section>
 
 <footer class="foot">
@@ -446,6 +467,24 @@ img,svg{display:block;max-width:100%}
     if (!ticking) { requestAnimationFrame(updateNav); ticking = true; }
   }, { passive: true });
   updateNav();
+})();
+
+(() => {
+  const targets = document.querySelectorAll(".case__bleed:not(.case__bleed--top), .case__body, .case__hero, .case__gallery, .outcomes, .next");
+  targets.forEach(el => el.classList.add("reveal"));
+  if (!("IntersectionObserver" in window)) {
+    targets.forEach(el => el.classList.add("is-in"));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add("is-in");
+        io.unobserve(e.target);
+      }
+    }
+  }, { rootMargin: "0px 0px -10% 0px", threshold: 0.08 });
+  targets.forEach(el => io.observe(el));
 })();
 </script>
 
