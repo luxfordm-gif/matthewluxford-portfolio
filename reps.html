@@ -247,6 +247,32 @@ img,svg{display:block;max-width:100%}
 }
 .next a.next__cta:hover{transform:translateY(-2px)}
 
+/* full-bleed image break */
+.case__bleed{
+  margin:clamp(5rem,9vw,7rem) 0 0;
+  padding:0 var(--pad);
+}
+.case__bleed--top{margin-top:0}
+.case__bleed img{
+  width:100%;max-width:1600px;margin:0 auto;display:block;
+  border-radius:clamp(16px,2vw,28px);
+  box-shadow:0 40px 80px -40px rgba(0,0,0,.25);
+}
+
+/* 2-up gallery */
+.case__gallery{
+  max-width:1400px;margin:clamp(5rem,9vw,7rem) auto 0;
+  padding:0 var(--pad);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(1rem,2.5vw,2rem);
+}
+.case__gallery img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  border-radius:clamp(16px,2vw,24px);
+  box-shadow:0 30px 60px -35px rgba(0,0,0,.22);
+}
+@media (max-width:760px){.case__gallery{grid-template-columns:1fr}}
+
 .foot{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:1400px;margin:0 auto}
 .foot__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
 </style>
@@ -281,10 +307,22 @@ img,svg{display:block;max-width:100%}
   </div>
 </header>
 
-<section class="case__hero">
+<figure class="case__bleed case__bleed--top">
+  <img src="assets/Reps/wide.png" alt="Reps app — workout view and progress screens" loading="lazy" />
+</figure>
+
+<section class="case__body">
+  <h2>The <em>backbone.</em></h2>
+  <div class="case__body__copy">
+    <p>The gym's been my thing for a long time. Properly into it — <em>bodybuilding</em> for years, half-marathons in between, rugby at a decent league level, plenty of road cycling more recently. When the kids came along I doubled down. The point wasn't the medals or the PBs. It was being the kind of dad who <strong>shows up to the thing he says is important</strong>.</p>
+    <p>The gym is the one I'll always make time for. Four years of working with a personal coach, on and off. And in those four years, the <em>one thing</em> that's never stopped grinding on me is the <strong>tooling.</strong></p>
+  </div>
+</section>
+
+<section class="case__hero" style="margin-top:clamp(5rem,9vw,7rem)">
   <div class="case__hero-grid">
     <div>
-      <h2>Designed it. <em>Built it.</em> Train with it.</h2>
+      <h2>Designed it. <em>Built it.</em><br />Train with it.</h2>
       <p>No brief. No client. Just the app I always wished existed — built around how I actually train, not how someone in a strategy deck thinks people train.</p>
     </div>
     <div class="case__hero-stats">
@@ -301,14 +339,6 @@ img,svg{display:block;max-width:100%}
         <div class="hero-stat__lab">Voice note → Claude → ship. Repeat.</div>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="case__body">
-  <h2>The <em>backbone.</em></h2>
-  <div class="case__body__copy">
-    <p>The gym's been my thing for a long time. Properly into it — <em>bodybuilding</em> for years, half-marathons in between, rugby at a decent league level, plenty of road cycling more recently. When the kids came along I doubled down. The point wasn't the medals or the PBs. It was being the kind of dad who <strong>shows up to the thing he says is important</strong>.</p>
-    <p>The gym is the one I'll always make time for. Four years of working with a personal coach, on and off. And in those four years, the <em>one thing</em> that's never stopped grinding on me is the <strong>tooling.</strong></p>
   </div>
 </section>
 
@@ -339,6 +369,11 @@ img,svg{display:block;max-width:100%}
   </div>
 </section>
 
+<div class="case__gallery">
+  <img src="assets/Reps/two.png" alt="Reps app — exercise detail" loading="lazy" />
+  <img src="assets/Reps/three.png" alt="Reps app — progress view" loading="lazy" />
+</div>
+
 <section class="case__body">
   <h2>How I <em>build it.</em></h2>
   <div class="case__body__copy">
@@ -348,6 +383,11 @@ img,svg{display:block;max-width:100%}
     <p>It's been the most enjoyable side quest I've done in years. Designer into Claude into designer into code into database — and the thing at the end of it is something I actually <strong>open every morning</strong>.</p>
   </div>
 </section>
+
+<div class="case__gallery">
+  <img src="assets/Reps/two.png" alt="Reps app — exercise detail" loading="lazy" />
+  <img src="assets/Reps/three.png" alt="Reps app — progress view" loading="lazy" />
+</div>
 
 <section class="case__body">
   <h2>Where it's <em>going.</em></h2>
