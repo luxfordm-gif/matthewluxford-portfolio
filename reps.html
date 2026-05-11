@@ -196,11 +196,11 @@ img,svg{display:block;max-width:100%}
   font-size:clamp(1.05rem,1rem + .35vw,1.2rem);
   color:var(--ink-2);line-height:1.7;max-width:62ch;
 }
-@media (min-width:881px){.case__body__copy{line-height:29px}}
 .case__body__copy p{margin:0}
 .case__body__copy strong{color:var(--ink);font-weight:600}
 .case__body__copy em{font-family:var(--serif);font-style:italic}
 .case__body__copy ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:calc(.65rem - 2px)}
+@media (min-width:881px){.case__body__copy{line-height:29px}.case__body__copy ul{gap:calc(.65rem - 6px)}}
 .case__body__copy ul li{padding-left:1em;position:relative}
 .case__body__copy ul li::before{content:"·";position:absolute;left:0;color:var(--accent);font-weight:800}
 @media (max-width:880px){.case__body{grid-template-columns:1fr}}
@@ -328,8 +328,8 @@ img,svg{display:block;max-width:100%}
 <section class="case__body">
   <h2>The <em>backbone.</em></h2>
   <div class="case__body__copy">
-    <p>The gym's been my thing for a long time. Properly into it — <em>bodybuilding</em> for years, half-marathons in between, rugby at a decent league level, plenty of road cycling more recently. When the kids came along I doubled down. The point wasn't the medals or the PBs. It was being the kind of dad who <strong>shows up to the thing he says is important</strong>.</p>
-    <p>The gym is the one I'll always make time for. Four years of working with a personal coach, on and off. And in those four years, the <em>one thing</em> that's never stopped grinding on me is the <strong>tooling.</strong></p>
+    <p>Training's part of my routine. I work with a personal trainer, and over four years we've built a solid programme. It's the consistency thing — <strong>showing up matters</strong>, tracking what works matters.</p>
+    <p>What's always annoyed me is the <strong>tooling</strong>. A PDF plan lands, it goes into a Google Doc, and every session becomes a manual spreadsheet job. Four years of that, and it finally got to me enough to <em>fix it</em>.</p>
   </div>
 </section>
 
@@ -350,18 +350,16 @@ img,svg{display:block;max-width:100%}
       </div>
       <div class="hero-stat">
         <div class="hero-stat__num">Built with <em>AI.</em></div>
-        <div class="hero-stat__lab">Voice note → Claude → ship. Repeat.</div>
+        <div class="hero-stat__lab">Voice note → Claude → Ship. Repeat.</div>
       </div>
     </div>
   </div>
 </section>
 
 <section class="case__body">
-  <h2>The <em>annoyance.</em></h2>
+  <h2>The <em>problem.</em></h2>
   <div class="case__body__copy">
-    <p>Every block of training starts the same way. <strong>A PDF lands in my inbox.</strong> Then the dance begins.</p>
-    <p>Copy the PDF into a Google Doc. Tidy the columns. Add a date row. Each session, scroll back to last week, copy the column, paste it across, change the number. Forget to update the date. Misalign a row. Lose track of which set you're on. Try to spot progress on a screen the size of a beer mat.</p>
-    <p>Every <strong>two or three months</strong> a new plan comes in. The whole thing starts over.</p>
+    <p>Every training block starts the same way: <strong>a PDF plan lands</strong>. Then it becomes a manual process. Copy it to a Google Doc, tidy the columns, add dates, then repeat that each session — scroll back, copy, paste, update numbers. Every few months a new plan arrives and you start over. The whole thing feels <em>broken</em>.</p>
     <p>AI has made bits of it easier. It still wasn't <em>good</em>.</p>
   </div>
 </section>
@@ -371,15 +369,16 @@ img,svg{display:block;max-width:100%}
   <div class="case__body__copy">
     <p>A web app. Lives on my phone like a native one — saved to the home screen, opens in a tap. New plan arrives, I upload the <strong>PDF or CSV</strong>, and the app reads it, splits it into days, and lays the week out properly.</p>
     <p>Then it gets out of the way.</p>
-    <p>I've spent enough years inside gym apps to know what I don't want from one. Most of them feel like they were built by someone who's <em>never</em> actually trained. Too rigid. No drop sets without three taps and a menu. Supersets buried. You can't just <strong>do the workout</strong>.</p>
+    <p>I've spent enough years inside gym apps to know what I don't want from one. Most of them feel like they were built by someone who's <em>never</em> actually used them. Too rigid. No drop sets without three taps and a menu. Supersets buried. You can't just <strong>do the workout</strong>.</p>
     <p>So I built every flexibility I've ever missed:</p>
     <ul>
       <li><strong>Drop sets, supersets, rest-pause</strong> — first-class, not workarounds</li>
-      <li><strong>Edit anything mid-set</strong> — reps, weight, swap an exercise, add one in</li>
+      <li><strong>Edit anything mid-session</strong> — reps, weight, swap an exercise, add one in</li>
       <li><strong>Last-week glance</strong> — the number you're chasing, right there on the row</li>
-      <li><strong>Big numbers, one thumb</strong> — readable mid-set, sweaty hands and all</li>
+      <li><strong>Big numbers, one tap</strong> — readable mid-session, no squinting required</li>
+      <li><strong>Plate stacking</strong> — tap each plate as you load it, see the total weight stack up in real time. No math, no coffee needed.</li>
     </ul>
-    <p>It's an app built by someone who actually goes to the gym. <em>Imagine that.</em></p>
+    <p>It's an app built by someone who actually uses it. <em>Imagine that.</em></p>
   </div>
 </section>
 
@@ -391,10 +390,10 @@ img,svg{display:block;max-width:100%}
 <section class="case__body">
   <h2>How I <em>build it.</em></h2>
   <div class="case__body__copy">
-    <p>In the gym, I take voice notes between sets. What's working. What's annoying me. What's broken. Sometimes a half-formed feature, sometimes <em>"why is this button so small."</em></p>
-    <p>Get home, day job kicks in. In the gaps, I export the notes into <strong>Claude</strong>, hand it the running list, and let it work through fixes while I'm on calls. Design in Figma, design back, into Claude Code, wire it into <strong>Supabase</strong>, make sure the SQL holds up.</p>
-    <p>The loop's tight: <em>train, note, ship, train again</em>. Most days the app I train with at 6am is a bit better than the one I trained with the day before.</p>
-    <p>It's been the most enjoyable side quest I've done in years. Designer into Claude into designer into code into database — and the thing at the end of it is something I actually <strong>open every morning</strong>.</p>
+    <p>Between sessions, I take voice notes. What's working. What's annoying me. What's broken. Sometimes a half-formed feature, sometimes <em>"why is this button so small."</em></p>
+    <p>In the gaps during the day, I export the notes into <strong>Claude</strong>, hand it the running list, and let it work through fixes. Design in Figma, review it back, into Claude Code, wire it into <strong>Supabase</strong>, make sure the SQL holds up.</p>
+    <p>The loop's tight: <em>train, note, ship, train again</em>. Most days the app I use is a bit better than the one I used the day before.</p>
+    <p>It's been the most enjoyable side project I've done in years. Designer into Claude into designer into code into database — and the thing at the end of it is something I actually <strong>open every morning</strong>.</p>
     <img class="mobile-only-img" src="assets/reps/three.webp" alt="Reps app — progress view" loading="lazy" />
   </div>
 </section>
@@ -403,7 +402,7 @@ img,svg{display:block;max-width:100%}
   <h2>Where it's <em>going.</em></h2>
   <div class="case__body__copy">
     <p>Right now it's mine. Works for me, fits how I train, solves the thing that's been annoying me for years.</p>
-    <p>The plan is to <strong>open it up</strong>. Build a proper site around it. A free tier that covers the basics — log a workout, track a plan, see your progress. A paid tier (subscription or one-off) for the advanced stuff: PDF/CSV import, custom set structures, longer-term progress views, anything else my voice notes keep flagging.</p>
+    <p>The plan is to <strong>open it up</strong>. Build a proper site around it. A free tier that covers the basics — log a session, track a plan, see your progress. A paid tier (subscription or one-off) for the advanced stuff: PDF/CSV import, custom set structures, longer-term progress views, anything else my voice notes keep flagging.</p>
     <p>No timeline. No pressure. It earns its keep the second I open it each morning — anything beyond that is upside.</p>
   </div>
 </section>
@@ -411,7 +410,7 @@ img,svg{display:block;max-width:100%}
 <section class="outcomes">
   <div class="outcome">
     <span class="outcome__num">1</span>
-    <span class="outcome__lab">Daily user — me. Every session, every day.</span>
+    <span class="outcome__lab">Daily user — me. Every session.</span>
   </div>
   <div class="outcome">
     <span class="outcome__num">0</span>
