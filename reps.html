@@ -203,6 +203,13 @@ img,svg{display:block;max-width:100%}
 @media (min-width:881px){.case__body__copy{line-height:29px}.case__body__copy ul{gap:calc(.65rem - 6px)}}
 .case__body__copy ul li{padding-left:1em;position:relative}
 .case__body__copy ul li::before{content:"·";position:absolute;left:0;color:var(--accent);font-weight:800}
+.case__body__copy .case__sub{
+  margin-top:2.6rem;margin-bottom:-1.1rem;
+  font-size:clamp(1.1rem,1rem + .4vw,1.28rem);
+  letter-spacing:-.01em;
+  color:var(--ink);font-weight:700;
+}
+.case__body__copy .case__sub:first-child{margin-top:-.4rem}
 @media (max-width:880px){.case__body{grid-template-columns:1fr}}
 
 /* outcomes */
@@ -390,10 +397,16 @@ img,svg{display:block;max-width:100%}
 <section class="case__body">
   <h2>How I <em>build it.</em></h2>
   <div class="case__body__copy">
-    <p>Between sessions, I take voice notes. What's working. What's annoying me. What's broken. Sometimes a half-formed feature, sometimes <em>"why is this button so small."</em></p>
-    <p>In the gaps during the day, I export the notes into <strong>Claude</strong>, hand it the running list, and let it work through fixes. Design in Figma, review it back, into Claude Code, wire it into <strong>Supabase</strong>, make sure the SQL holds up.</p>
-    <p>The loop's tight: <em>train, note, ship, train again</em>. Most days the app I use is a bit better than the one I used the day before.</p>
-    <p>It's been the most enjoyable side project I've done in years. Designer into Claude into designer into code into database — and the thing at the end of it is something I actually <strong>open every morning</strong>.</p>
+    <p class="case__sub">The feedback loop</p>
+    <p>While using the app daily, I capture what needs fixing. What's clunky. What's missing. Sometimes a feature request, sometimes <em>"this interaction feels wrong."</em></p>
+    <p>I dump those notes into <strong>Claude Plan</strong>, let it map out the solution strategy. If it's a backend fix or logic problem, Claude executes it directly into <strong>Claude Code</strong> → <strong>GitHub</strong> → <strong>Supabase</strong> → ship. Done the same day.</p>
+    <p class="case__sub">When design is needed</p>
+    <p>If it's a visual or interaction problem, I sketch a quick wireframe in <strong>Figma</strong>, throw it into <strong>ChatGPT</strong> image generation to explore options, then export that output at the correct artboard size into <strong>Claude Code</strong> as a starting point.</p>
+    <p>Once the working prototype is solid, I export custom PNGs at production size — glossy barbells, shiny plates with actual depth and shine — things that elevate it from <em>"quick dirty rectangles with semi-rounded corners"</em> to <em>"actually polished."</em></p>
+    <p class="case__sub">The speed</p>
+    <p>Most iterations ship the same day. Some don't need design at all. Some are just code fixes. Some need the full flow from wireframe → generated image → prototype → assets. The right tool for the right job, every time.</p>
+    <!-- TODO: insert before/after screenshots here -->
+    <p>It's been a solid learning experience on the backend side too — <strong>GitHub</strong> workflows and <strong>Supabase</strong> especially have leveled up how I think about data and infrastructure.</p>
     <img class="mobile-only-img" src="assets/reps/three.webp" alt="Reps app — progress view" loading="lazy" />
   </div>
 </section>
