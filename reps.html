@@ -210,6 +210,27 @@ img,svg{display:block;max-width:100%}
   color:var(--ink);font-weight:700;
 }
 .case__body__copy .case__sub:first-child{margin-top:-.4rem}
+
+.case__quote{
+  max-width:1400px;margin:0 auto;
+  padding:clamp(4rem,7vw,6rem) var(--pad) clamp(1rem,2vw,2rem);
+  display:grid;grid-template-columns:1fr 2fr;
+  gap:clamp(2rem,5vw,5rem);
+}
+.case__quote__inner{grid-column:2;max-width:62ch}
+.case__quote p{
+  margin:0;
+  padding:clamp(3rem,5vw,4rem) 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  font-family:var(--serif);font-style:italic;font-weight:300;
+  font-size:clamp(1.5rem,1.1rem + 1.6vw,2.4rem);
+  line-height:1.25;letter-spacing:-.015em;color:var(--ink);
+}
+@media (max-width:880px){
+  .case__quote{grid-template-columns:1fr}
+  .case__quote__inner{grid-column:1}
+}
 @media (max-width:880px){.case__body{grid-template-columns:1fr}}
 
 /* outcomes */
@@ -368,6 +389,12 @@ img,svg{display:block;max-width:100%}
   <div class="case__body__copy">
     <p>Every training block starts the same way: <strong>a PDF plan lands</strong>. Then it becomes a manual process. Copy it to a Google Doc, tidy the columns, add dates, then repeat that each session — scroll back, copy, paste, update numbers. Every few months a new plan arrives and you start over. The whole thing feels <em>broken</em>.</p>
     <p>AI has made bits of it easier. It still wasn't <em>good</em>.</p>
+  </div>
+</section>
+
+<section class="case__quote">
+  <div class="case__quote__inner">
+    <p>"I'm not trying to invent the wheel. I'm trying to make a better wheel."</p>
   </div>
 </section>
 
