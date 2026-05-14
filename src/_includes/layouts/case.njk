@@ -89,6 +89,32 @@ img,svg{display:block;max-width:100%}
 @media (min-width:760px){
   .case__head{margin-bottom:clamp(32px,5.8vw,72px)}
 }
+
+/* head variant — split: title sits big on top, lead + meta line up underneath in 4 columns */
+.case__head--split{
+  grid-template-columns:1fr;
+  gap:clamp(3rem,7vw,7rem);
+}
+.case__head--split .case__title{
+  font-size:clamp(3.5rem,2rem + 9vw,11rem);
+  letter-spacing:-.05em;line-height:.92;
+  max-width:10ch;
+}
+.case__head--split .case__intro{
+  display:grid;
+  grid-template-columns:1.6fr 1fr 1fr 1.2fr;
+  gap:clamp(1.5rem,3vw,3rem);
+  align-items:end;
+}
+.case__head--split .case__lead{
+  max-width:42ch;margin:0;
+}
+.case__head--split .case__meta{display:contents}
+@media (max-width:880px){
+  .case__head--split .case__intro{grid-template-columns:1fr;align-items:start;gap:1.5rem}
+  .case__head--split .case__title{max-width:none;font-size:clamp(3rem,2rem + 7vw,9rem)}
+}
+
 .case__title{
   font-family:var(--sans);font-weight:700;
   font-size:clamp(3rem,2rem + 7vw,9rem);
@@ -608,7 +634,7 @@ img,svg{display:block;max-width:100%}
   <a href="index.html#work">← Back to work</a>
 </nav>
 
-<header class="case__head">
+<header class="case__head{% if headVariant %} case__head--{{ headVariant }}{% endif %}">
   <h1 class="case__title">{{ caseTitle | safe }}</h1>
   <div class="case__intro">
     {%- if caseAward %}
