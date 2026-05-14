@@ -90,7 +90,7 @@ img,svg{display:block;max-width:100%}
   transition:transform .25s var(--ease);
 }
 .nav__cta:hover{transform:translateY(-2px)}
-@media (max-width:760px){.nav__links{display:none}.nav__brand{font-size:1.21rem}}
+@media (max-width:760px){.nav__links{display:none}}
 
 .back{
   position:relative;z-index:5;
@@ -388,9 +388,11 @@ img,svg{display:block;max-width:100%}
 }
 .next a.next__cta:hover{transform:translateY(-2px)}
 
-.foot{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:1400px;margin:0 auto}
-.foot__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
-@media (max-width:760px){.foot__bottom{justify-content:center;text-align:center;gap:.25rem}}
+/* @shared: terms-footer */
+.terms-footer{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:1400px;margin:0 auto}
+.terms-footer__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
+@media (max-width:760px){.terms-footer__bottom{justify-content:center;text-align:center;gap:.25rem}}
+/* @end-shared */
 
 /* mobile rhythm — editorial spacing */
 @media (max-width:760px){
@@ -404,7 +406,7 @@ img,svg{display:block;max-width:100%}
 </head>
 <body>
 
-<header class="nav">
+<header class="nav" id="top">
   <a class="nav__brand" href="index.html">matthew.</a>
   <div class="nav__right">
     <nav class="nav__links" aria-label="Primary">
@@ -726,10 +728,10 @@ img,svg{display:block;max-width:100%}
   <a class="next__cta" href="reps.html">View case study →</a>
 </section>
 
-<footer class="foot">
-  <div class="foot__bottom">
+<footer class="terms-footer">
+  <div class="terms-footer__bottom">
     <span>© 2026 Matthew Luxford</span>
-    <span><a href="index.html">↑ Top of site</a></span>
+    <span><a href="#top">↑ Top of page</a></span>
   </div>
 </footer>
 

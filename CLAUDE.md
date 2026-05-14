@@ -77,7 +77,11 @@ node scripts/check-shared-css.js          # report drift
 node scripts/check-shared-css.js --fix    # copy the first (alphabetical) file's version everywhere
 ```
 
-Currently wrapped: `secret-footer` (in `index.html`, `cv.html`). Extend by wrapping more blocks the same way — the script auto-picks them up.
+Currently wrapped:
+- `secret-footer` — in `index.html`, `cv.html`
+- `terms-footer` — the small © + back-to-top footer across all 5 case studies (`jlr.html`, `lifecake.html`, `collective.html`, `skatefarm.html`, `reps.html`)
+
+Extend by wrapping more blocks the same way — the script auto-picks them up.
 
 ## Deploys
 

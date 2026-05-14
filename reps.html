@@ -304,8 +304,11 @@ img,svg{display:block;max-width:100%}
   .case__gallery{grid-template-columns:1fr}
   .case__gallery img:nth-child(2){display:none}
 }
-.foot{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:1400px;margin:0 auto}
-.foot__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
+/* @shared: terms-footer */
+.terms-footer{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:1400px;margin:0 auto}
+.terms-footer__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
+@media (max-width:760px){.terms-footer__bottom{justify-content:center;text-align:center;gap:.25rem}}
+/* @end-shared */
 
 /* mobile rhythm — editorial spacing */
 @media (max-width:760px){
@@ -320,7 +323,7 @@ img,svg{display:block;max-width:100%}
 </head>
 <body>
 
-<header class="nav">
+<header class="nav" id="top">
   <a class="nav__brand" href="index.html">matthew.</a>
   <div class="nav__right">
     <nav class="nav__links" aria-label="Primary">
@@ -465,10 +468,10 @@ img,svg{display:block;max-width:100%}
   <a class="next__cta" href="jlr.html">View case study →</a>
 </section>
 
-<footer class="foot">
-  <div class="foot__bottom">
+<footer class="terms-footer">
+  <div class="terms-footer__bottom">
     <span>© 2026 Matthew Luxford</span>
-    <span><a href="index.html">↑ Top of site</a></span>
+    <span><a href="#top">↑ Top of page</a></span>
   </div>
 </footer>
 
