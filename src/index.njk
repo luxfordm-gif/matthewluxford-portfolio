@@ -243,9 +243,11 @@ p,li{text-wrap:pretty}
   padding:0;overflow:hidden;
   background-color:#0a0a0a;
   background-image:
-    linear-gradient(180deg, rgba(10,10,10,0) 30%, rgba(10,10,10,.88) 100%),
+    linear-gradient(180deg, rgba(10,10,10,0) 38%, rgba(10,10,10,.55) 65%, rgba(10,10,10,.95) 100%),
     url("assets/masterclass-hero.jpg");
-  background-size:cover;background-position:center top;
+  background-size:100% 100%, auto 122%;
+  background-position:0 0, center 28%;
+  background-repeat:no-repeat;
 }
 .fcard--2 .mc-eyebrow{
   position:absolute;top:11px;left:11px;
@@ -413,7 +415,8 @@ p,li{text-wrap:pretty}
     justify-content:flex-start;
     padding-top:clamp(8rem, 22vh, 14rem);
   }
-  .fan{padding:0 10px}
+  /* +28px breathing room between the title and the stacked cards */
+  .fan{padding:0 10px;margin-top:calc(clamp(2rem,4vw,3rem) + 28px)}
   .fan__inner{
     transform:none;
     width:218px;
@@ -429,7 +432,6 @@ p,li{text-wrap:pretty}
     margin-left:-79px;top:80px;
     --r:5deg;--stack-tx:-30px;--stack-ty:90px;--stack-r:3deg;
   }
-  .fcard--2 .mc-body{justify-content:flex-start;padding-top:50px}
   .fcard--5{
     margin-left:-109px;top:170px;
     --r:-2deg;--stack-tx:0;--stack-ty:0;--stack-r:-1deg;
