@@ -404,11 +404,14 @@ p,li{text-wrap:pretty}
    then fans up/down to its final position. */
 @media (max-width:640px){
   /* anchor hero to the top so the taller fan doesn't shove the title
-     off-screen — title stays where it was, fan flows below the fold. */
+     off-screen — title stays where it was, fan flows below the fold.
+     padding-top is sized in vh to roughly match the old vertically-
+     centred title position; cards can extend past the viewport and
+     the user scrolls to reach them. */
   .hero{
     min-height:auto;
     justify-content:flex-start;
-    padding-top:clamp(6.5rem, 14vw, 9rem);
+    padding-top:clamp(8rem, 22vh, 14rem);
   }
   .fan{padding:0 10px}
   .fan__inner{
