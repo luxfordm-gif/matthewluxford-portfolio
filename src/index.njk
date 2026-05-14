@@ -431,32 +431,28 @@ p,li{text-wrap:pretty}
   scroll-snap-type:x mandatory;
   scroll-padding-left:var(--pad);
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;scrollbar-color:var(--dot) transparent;
+  scrollbar-width:none;
 }
-.work__rail::-webkit-scrollbar{height:6px}
-.work__rail::-webkit-scrollbar-thumb{background:var(--dot);border-radius:999px}
+.work__rail::-webkit-scrollbar{display:none}
 
 .proj{
   scroll-snap-align:start;display:flex;flex-direction:column;gap:1rem;
   text-decoration:none;color:inherit;
 }
 
-/* pagination dots under the work rail (mobile) */
-.work__dots{display:none}
-@media (max-width:760px){
-  .work__dots{
-    display:flex;justify-content:center;gap:8px;
-    padding:0 var(--pad) clamp(2rem,5vw,3rem);
-  }
-  .work__dot{
-    width:7px;height:7px;border-radius:50%;
-    background:var(--dot);border:0;padding:0;cursor:pointer;
-    transition:background .3s var(--ease), transform .3s var(--ease), width .3s var(--ease);
-  }
-  .work__dot.is-active{
-    background:var(--ink);
-    width:22px;border-radius:999px;
-  }
+/* pagination dots under the work rail */
+.work__dots{
+  display:flex;justify-content:center;gap:8px;
+  padding:0 var(--pad) clamp(2rem,5vw,3rem);
+}
+.work__dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--dot);border:0;padding:0;cursor:pointer;
+  transition:background .3s var(--ease), transform .3s var(--ease), width .3s var(--ease);
+}
+.work__dot.is-active{
+  background:var(--ink);
+  width:22px;border-radius:999px;
 }
 
 /* ===== Apple-style snap carousel on mobile ===== */
@@ -471,8 +467,6 @@ p,li{text-wrap:pretty}
     scroll-behavior:smooth;
     overscroll-behavior-x:contain;
   }
-  .work__rail::-webkit-scrollbar{display:none}
-  .work__rail{scrollbar-width:none}
   .proj{
     scroll-snap-align:center;
     scroll-snap-stop:always;
@@ -1474,27 +1468,6 @@ p,li{text-wrap:pretty}
 
     <div class="work__rail" tabindex="0" aria-label="Work case studies">
 
-      <a class="proj is-soon" href="#" aria-disabled="true">
-        <div class="proj__media proj__media--05">
-          <span class="proj__badge">Coming soon</span>
-          <span class="proj__logo" style="background:#fff;color:#7132E4">K</span>
-          <div class="laptop">
-            <div class="laptop__screen">
-              <div class="mock-bar"><i></i><i></i><i></i></div>
-              <div class="mock-line d"></div>
-              <div class="mock-grid"><span style="background:#ede9fe"></span><span></span><span style="background:#c4b5fd"></span><span></span></div>
-              <div class="mock-line"></div>
-              <div class="mock-line s"></div>
-            </div>
-          </div>
-        </div>
-        <div class="proj__caption">
-          <h3 class="proj__name">Kraken <em>— crypto exchange</em></h3>
-          <span class="proj__year">2024 – Present</span>
-        </div>
-        <div class="proj__crumb">Logged-out web for the global crypto exchange.</div>
-      </a>
-
       <a class="proj is-soon" href="reps.html">
         <div class="proj__media proj__media--07" style="background:#f6f5f0">
           <span class="proj__badge proj__badge--side">Side project</span>
@@ -1532,25 +1505,25 @@ p,li{text-wrap:pretty}
         <div class="proj__crumb">Scrappy MVP. 100+ pages, 22k Google clicks.</div>
       </a>
 
-      <a class="proj is-soon" href="jlr.html">
-        <div class="proj__media proj__media--01">
+      <a class="proj is-soon" href="#" aria-disabled="true">
+        <div class="proj__media proj__media--05">
           <span class="proj__badge">Coming soon</span>
-          <span class="proj__logo">JLR</span>
+          <span class="proj__logo" style="background:#fff;color:#7132E4">K</span>
           <div class="laptop">
             <div class="laptop__screen">
               <div class="mock-bar"><i></i><i></i><i></i></div>
               <div class="mock-line d"></div>
-              <div class="mock-grid"><span></span><span></span><span></span><span></span></div>
+              <div class="mock-grid"><span style="background:#ede9fe"></span><span></span><span style="background:#c4b5fd"></span><span></span></div>
               <div class="mock-line"></div>
               <div class="mock-line s"></div>
             </div>
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">Jaguar Land Rover <em>— web &amp; design system</em></h3>
-          <span class="proj__year">2017 – 2024</span>
+          <h3 class="proj__name">Kraken <em>— crypto exchange</em></h3>
+          <span class="proj__year">2024 – Present</span>
         </div>
-        <div class="proj__crumb">Ground-up rebuild across 27 markets and two brands.</div>
+        <div class="proj__crumb">Logged-out web for the global crypto exchange.</div>
       </a>
 
       <a class="proj is-soon" href="#" aria-disabled="true">
@@ -1572,6 +1545,26 @@ p,li{text-wrap:pretty}
           <span class="proj__year">2021 – 2022</span>
         </div>
         <div class="proj__crumb">End-to-end design for the women's-health DTC.</div>
+      </a>
+
+      <a class="proj is-soon" href="collective.html">
+        <div class="proj__media proj__media--04">
+          <span class="proj__badge">Coming soon</span>
+          <span class="proj__logo" style="background:#fff;color:#1e293b">TC</span>
+          <div class="laptop">
+            <div class="laptop__screen">
+              <div class="mock-bar"><i></i><i></i><i></i></div>
+              <div style="flex:1;border-radius:6px;background:linear-gradient(135deg,#fde68a 0 50%,#1e293b 50%)"></div>
+              <div class="mock-line"></div>
+              <div class="mock-line s"></div>
+            </div>
+          </div>
+        </div>
+        <div class="proj__caption">
+          <h3 class="proj__name">The Collective <em>— editorial</em></h3>
+          <span class="proj__year">2020 – 2021</span>
+        </div>
+        <div class="proj__crumb">Booking flow rebuild. 500% lift in enquiries, month one.</div>
       </a>
 
       <a class="proj is-soon" href="lifecake.html">
@@ -1597,26 +1590,26 @@ p,li{text-wrap:pretty}
         <div class="proj__crumb">Brand and product overhaul. 3.4M users.</div>
       </a>
 
-      <a class="proj is-soon" href="collective.html">
-        <div class="proj__media proj__media--04">
+      <a class="proj is-soon" href="jlr.html">
+        <div class="proj__media proj__media--01">
           <span class="proj__badge">Coming soon</span>
-          <span class="proj__logo" style="background:#fff;color:#1e293b">TC</span>
+          <span class="proj__logo">JLR</span>
           <div class="laptop">
             <div class="laptop__screen">
               <div class="mock-bar"><i></i><i></i><i></i></div>
-              <div style="flex:1;border-radius:6px;background:linear-gradient(135deg,#fde68a 0 50%,#1e293b 50%)"></div>
+              <div class="mock-line d"></div>
+              <div class="mock-grid"><span></span><span></span><span></span><span></span></div>
               <div class="mock-line"></div>
               <div class="mock-line s"></div>
             </div>
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">The Collective <em>— editorial</em></h3>
-          <span class="proj__year">2020 – 2021</span>
+          <h3 class="proj__name">JLR <em>— web &amp; design system</em></h3>
+          <span class="proj__year">2017 – 2024</span>
         </div>
-        <div class="proj__crumb">Booking flow rebuild. 500% lift in enquiries, month one.</div>
+        <div class="proj__crumb">Ground-up rebuild across 27 markets and two brands.</div>
       </a>
-
     </div>
     <div class="work__dots" aria-hidden="true"></div>
   </section>
