@@ -209,7 +209,18 @@ p,li{text-wrap:pretty}
     transform:rotate(var(--r));
   }
 }
-.fcard:hover{
+@media (hover:hover){
+  .fcard:hover{
+    transform:translateY(-18px) rotate(0deg)!important;
+    box-shadow:0 50px 80px -25px rgba(0,0,0,.35);z-index:10;
+  }
+}
+/* mobile tap-to-pop — same lift as the desktop hover state.
+   JS adds .is-popped on tap and removes it on a second tap or
+   outside-tap. Link cards keep their <a> wrapper; only taps on the
+   designated link target (the masterclass pill, the AC/DC vinyl)
+   follow the link. */
+.fcard.is-popped{
   transform:translateY(-18px) rotate(0deg)!important;
   box-shadow:0 50px 80px -25px rgba(0,0,0,.35);z-index:10;
 }
@@ -232,9 +243,11 @@ p,li{text-wrap:pretty}
   padding:0;overflow:hidden;
   background-color:#0a0a0a;
   background-image:
-    linear-gradient(180deg, rgba(10,10,10,0) 30%, rgba(10,10,10,.88) 100%),
+    linear-gradient(180deg, rgba(10,10,10,0) 38%, rgba(10,10,10,.55) 65%, rgba(10,10,10,.95) 100%),
     url("assets/masterclass-hero.jpg");
-  background-size:cover;background-position:center top;
+  background-size:100% 100%, auto 122%;
+  background-position:0 0, center 28%;
+  background-repeat:no-repeat;
 }
 .fcard--2 .mc-eyebrow{
   position:absolute;top:11px;left:11px;
@@ -387,7 +400,52 @@ p,li{text-wrap:pretty}
   font-family:var(--serif);font-style:italic;margin-top:1px;
 }
 @media (max-width:760px){.fan__inner{transform:scale(.85)}}
-@media (max-width:560px){.fan__inner{transform:scale(.7);height:280px}}
+/* mobile: cards animate stacked → spread vertically (not horizontally)
+   so the outermost cards stop clipping off the edge of the viewport.
+   each card converges to (top:170, margin-left:-109) at the 40% keyframe,
+   then fans up/down to its final position. */
+@media (max-width:640px){
+  /* anchor hero to the top so the taller fan doesn't shove the title
+     off-screen — title stays where it was, fan flows below the fold.
+     padding-top is sized in vh to roughly match the old vertically-
+     centred title position; cards can extend past the viewport and
+     the user scrolls to reach them. */
+  .hero{
+    min-height:auto;
+    justify-content:flex-start;
+    padding-top:clamp(8rem, 22vh, 14rem);
+    padding-bottom:clamp(4.5rem, 9vw, 6.5rem);
+  }
+  /* +28px breathing room between the title and the stacked cards */
+  .fan{padding:0 10px;margin-top:calc(clamp(2rem,4vw,3rem) + 28px)}
+  .fan__inner{
+    transform:none;
+    width:218px;
+    height:600px;
+    margin:0 auto;
+  }
+  .fcard{left:50%}
+  .fcard--1{
+    margin-left:-129px;top:0;
+    --r:-7deg;--stack-tx:20px;--stack-ty:170px;--stack-r:-2deg;
+  }
+  .fcard--2{
+    margin-left:-79px;top:80px;
+    --r:5deg;--stack-tx:-30px;--stack-ty:90px;--stack-r:3deg;
+  }
+  .fcard--5{
+    margin-left:-109px;top:170px;
+    --r:-2deg;--stack-tx:0;--stack-ty:0;--stack-r:-1deg;
+  }
+  .fcard--3{
+    margin-left:-139px;top:240px;
+    --r:-5deg;--stack-tx:30px;--stack-ty:-70px;--stack-r:-3deg;
+  }
+  .fcard--4{
+    margin-left:-89px;top:310px;
+    --r:6deg;--stack-tx:-20px;--stack-ty:-140px;--stack-r:4deg;
+  }
+}
 
 /* ========================================================= marquee */
 .marquee{
@@ -2072,6 +2130,40 @@ p,li{text-wrap:pretty}
       clock.textContent = `${h}:${m}:${s} ${ap}`;
     };
     tick(); setInterval(tick, 1000);
+  }
+
+  // Mobile tap-to-pop for the fanned hero cards. On phones (≤640px) the
+  // cards are stacked vertically; tapping a card lifts it above the others
+  // (.is-popped), tapping again — or tapping outside — drops it back.
+  // For the two link cards, only the designated child element follows the
+  // link; taps elsewhere on the card just toggle the pop state.
+  {
+    const mql = window.matchMedia("(max-width:640px)");
+    const cards = [...document.querySelectorAll(".fan .fcard")];
+    if (cards.length) {
+      const linkTarget = (card) => {
+        if (card.classList.contains("fcard--2")) return card.querySelector(".pill");
+        if (card.classList.contains("fcard--5")) return card.querySelector(".mu-disc-wrap");
+        return null;
+      };
+      const reset = () => cards.forEach((c) => c.classList.remove("is-popped"));
+      cards.forEach((card) => {
+        card.addEventListener("click", (e) => {
+          if (!mql.matches) return;
+          const target = linkTarget(card);
+          if (target && target.contains(e.target)) return; // let the link follow
+          e.preventDefault();
+          const wasPopped = card.classList.contains("is-popped");
+          reset();
+          if (!wasPopped) card.classList.add("is-popped");
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!mql.matches) return;
+        if (e.target.closest(".fan .fcard")) return;
+        reset();
+      });
+    }
   }
 
   // GA4: case study card clicks
