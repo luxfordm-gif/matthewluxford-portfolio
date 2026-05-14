@@ -1,39 +1,18 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="google-site-verification" content="DCzH4uKTH2r3OzwjbGHr2sC7gLw07BgiEAJQJjVWf18" />
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QL3LGSTN6Q"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-QL3LGSTN6Q');
-</script>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Matthew Luxford — Senior Web Designer</title>
-<meta name="description" content="Matthew Luxford — senior web designer, design lead and creative director with 18+ years crafting digital products for Jaguar Land Rover, Google, BBC and Netflix." />
-<meta name="theme-color" content="#fafaf7" />
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-<link rel="canonical" href="https://matthewluxford.co.uk/" />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="Matthew Luxford" />
-<meta property="og:locale" content="en_GB" />
-<meta property="og:url" content="https://matthewluxford.co.uk/" />
-<meta property="og:title" content="Matthew Luxford — Senior Web Designer" />
-<meta property="og:description" content="Senior web designer, design lead and creative director with 18+ years crafting digital products for Jaguar Land Rover, Google, BBC and Netflix." />
-<meta property="og:image" content="https://matthewluxford.co.uk/assets/og-image.jpg" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Hire me already! — Matthew Luxford" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Matthew Luxford — Senior Web Designer" />
-<meta name="twitter:description" content="Senior web designer, design lead and creative director with 18+ years crafting digital products for Jaguar Land Rover, Google, BBC and Netflix." />
-<meta name="twitter:image" content="https://matthewluxford.co.uk/assets/og-image.jpg" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800;900&family=Caveat+Brush&display=swap" rel="stylesheet" />
+---
+title: "Matthew Luxford — Senior Web Designer"
+description: "Matthew Luxford — senior web designer, design lead and creative director with 18+ years crafting digital products for Jaguar Land Rover, Google, BBC and Netflix."
+ogDescription: "Senior web designer, design lead and creative director with 18+ years crafting digital products for Jaguar Land Rover, Google, BBC and Netflix."
+canonical: "https://matthewluxford.co.uk/"
+ogType: "website"
+ogImage: "https://matthewluxford.co.uk/assets/og-image.jpg"
+ogImageAlt: "Hire me already! — Matthew Luxford"
+fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800;900&family=Caveat+Brush"
+navBrandHref: "#top"
+navLinkBase: ""
+---
+{% extends "layouts/base.njk" %}
+
+{% block pageStyles %}
 <style>
 :root{
   --bg:#fafaf7;
@@ -1394,24 +1373,14 @@ p,li{text-wrap:pretty}
   .hero__title .ln>span{transform:none}
 }
 </style>
-</head>
-<body>
+{% endblock %}
 
+{% block content %}
 <div class="page">
 
-<header class="nav">
-  <a class="nav__brand" href="#top">matthew.</a>
-  <div class="nav__right">
-    <nav class="nav__links" aria-label="Primary">
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a class="nav__cta" href="cv.html">Resume</a>
-  </div>
-</header>
+{% include "partials/nav.njk" %}
 
-<main id="top">
+<main>
 
   <!-- HERO -->
   <section class="hero">
@@ -1824,53 +1793,11 @@ p,li{text-wrap:pretty}
 
 </main>
 
-<!-- FOOTER (Trusha-style giant wordmark) -->
-<footer class="lux-large-footer" id="contact">
-  <div class="lux-large-footer__top">
-    <div class="lux-large-footer__links">
-      <a href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener">LinkedIn <span class="arr">↗</span></a>
-      <a href="https://instagram.com/grillmaster_of_surrey" target="_blank" rel="noopener">Instagram <span class="arr">↗</span></a>
-      <a href="https://soundcloud.com/mrlux" target="_blank" rel="noopener">SoundCloud <span class="arr">↗</span></a>
-      <a href="mailto:luxfordm@gmail.com" class="email">luxfordm@gmail.com</a>
-    </div>
-    <div class="lux-large-footer__right">
-      <div class="lux-large-footer__sig" aria-label="Matthew Luxford signature">Matthew Luxford</div>
-      <div class="lux-large-footer__status">
-        <span><span class="dot"></span>Open to work</span>
-        <span>Based in Surrey, UK</span>
-        <span id="clock">—</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="lux-large-footer__giant-row">
-    <h2 class="lux-large-footer__giant" aria-hidden="true">luxford.</h2>
-    <img class="lux-large-footer__giant-gif" src="assets/luxford-footer.gif" alt="" loading="lazy" />
-  </div>
-
-  <div class="lux-large-footer__bottom">
-    <span>© 2026 Matthew Luxford</span>
-    <span>Built with HTML, CSS &amp; a sprinkle of JS and <a href="https://claude.com/claude-code" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-decoration-color:rgba(255,255,255,.3);text-underline-offset:3px">Claude Code</a></span>
-  </div>
-</footer>
+{% include "partials/lux-large-footer.njk" %}
 
 </div><!-- /.page -->
 
-<!-- HIDDEN REVEAL FOOTER -->
-<section class="secret-footer" aria-label="Hidden message">
-  <p class="secret-footer__eyebrow">WOAH... YOU REALLY LIKE TO SCROLL<br/>DON'T YOU?</p>
-
-  <h2 class="secret-footer__head">
-    <span class="secret-pill secret-pill--cmon">C'mon</span>
-    <span class="nonit">Hire</span> <em>me</em> <span class="nonit">Already!</span>
-    <span class="secret-pill secret-pill--just">Just</span>
-  </h2>
-
-  <div class="secret-footer__bottom">
-    <a class="secret-footer__cta" href="mailto:luxfordm@gmail.com">Hire me <span class="arr">↗</span></a>
-    <p class="secret-footer__tag">not forcing you btw, you-do-you</p>
-  </div>
-</section>
+{% include "partials/secret-footer.njk" %}
 
 <script>
 (() => {
@@ -2104,5 +2031,4 @@ p,li{text-wrap:pretty}
   });
 })();
 </script>
-</body>
-</html>
+{% endblock %}

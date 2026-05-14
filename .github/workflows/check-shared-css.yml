@@ -1,4 +1,4 @@
-name: Check shared CSS
+name: Build + shared CSS check
 
 on:
   pull_request:
@@ -13,4 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
+      - run: npm ci
       - run: node scripts/check-shared-css.js
+      - run: npm run build

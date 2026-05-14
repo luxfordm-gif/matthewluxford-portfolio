@@ -1,39 +1,17 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="google-site-verification" content="DCzH4uKTH2r3OzwjbGHr2sC7gLw07BgiEAJQJjVWf18" />
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QL3LGSTN6Q"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-QL3LGSTN6Q');
-</script>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>CV — Matthew Luxford</title>
-<meta name="description" content="Curriculum Vitae of Matthew Luxford — senior web designer based in Surrey, UK." />
-<meta name="theme-color" content="#fafaf7" />
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-<link rel="canonical" href="https://matthewluxford.co.uk/cv.html" />
-<meta property="og:type" content="profile" />
-<meta property="og:site_name" content="Matthew Luxford" />
-<meta property="og:locale" content="en_GB" />
-<meta property="og:url" content="https://matthewluxford.co.uk/cv.html" />
-<meta property="og:title" content="CV — Matthew Luxford, Senior Web Designer" />
-<meta property="og:description" content="Curriculum Vitae of Matthew Luxford — senior web designer based in Surrey, UK with 18+ years of experience." />
-<meta property="og:image" content="https://matthewluxford.co.uk/assets/og-image.jpg" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Hire me already! — Matthew Luxford" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="CV — Matthew Luxford, Senior Web Designer" />
-<meta name="twitter:description" content="Curriculum Vitae of Matthew Luxford — senior web designer based in Surrey, UK with 18+ years of experience." />
-<meta name="twitter:image" content="https://matthewluxford.co.uk/assets/og-image.jpg" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+---
+title: "CV — Matthew Luxford"
+description: "Curriculum Vitae of Matthew Luxford — senior web designer based in Surrey, UK."
+ogTitle: "CV — Matthew Luxford, Senior Web Designer"
+ogDescription: "Curriculum Vitae of Matthew Luxford — senior web designer based in Surrey, UK with 18+ years of experience."
+canonical: "https://matthewluxford.co.uk/cv.html"
+ogType: "profile"
+ogImage: "https://matthewluxford.co.uk/assets/og-image.jpg"
+ogImageAlt: "Hire me already! — Matthew Luxford"
+fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800"
+---
+{% extends "layouts/base.njk" %}
+
+{% block pageStyles %}
 <style>
 :root{
   --bg:#fafaf7;
@@ -635,17 +613,12 @@ body.near-secret-footer .cv-download-fade{
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
 }
 </style>
-</head>
-<body>
+{% endblock %}
 
+{% block content %}
 <div class="page">
 
-<a class="nav__close" href="index.html" aria-label="Back to home">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <line x1="18" y1="6" x2="6" y2="18"></line>
-    <line x1="6" y1="6" x2="18" y2="18"></line>
-  </svg>
-</a>
+{% include "partials/nav-cv.njk" %}
 
 <!-- HERO -->
 <section class="cv-hero">
@@ -834,21 +807,7 @@ body.near-secret-footer .cv-download-fade{
   Download CV <span class="arr">↓</span>
 </button>
 
-<!-- HIDDEN REVEAL FOOTER -->
-<section class="secret-footer" aria-label="Hidden message">
-  <p class="secret-footer__eyebrow">WOAH... YOU REALLY LIKE TO SCROLL<br/>DON'T YOU?</p>
-
-  <h2 class="secret-footer__head">
-    <span class="secret-pill secret-pill--cmon">C'mon</span>
-    <span class="nonit">Hire</span> <em>me</em> <span class="nonit">Already!</span>
-    <span class="secret-pill secret-pill--just">Just</span>
-  </h2>
-
-  <div class="secret-footer__bottom">
-    <a class="secret-footer__cta" href="mailto:luxfordm@gmail.com">Hire me <span class="arr">↗</span></a>
-    <p class="secret-footer__tag">not forcing you btw, you-do-you</p>
-  </div>
-</section>
+{% include "partials/secret-footer.njk" %}
 
 <script>
 (() => {
@@ -914,5 +873,4 @@ body.near-secret-footer .cv-download-fade{
   }
 })();
 </script>
-</body>
-</html>
+{% endblock %}
