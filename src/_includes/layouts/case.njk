@@ -91,45 +91,28 @@ img,svg{display:block;max-width:100%}
 }
 
 /* head variant — split:
-   title sits big on top (use <br> in caseTitle to control the wrap);
-   below it: lead on the left (4fr), meta on the right (1fr) with role
-   and scope stacked vertically. Timeline is rendered as a lighter line
-   inside the role dd. Opt-in via headVariant: "split". */
+   title at default size on top (use <br> in caseTitle to control the wrap);
+   lead body copy at default size underneath;
+   then Role | Timeline | Scope in a 3-column row at the bottom.
+   Opt-in via headVariant: "split". */
 .case__head--split{
   grid-template-columns:1fr;
-  gap:clamp(2.5rem,5vw,60px);
+  gap:clamp(1.5rem,3vw,2rem);
 }
 @media (min-width:760px){
   .case__head--split{margin-bottom:clamp(24px,3.5vw,47px)}
 }
-.case__head--split .case__title{
-  font-size:clamp(3.5rem,2rem + 10vw,13rem);
-  letter-spacing:-.05em;line-height:.92;
-}
-.case__head--split .case__intro{
-  display:grid;
-  grid-template-columns:4fr 1fr;
-  gap:clamp(2rem,4vw,4rem);
-  align-items:start;
-}
-.case__head--split .case__lead{
-  max-width:none;margin:0;
-}
+.case__head--split .case__intro{display:contents}
+.case__head--split .case__lead{margin:0}
 .case__head--split .case__meta{
-  display:flex;flex-direction:column;
-  margin-top:0;gap:20px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:clamp(1.5rem,3vw,3rem);
+  margin-top:clamp(1rem,2vw,1.5rem);
 }
-.case__head--split .case__meta > div{grid-column:auto;width:100%;margin:0}
-.case__head--split .case__meta-date{
-  display:block;
-  color:var(--muted);font-weight:500;
-  margin-top:.25rem;
-}
+.case__head--split .case__meta > div:nth-child(3){grid-column:auto}
 @media (max-width:880px){
-  .case__head--split .case__intro{
-    display:flex;flex-direction:column;align-items:flex-start;gap:1.5rem;
-  }
-  .case__head--split .case__title{font-size:clamp(3rem,2rem + 7vw,9rem)}
+  .case__head--split .case__meta{grid-template-columns:1fr;gap:1.25rem;margin-top:1rem}
 }
 
 .case__title{
@@ -661,18 +644,11 @@ img,svg{display:block;max-width:100%}
     </span>
     {%- endif %}
     <p class="case__lead">{{ caseLead | safe }}</p>
-    {%- if headVariant == "split" %}
-    <dl class="case__meta">
-      <div><dt>Role</dt><dd>{{ meta.role | safe }}<span class="case__meta-date">{{ meta.timeline }}</span></dd></div>
-      <div><dt>Scope</dt><dd>{{ meta.scope | safe }}</dd></div>
-    </dl>
-    {%- else %}
     <dl class="case__meta">
       <div><dt>Role</dt><dd>{{ meta.role | safe }}</dd></div>
       <div><dt>Timeline</dt><dd>{{ meta.timeline }}</dd></div>
       <div><dt>Scope</dt><dd>{{ meta.scope | safe }}</dd></div>
     </dl>
-    {%- endif %}
   </div>
 </header>
 
