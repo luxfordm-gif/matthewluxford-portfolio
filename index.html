@@ -92,7 +92,6 @@ p,li{text-wrap:pretty}
   mix-blend-mode:difference;
   color:#fff;
 }
-.nav.is-floating{padding-top:18px}
 .nav.is-pinned{
   background:rgba(250,250,247,.0);
   backdrop-filter:none;
@@ -105,6 +104,7 @@ p,li{text-wrap:pretty}
   border-bottom-color:rgba(20,20,20,.06);
   mix-blend-mode:normal;
   color:var(--ink);
+  padding-top:14px;padding-bottom:14px;
 }
 .nav.is-hidden{transform:translateY(-110%)}
 .nav__brand{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:inherit}
@@ -128,7 +128,6 @@ p,li{text-wrap:pretty}
 .nav__cta:hover{transform:translateY(-2px)}
 @media (max-width:760px){
   .nav__links{display:none}
-  .nav__brand{font-size:1.21rem}
   /* mobile: drop mix-blend-mode (flaky w/ position:fixed on iOS) */
   .nav{
     mix-blend-mode:normal;
@@ -910,30 +909,30 @@ p,li{text-wrap:pretty}
 }
 
 /* =========================================================== foot */
-.foot{
+.lux-large-footer{
   position:relative;z-index:2;
   margin-top:clamp(3rem,6vw,5rem);
   padding:clamp(4rem,9vw,7rem) var(--pad) 0;
   overflow:hidden;
 }
-.foot__top{
+.lux-large-footer__top{
   display:grid;grid-template-columns:1fr 1fr;
   gap:clamp(2rem,5vw,5rem);
   align-items:start;
   margin-bottom:clamp(3rem,7vw,6rem);
 }
-.foot__links{display:flex;flex-direction:column;gap:.65rem;font-size:1.05rem;font-weight:500}
-.foot__links a{
+.lux-large-footer__links{display:flex;flex-direction:column;gap:.65rem;font-size:1.05rem;font-weight:500}
+.lux-large-footer__links a{
   display:inline-flex;align-items:center;gap:8px;
   width:fit-content;
   transition:opacity .25s var(--ease);
 }
-.foot__links a:hover{opacity:.55}
-.foot__links a .arr{display:inline-block;transition:transform .35s var(--ease)}
-.foot__links a:hover .arr{transform:translate(4px,-4px)}
-.foot__links .email{color:var(--ink-2);font-weight:400;margin-top:.5rem}
-.foot__right{display:flex;flex-direction:column;align-items:flex-end;gap:clamp(2rem,4vw,3rem)}
-.foot__sig{
+.lux-large-footer__links a:hover{opacity:.55}
+.lux-large-footer__links a .arr{display:inline-block;transition:transform .35s var(--ease)}
+.lux-large-footer__links a:hover .arr{transform:translate(4px,-4px)}
+.lux-large-footer__links .email{color:var(--ink-2);font-weight:400;margin-top:.5rem}
+.lux-large-footer__right{display:flex;flex-direction:column;align-items:flex-end;gap:clamp(2rem,4vw,3rem)}
+.lux-large-footer__sig{
   font-family:var(--hand);
   font-size:clamp(2.2rem,1.5rem + 3vw,3.8rem);
   font-weight:600;color:var(--ink);
@@ -941,11 +940,11 @@ p,li{text-wrap:pretty}
   transform:rotate(-3deg);
   user-select:none;
 }
-.foot__status{
+.lux-large-footer__status{
   display:flex;gap:clamp(1.5rem,4vw,3rem);align-items:center;
   font-size:.95rem;color:var(--ink-2);
 }
-.foot__status .dot{
+.lux-large-footer__status .dot{
   display:inline-block;width:9px;height:9px;border-radius:50%;
   background:#3b82f6;margin-right:8px;vertical-align:middle;
   box-shadow:0 0 0 0 rgba(59,130,246,.55);
@@ -957,11 +956,11 @@ p,li{text-wrap:pretty}
   100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}
 }
 
-.foot__giant-row{
+.lux-large-footer__giant-row{
   display:flex;align-items:flex-end;justify-content:space-between;
   gap:clamp(2rem,4vw,4rem);
 }
-.foot__giant{
+.lux-large-footer__giant{
   font-family:var(--sans);font-weight:800;
   font-size:clamp(5rem,22vw,100rem);
   line-height:.86;
@@ -972,7 +971,7 @@ p,li{text-wrap:pretty}
   white-space:nowrap;
   flex:1;min-width:0;
 }
-.foot__giant-gif{
+.lux-large-footer__giant-gif{
   display:block;
   width:min(24vw,300px);height:auto;
   border-radius:8px;
@@ -981,30 +980,30 @@ p,li{text-wrap:pretty}
   margin-bottom:.6rem;
 }
 @media (max-width:720px){
-  .foot__giant-gif{display:none}
-  .foot__giant{font-size:clamp(5rem,26vw,100rem)}
+  .lux-large-footer__giant-gif{display:none}
+  .lux-large-footer__giant{font-size:clamp(5rem,26vw,100rem)}
 }
-.foot__bottom{
+.lux-large-footer__bottom{
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;
   padding:1.5rem 0 2rem;
   font-size:.85rem;color:var(--muted);
   border-top:1px solid var(--line);margin-top:1rem;
 }
 @media (max-width:760px){
-  .foot{
+  .lux-large-footer{
     margin-top:clamp(1.5rem,4vw,2.5rem);
     padding-top:clamp(2rem,5vw,3rem);
   }
-  .foot__top{
+  .lux-large-footer__top{
     grid-template-columns:1fr;
     gap:clamp(1.75rem,4vw,2.5rem);
     margin-bottom:clamp(2rem,5vw,3rem);
   }
-  .foot__right{align-items:flex-start;gap:clamp(1.25rem,3vw,1.75rem)}
-  .foot__sig{transform:rotate(-3deg) translateX(0)}
-  .foot__status{flex-wrap:wrap;gap:.85rem 1.25rem}
+  .lux-large-footer__right{align-items:flex-start;gap:clamp(1.25rem,3vw,1.75rem)}
+  .lux-large-footer__sig{transform:rotate(-3deg) translateX(0)}
+  .lux-large-footer__status{flex-wrap:wrap;gap:.85rem 1.25rem}
   /* copyright + built-with sit close together, centered on mobile */
-  .foot__bottom{
+  .lux-large-footer__bottom{
     justify-content:center;
     text-align:center;
     gap:.25rem;
@@ -1176,6 +1175,7 @@ p,li{text-wrap:pretty}
   .testimonials.is-expanded .testimonials__more{display:none}
 }
 
+/* @shared: secret-footer */
 /* ===================================================== secret footer */
 .secret-footer{
   position:fixed;left:0;right:0;bottom:0;
@@ -1319,9 +1319,6 @@ p,li{text-wrap:pretty}
   to{opacity:1;transform:translateY(0) scale(1)}
 }
 
-/* boost grain z-index above the page wrapper */
-.grain{z-index:50}
-
 /* secret footer mobile fixes */
 @media (max-width:720px){
   body{padding-bottom:54vh}
@@ -1390,6 +1387,7 @@ p,li{text-wrap:pretty}
     white-space:nowrap;text-align:center;
   }
 }
+/* @end-shared */
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
@@ -1827,7 +1825,7 @@ p,li{text-wrap:pretty}
 </main>
 
 <!-- FOOTER (Trusha-style giant wordmark) -->
-<footer class="foot" id="contact">
+<footer class="lux-large-footer" id="contact">
   <div class="foot__top">
     <div class="foot__links">
       <a href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener">LinkedIn <span class="arr">↗</span></a>

@@ -58,6 +58,31 @@ Production is case-sensitive (Linux). macOS dev is case-insensitive, so a path t
 
 `gtag` fires a `case_study_view` event on any click of `a.proj[href]`. New work cards must be `<a>` tags (not `<div>`) and have a real `href` for the click to track. The `.is-soon` class adds a "Coming soon" badge but does not remove tracking — cards stay clickable.
 
+## Shared CSS blocks (drift guardrail)
+
+Some CSS blocks are duplicated across pages (e.g. `.secret-footer` lives in both `index.html` and `cv.html`). To keep them in sync, wrap each shared block with sentinel comments:
+
+```css
+/* @shared: <name> */
+.thing { ... }
+/* @end-shared */
+```
+
+A CI check (`.github/workflows/check-shared-css.yml`) runs `node scripts/check-shared-css.js` on every PR. If any two `@shared: <name>` blocks differ — even by one byte — the check fails with a diff and blocks merge.
+
+To resync after deliberately changing one copy:
+
+```bash
+node scripts/check-shared-css.js          # report drift
+node scripts/check-shared-css.js --fix    # copy the first (alphabetical) file's version everywhere
+```
+
+Currently wrapped:
+- `secret-footer` — in `index.html`, `cv.html`
+- `terms-footer` — the small © + back-to-top footer across all 5 case studies (`jlr.html`, `lifecake.html`, `collective.html`, `skatefarm.html`, `reps.html`)
+
+Extend by wrapping more blocks the same way — the script auto-picks them up.
+
 ## Deploys
 
 Pushing to `main` deploys the live site (`matthewluxford.co.uk`). Treat `main` as production — no force pushes, no unreviewed risky changes. If `git push` rejects, `git pull --rebase origin main` first (the live host occasionally commits build artefacts).
