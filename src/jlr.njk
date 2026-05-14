@@ -15,76 +15,43 @@ meta:
   scope: "UX · UI · DS · Motion"
 prev:
   slug: "reps.html"
-  title: "Reps<em>.</em>"
+  title: "Reps."
 next:
   slug: "collective.html"
-  title: "The <em>Collective.</em>"
+  title: "The Collective."
 ---
 {% extends "layouts/case.njk" %}
 
 {% block caseBody %}
-<figure class="case__bleed case__bleed--top">
-  <picture>
-    <img src="assets/jlr/hero.jpg" alt="Jaguar Land Rover global website refresh — hero" loading="eager" />
-  </picture>
-</figure>
+{% case_hero_image "assets/jlr/hero.jpg", "Jaguar Land Rover global website refresh — hero" %}
 
-<section class="case__body">
-  <h2>The <em>brief.</em></h2>
-  <div class="case__body__copy">
-    <p>JLR's global digital experience was carrying years of legacy. Aging infrastructure, dozens of bespoke variants per asset, and a fragmented user journey from "I want to learn about a car" to "I'm sitting in one." Components shipped slowly, performed poorly, and the brand felt inconsistent across markets.</p>
-    <p>The mandate: a <strong>six-month pilot</strong> to rebuild the component library on Adobe AEM and ship to <strong>Germany and Australia first</strong>, with the entire global rollout dependent on whether the pilot proved efficiency gains big enough to justify deployment.</p>
-  </div>
-</section>
+{% case_body "The brief." %}
+  <p>JLR's global digital experience was carrying years of legacy. Aging infrastructure, dozens of bespoke variants per asset, and a fragmented user journey from "I want to learn about a car" to "I'm sitting in one." Components shipped slowly, performed poorly, and the brand felt inconsistent across markets.</p>
+  <p>The mandate: a <strong>six-month pilot</strong> to rebuild the component library on Adobe AEM and ship to <strong>Germany and Australia first</strong>, with the entire global rollout dependent on whether the pilot proved efficiency gains big enough to justify deployment.</p>
+{% endcase_body %}
 
-<figure class="case__feature">
-  <img src="assets/jlr/02.jpg" alt="JLR component overview — desktop layout" />
-  <figcaption class="case__caption">— Component library overview, desktop</figcaption>
-</figure>
+{% case_feature "assets/jlr/02.jpg", "JLR component overview — desktop layout", "Component library overview, desktop" %}
 
-<section class="case__body">
-  <h2>The <em>approach.</em></h2>
-  <div class="case__body__copy">
-    <p>As one of two senior leads on a six-person team, I worked component-by-component. The poor performers were the ones whose responsive breakpoints fought the imagery — text overlays cropping vehicles awkwardly, requiring a different image variant for every layout.</p>
-    <p>The fix was constraint-driven: <strong>standardise on a 16:9 ratio</strong> for product imagery and let layout flexibility live in margin and typography rather than dozens of cropped variants. A <strong>16:7 cinematic exception</strong> was reserved for hero modules where dramatic vehicle positioning earned its keep.</p>
-    <p>Alongside the rebuild I ran <strong>Figma workshops</strong>, set up the component library and established the <strong>Principle animation patterns</strong> for interactive states and transitions — giving the rest of the design and dev team a shared, repeatable kit.</p>
-  </div>
-</section>
+{% case_body "The approach." %}
+  <p>As one of two senior leads on a six-person team, I worked component-by-component. The poor performers were the ones whose responsive breakpoints fought the imagery — text overlays cropping vehicles awkwardly, requiring a different image variant for every layout.</p>
+  <p>The fix was constraint-driven: <strong>standardise on a 16:9 ratio</strong> for product imagery and let layout flexibility live in margin and typography rather than dozens of cropped variants. A <strong>16:7 cinematic exception</strong> was reserved for hero modules where dramatic vehicle positioning earned its keep.</p>
+  <p>Alongside the rebuild I ran <strong>Figma workshops</strong>, set up the component library and established the <strong>Principle animation patterns</strong> for interactive states and transitions — giving the rest of the design and dev team a shared, repeatable kit.</p>
+{% endcase_body %}
 
-<div class="case__split">
-  <img src="assets/jlr/03.jpg" alt="JLR responsive component — tablet" />
-  <img src="assets/jlr/04.jpg" alt="JLR responsive component — mobile" />
-</div>
+{% case_split "assets/jlr/03.jpg", "JLR responsive component — tablet", "assets/jlr/04.jpg", "JLR responsive component — mobile" %}
 
-<section class="case__body">
-  <h2>Models &amp; <em>Specifications.</em></h2>
-  <div class="case__body__copy">
-    <p>In parallel, I overhauled the 'Models &amp; Specifications' pages for the global site across all 27 markets. Led the design, ran competitor and out-of-sector analysis, and made data-driven UX/UI calls for every major decision.</p>
-    <p>The trick was surfacing what users actually needed to pick the right vehicle — without the page collapsing under both brands' complex model and trim ranges. <strong>Every decision served the user first.</strong> The output had to be flexible enough to work across Jaguar's range and Land Rover's range simultaneously, because both brands shipped from the same template.</p>
-  </div>
-</section>
+{% case_body "Models & Specifications." %}
+  <p>In parallel, I overhauled the 'Models &amp; Specifications' pages for the global site across all 27 markets. Led the design, ran competitor and out-of-sector analysis, and made data-driven UX/UI calls for every major decision.</p>
+  <p>The trick was surfacing what users actually needed to pick the right vehicle — without the page collapsing under both brands' complex model and trim ranges. <strong>Every decision served the user first.</strong> The output had to be flexible enough to work across Jaguar's range and Land Rover's range simultaneously, because both brands shipped from the same template.</p>
+{% endcase_body %}
 
-<figure class="case__feature">
-  <img src="assets/jlr/05.jpg" alt="Models &amp; Specifications page detail" />
-  <figcaption class="case__caption">— Models &amp; Specifications, both brands</figcaption>
-</figure>
+{% case_feature "assets/jlr/05.jpg", "Models & Specifications page detail", "Models & Specifications, both brands" %}
 
-<figure class="case__feature case__feature--full">
-  <img src="assets/jlr/06.jpg" alt="JLR multi-breakpoint validation" />
-</figure>
+{% case_feature_full "assets/jlr/06.jpg", "JLR multi-breakpoint validation" %}
 
-<section class="outcomes">
-  <div class="outcome">
-    <span class="outcome__num"><em>↓</em> 35%</span>
-    <span class="outcome__lab">Site authoring time, end-to-end</span>
-  </div>
-  <div class="outcome">
-    <span class="outcome__num"><em>↑</em> 50%</span>
-    <span class="outcome__lab">Enquiry uplift on the configurator flow</span>
-  </div>
-  <div class="outcome">
-    <span class="outcome__num">27</span>
-    <span class="outcome__lab">Markets the rebuild rolled out to</span>
-  </div>
-</section>
+{% outcomes %}
+  {% outcome "<em>↓</em> 35%", "Site authoring time, end-to-end" %}
+  {% outcome "<em>↑</em> 50%", "Enquiry uplift on the configurator flow" %}
+  {% outcome "27", "Markets the rebuild rolled out to" %}
+{% endoutcomes %}
 {% endblock %}
