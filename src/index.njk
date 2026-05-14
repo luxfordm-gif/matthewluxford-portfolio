@@ -440,11 +440,25 @@ p,li{text-wrap:pretty}
   text-decoration:none;color:inherit;
 }
 
-/* pagination dots under the work rail */
-.work__dots{
-  display:flex;justify-content:center;gap:8px;
+/* prev/next arrows under the work rail (desktop) */
+.work__controls{
+  display:flex;justify-content:center;gap:12px;
   padding:clamp(14px,3vw,22px) var(--pad) clamp(2rem,5vw,3rem);
 }
+.work__arrow{
+  width:44px;height:44px;border-radius:50%;
+  background:transparent;color:var(--ink);
+  border:1px solid var(--line);padding:0;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease), opacity .25s var(--ease);
+}
+.work__arrow svg{display:block;width:18px;height:18px}
+.work__arrow:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);transform:translateY(-1px)}
+.work__arrow:active{transform:translateY(0) scale(.96)}
+.work__arrow[disabled]{opacity:.3;cursor:not-allowed;pointer-events:none}
+
+/* pagination dots — mobile only */
+.work__dots{display:none}
 .work__dot{
   width:7px;height:7px;border-radius:50%;
   background:var(--dot);border:0;padding:0;cursor:pointer;
@@ -453,6 +467,13 @@ p,li{text-wrap:pretty}
 .work__dot.is-active{
   background:var(--ink);
   width:22px;border-radius:999px;
+}
+@media (max-width:760px){
+  .work__controls{display:none}
+  .work__dots{
+    display:flex;justify-content:center;gap:8px;
+    padding:clamp(14px,3vw,22px) var(--pad) clamp(2rem,5vw,3rem);
+  }
 }
 
 /* ===== Apple-style snap carousel on mobile ===== */
@@ -1467,6 +1488,27 @@ p,li{text-wrap:pretty}
 
     <div class="work__rail" tabindex="0" aria-label="Work case studies">
 
+      <a class="proj is-soon" href="#" aria-disabled="true">
+        <div class="proj__media proj__media--05">
+          <span class="proj__badge">Coming soon</span>
+          <span class="proj__logo" style="background:#fff;color:#7132E4">K</span>
+          <div class="laptop">
+            <div class="laptop__screen">
+              <div class="mock-bar"><i></i><i></i><i></i></div>
+              <div class="mock-line d"></div>
+              <div class="mock-grid"><span style="background:#ede9fe"></span><span></span><span style="background:#c4b5fd"></span><span></span></div>
+              <div class="mock-line"></div>
+              <div class="mock-line s"></div>
+            </div>
+          </div>
+        </div>
+        <div class="proj__caption">
+          <h3 class="proj__name">Kraken <em>— crypto exchange</em></h3>
+          <span class="proj__year">2024 – Present</span>
+        </div>
+        <div class="proj__crumb">Logged-out web for the global crypto exchange.</div>
+      </a>
+
       <a class="proj is-soon" href="reps.html">
         <div class="proj__media proj__media--07" style="background:#f6f5f0">
           <span class="proj__badge proj__badge--side">Side project</span>
@@ -1502,27 +1544,6 @@ p,li{text-wrap:pretty}
           <span class="proj__year">2025 – Present</span>
         </div>
         <div class="proj__crumb">Scrappy MVP. 100+ pages, 22k Google clicks.</div>
-      </a>
-
-      <a class="proj is-soon" href="#" aria-disabled="true">
-        <div class="proj__media proj__media--05">
-          <span class="proj__badge">Coming soon</span>
-          <span class="proj__logo" style="background:#fff;color:#7132E4">K</span>
-          <div class="laptop">
-            <div class="laptop__screen">
-              <div class="mock-bar"><i></i><i></i><i></i></div>
-              <div class="mock-line d"></div>
-              <div class="mock-grid"><span style="background:#ede9fe"></span><span></span><span style="background:#c4b5fd"></span><span></span></div>
-              <div class="mock-line"></div>
-              <div class="mock-line s"></div>
-            </div>
-          </div>
-        </div>
-        <div class="proj__caption">
-          <h3 class="proj__name">Kraken <em>— crypto exchange</em></h3>
-          <span class="proj__year">2024 – Present</span>
-        </div>
-        <div class="proj__crumb">Logged-out web for the global crypto exchange.</div>
       </a>
 
       <a class="proj is-soon" href="#" aria-disabled="true">
@@ -1609,6 +1630,14 @@ p,li{text-wrap:pretty}
         </div>
         <div class="proj__crumb">Ground-up rebuild across 27 markets and two brands.</div>
       </a>
+    </div>
+    <div class="work__controls">
+      <button class="work__arrow work__arrow--prev" type="button" aria-label="Previous work" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      </button>
+      <button class="work__arrow work__arrow--next" type="button" aria-label="Next work">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
     </div>
     <div class="work__dots" aria-hidden="true"></div>
   </section>
@@ -1824,6 +1853,31 @@ p,li{text-wrap:pretty}
     workRail.addEventListener("scroll", updateDots, { passive: true });
     window.addEventListener("resize", updateDots);
     updateDots();
+  }
+
+  // prev/next arrows for the work rail (desktop)
+  const prevBtn = document.querySelector(".work__arrow--prev");
+  const nextBtn = document.querySelector(".work__arrow--next");
+  if (workRail && prevBtn && nextBtn) {
+    const scrollByCard = (dir) => {
+      const card = workRail.querySelector(".proj");
+      if (!card) return;
+      const style = getComputedStyle(workRail);
+      const gap = parseFloat(style.columnGap || style.gap || "0") || 0;
+      const step = card.getBoundingClientRect().width + gap;
+      workRail.scrollBy({ left: dir * step, behavior: "smooth" });
+    };
+    prevBtn.addEventListener("click", () => scrollByCard(-1));
+    nextBtn.addEventListener("click", () => scrollByCard(1));
+    const updateArrows = () => {
+      const atStart = workRail.scrollLeft <= 1;
+      const atEnd = workRail.scrollLeft + workRail.clientWidth >= workRail.scrollWidth - 1;
+      prevBtn.toggleAttribute("disabled", atStart);
+      nextBtn.toggleAttribute("disabled", atEnd);
+    };
+    workRail.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+    updateArrows();
   }
 
   // drag-to-scroll on the work rail
