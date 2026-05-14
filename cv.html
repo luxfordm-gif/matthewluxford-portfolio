@@ -509,7 +509,25 @@ body.near-secret-footer .cv-download-fade{
     line-height:1.1;padding:0 1.25rem;
     max-width:100%;overflow-wrap:break-word;
   }
-  .secret-pill{display:none}
+  /* keep the floating pills on mobile for the magic — just reposition
+     so they sit clear of the headline */
+  .secret-pill{
+    display:inline-flex;
+    font-size:.62rem;
+    padding:6px 12px;
+  }
+  .secret-pill--cmon{top:-58%;left:4%}
+  .secret-pill--just{top:-30%;left:18%;bottom:auto;right:auto}
+  .secret-footer.is-revealed .secret-pill--cmon{
+    animation:
+      pillIn .5s cubic-bezier(.34,1.6,.64,1) .3s forwards,
+      floatA 3.4s ease-in-out .85s infinite;
+  }
+  .secret-footer.is-revealed .secret-pill--just{
+    animation:
+      pillIn .5s cubic-bezier(.34,1.6,.64,1) .42s forwards,
+      floatB 3.8s ease-in-out 1s infinite;
+  }
   .secret-footer__bottom{
     bottom:calc(env(safe-area-inset-bottom, 0px) + 36px);
     width:100%;left:0;right:0;transform:none;
