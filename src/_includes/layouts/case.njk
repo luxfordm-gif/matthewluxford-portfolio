@@ -92,11 +92,15 @@ img,svg{display:block;max-width:100%}
 
 /* head variant — split:
    title sits big on top (use <br> in caseTitle to control the wrap);
-   below it: lead on the left, role+timeline stacked in the middle,
-   scope on the right — all bottom-aligned. */
+   below it: lead on the left (4fr), meta on the right (1fr) with role
+   and scope stacked vertically. Timeline is rendered as a lighter line
+   inside the role dd. Opt-in via headVariant: "split". */
 .case__head--split{
   grid-template-columns:1fr;
-  gap:clamp(3rem,7vw,7rem);
+  gap:clamp(2.5rem,5vw,60px);
+}
+@media (min-width:760px){
+  .case__head--split{margin-bottom:clamp(24px,3.5vw,47px)}
 }
 .case__head--split .case__title{
   font-size:clamp(3.5rem,2rem + 10vw,13rem);
@@ -113,17 +117,18 @@ img,svg{display:block;max-width:100%}
 }
 .case__head--split .case__meta{
   display:flex;flex-direction:column;
-  gap:0;
+  margin-top:0;gap:20px;
 }
-.case__head--split .case__meta > div{grid-column:auto;width:100%}
-.case__head--split .case__meta > div:nth-child(1){margin-bottom:.4rem}
-.case__head--split .case__meta > div:nth-child(2){margin-bottom:clamp(1.5rem,3vw,2.5rem)}
+.case__head--split .case__meta > div{grid-column:auto;width:100%;margin:0}
+.case__head--split .case__meta-date{
+  display:block;
+  color:var(--muted);font-weight:500;
+  margin-top:.25rem;
+}
 @media (max-width:880px){
   .case__head--split .case__intro{
     display:flex;flex-direction:column;align-items:flex-start;gap:1.5rem;
   }
-  .case__head--split .case__meta{display:flex;flex-direction:column;gap:1rem}
-  .case__head--split .case__meta > div{grid-area:auto !important}
   .case__head--split .case__title{font-size:clamp(3rem,2rem + 7vw,9rem)}
 }
 
@@ -656,11 +661,18 @@ img,svg{display:block;max-width:100%}
     </span>
     {%- endif %}
     <p class="case__lead">{{ caseLead | safe }}</p>
+    {%- if headVariant == "split" %}
+    <dl class="case__meta">
+      <div><dt>Role</dt><dd>{{ meta.role | safe }}<span class="case__meta-date">{{ meta.timeline }}</span></dd></div>
+      <div><dt>Scope</dt><dd>{{ meta.scope | safe }}</dd></div>
+    </dl>
+    {%- else %}
     <dl class="case__meta">
       <div><dt>Role</dt><dd>{{ meta.role | safe }}</dd></div>
       <div><dt>Timeline</dt><dd>{{ meta.timeline }}</dd></div>
       <div><dt>Scope</dt><dd>{{ meta.scope | safe }}</dd></div>
     </dl>
+    {%- endif %}
   </div>
 </header>
 
