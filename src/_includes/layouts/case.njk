@@ -102,9 +102,11 @@ img,svg{display:block;max-width:100%}
 }
 .case__lead strong{color:var(--ink);font-weight:600}
 .case__meta{
-  display:grid;grid-template-columns:repeat(3,auto);
-  gap:clamp(1.5rem,3vw,3rem);
+  display:grid;
+  grid-template-columns:repeat(2,auto);
+  gap:clamp(1.25rem,2.5vw,1.75rem) clamp(2rem,5vw,4rem);
 }
+.case__meta > div:nth-child(3){grid-column:1 / -1}
 .case__meta dt{
   font-size:.75rem;color:var(--muted);
   letter-spacing:.08em;text-transform:uppercase;
