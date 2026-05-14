@@ -1,0 +1,132 @@
+---
+title: "Reps · Case Study — Matthew Luxford"
+description: "A training app I designed and built for myself — turning a PDF and a Google Doc into something I actually use every day at the gym."
+canonical: "https://matthewluxford.co.uk/reps.html"
+ogType: "article"
+ogImage: "https://matthewluxford.co.uk/assets/reps/og-image.jpg"
+ogImageAlt: "Reps — a training app I designed and built for myself"
+twitterImageAlt: "Reps — a training app I designed and built for myself"
+fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800"
+accent: "#0d0d0d"
+accent2: "#a7c1b1"
+caseTitle: "Reps<em>.</em>"
+caseLead: "A training app I designed and built for <strong>myself</strong>. Started as a fix for my own broken workflow — turned into something I <strong>use every day</strong>."
+meta:
+  role: "Design &amp; build"
+  timeline: "2026"
+  scope: "Web app · AI · Supabase"
+prev:
+  slug: "skatefarm.html"
+  title: "The Skate <em>Farm.</em>"
+next:
+  slug: "jlr.html"
+  title: "JLR<em>.</em>"
+---
+{% extends "layouts/case.njk" %}
+
+{% block caseBody %}
+<figure class="case__bleed case__bleed--top">
+  <picture>
+    <source media="(max-width: 760px)" srcset="assets/reps/reps-hero-mobile.webp" />
+    <img src="assets/reps/reps-hero.webp" alt="Reps app shown on iPhone — today's workout screen with exercises, sets and reps" loading="eager" />
+  </picture>
+</figure>
+
+<section class="case__body">
+  <h2>The <em>backbone.</em></h2>
+  <div class="case__body__copy">
+    <p>Training's part of my routine. I've worked with a personal trainer for four years and we've built a programme that works — <strong>consistency and tracking</strong> are the whole game. What's always annoyed me is the <strong>tooling</strong>. Every block starts the same way: a PDF plan lands, gets pasted into a Google Doc, columns tidied, dates added, numbers updated session after session. Every few months a new plan arrives and you start over. After four years of that, I <em>built the fix</em>.</p>
+  </div>
+</section>
+
+<section class="case__hero" style="margin-top:clamp(5rem,9vw,7rem)">
+  <div class="case__hero-grid">
+    <div>
+      <h2>Design it.<br /><em>Build it.</em><br />Train with it.</h2>
+      <p>No brief. No client. Just the app I always wished existed — built around how I actually train, not how someone in a strategy deck thinks people train.</p>
+    </div>
+    <div class="case__hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat__num">PDF &rarr; <em>App.</em></div>
+        <div class="hero-stat__lab">Upload a coach's plan, train off it the same day</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat__num">Daily <em>use.</em></div>
+        <div class="hero-stat__lab">Replaced the Google Doc on day one</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat__num">Built with <em>AI.</em></div>
+        <div class="hero-stat__lab">Voice note → Claude → Ship. Repeat.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="case__body">
+  <h2>I <em>built it.</em></h2>
+  <div class="case__body__copy">
+    <p>AI has made bits of it easier. It still wasn't <em>good</em>.</p>
+    <p>A web app. Lives on my phone like a native one — saved to the home screen, opens in a tap. New plan arrives, I upload the <strong>PDF or CSV</strong>, and the app reads it, splits it into days, and lays the week out properly.</p>
+    <p>Then it gets out of the way.</p>
+    <p>I've spent enough years inside gym apps to know what I don't want from one. Most of them feel like they were built by someone who's <em>never</em> actually used them. Too rigid. No drop sets without three taps and a menu. Supersets buried. You can't just <strong>do the workout</strong>.</p>
+    <p>So I built every flexibility I've ever missed:</p>
+    <ul>
+      <li><strong>Drop sets, supersets, rest-pause</strong> — first-class, not workarounds</li>
+      <li><strong>Edit anything mid-session</strong> — reps, weight, swap an exercise, add one in</li>
+      <li><strong>Last-week glance</strong> — the number you're chasing, right there on the row</li>
+      <li><strong>Big numbers, one tap</strong> — readable mid-session, no squinting required</li>
+      <li><strong>Plate stacking</strong> — tap each plate as you load it, see the total weight stack up in real time.</li>
+    </ul>
+    <p>It's an app built by someone who actually uses it. <em>Imagine that.</em></p>
+  </div>
+</section>
+
+<figure class="case__bleed case__bleed--flat">
+  <video src="assets/reps/reps-claude.mp4" poster="assets/reps/reps-claude-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording of building a Reps feature with Claude Code"></video>
+  <figcaption>The first version I actually trained off.</figcaption>
+</figure>
+
+<section class="case__body">
+  <h2>How I <em>build it.</em></h2>
+  <div class="case__body__copy">
+    <p class="case__sub">The feedback loop</p>
+    <p>While using the app daily, I capture what needs fixing. What's clunky. What's missing. Sometimes a feature request, sometimes <em>"this interaction feels wrong."</em></p>
+    <p>I dump those notes into <strong>Claude Plan</strong>, let it map out the solution strategy. If it's a backend fix or logic problem, Claude executes it directly into <strong>Claude Code</strong> → <strong>GitHub</strong> → <strong>Supabase</strong> → ship. Done the same day.</p>
+    <p class="case__sub">When design is needed</p>
+    <p>If it's a visual or interaction problem, I sketch a quick wireframe in <strong>Figma</strong>, throw it into <strong>ChatGPT</strong> image generation to explore options, then export that output at the correct artboard size into <strong>Claude Code</strong> as a starting point.</p>
+    <p>Once the working prototype is solid, I export custom PNGs at production size — glossy barbells, shiny plates with actual depth and shine — things that elevate it from <em>"quick dirty rectangles with semi-rounded corners"</em> to <em>"actually polished."</em></p>
+    <p class="case__sub">The speed</p>
+    <p>Most iterations ship the same day. Some don't need design at all. Some are just code fixes. Some need the full flow from wireframe → generated image → prototype → assets. The right tool for the right job, every time.</p>
+    <p>It's been a solid learning experience on the backend side too — <strong>GitHub</strong> workflows and <strong>Supabase</strong> especially have leveled up how I think about data and infrastructure.</p>
+  </div>
+</section>
+
+<div class="case__gallery">
+  <img src="assets/reps/two.webp" alt="Reps app — exercise detail" loading="lazy" />
+  <img src="assets/reps/three.webp" alt="Reps app — progress view" loading="lazy" />
+</div>
+
+<section class="case__body">
+  <h2>Where it's <em>going.</em></h2>
+  <div class="case__body__copy">
+    <p>Right now it's mine. Works for me, fits how I train, solves the thing I've been meaning to fix for years.</p>
+    <p>The plan is to <strong>open it up</strong>. Build a proper site around it. A free tier that covers the basics — log a session, track a plan, see your progress. A paid tier (subscription or one-off) for the advanced stuff: PDF/CSV import, custom set structures, longer-term progress views, anything else my voice notes keep flagging.</p>
+    <p>No timeline. No pressure. It earns its keep every time I open it — anything beyond that is upside.</p>
+  </div>
+</section>
+
+<section class="outcomes">
+  <div class="outcome">
+    <span class="outcome__num">1</span>
+    <span class="outcome__lab">Daily user — me. Every session.</span>
+  </div>
+  <div class="outcome">
+    <span class="outcome__num">0</span>
+    <span class="outcome__lab">Google Docs harmed in the making of this app</span>
+  </div>
+  <div class="outcome">
+    <span class="outcome__num">∞<em>.</em></span>
+    <span class="outcome__lab">Voice notes still queued for the next build</span>
+  </div>
+</section>
+{% endblock %}
