@@ -1176,6 +1176,7 @@ p,li{text-wrap:pretty}
   .testimonials.is-expanded .testimonials__more{display:none}
 }
 
+/* @shared: secret-footer */
 /* ===================================================== secret footer */
 .secret-footer{
   position:fixed;left:0;right:0;bottom:0;
@@ -1319,9 +1320,6 @@ p,li{text-wrap:pretty}
   to{opacity:1;transform:translateY(0) scale(1)}
 }
 
-/* boost grain z-index above the page wrapper */
-.grain{z-index:50}
-
 /* secret footer mobile fixes */
 @media (max-width:720px){
   body{padding-bottom:54vh}
@@ -1390,6 +1388,7 @@ p,li{text-wrap:pretty}
     white-space:nowrap;text-align:center;
   }
 }
+/* @end-shared */
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
