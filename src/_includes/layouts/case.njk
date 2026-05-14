@@ -1,45 +1,13 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="google-site-verification" content="DCzH4uKTH2r3OzwjbGHr2sC7gLw07BgiEAJQJjVWf18" />
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QL3LGSTN6Q"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-QL3LGSTN6Q');
-</script>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Jaguar Land Rover · Case Study — Matthew Luxford</title>
-<meta name="description" content="A six-month component rebuild and Models & Specifications overhaul for Jaguar Land Rover's global website across 27 markets and both brands." />
-<meta name="theme-color" content="#fafaf7" />
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-<link rel="canonical" href="https://matthewluxford.co.uk/jlr.html" />
-<meta property="og:type" content="article" />
-<meta property="og:site_name" content="Matthew Luxford" />
-<meta property="og:locale" content="en_GB" />
-<meta property="og:url" content="https://matthewluxford.co.uk/jlr.html" />
-<meta property="og:title" content="Jaguar Land Rover · Case Study — Matthew Luxford" />
-<meta property="og:description" content="A six-month component rebuild and Models & Specifications overhaul for Jaguar Land Rover's global website across 27 markets and both brands." />
-<meta property="og:image" content="https://matthewluxford.co.uk/assets/og-image.jpg" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Hire me already! — Matthew Luxford" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Jaguar Land Rover · Case Study — Matthew Luxford" />
-<meta name="twitter:description" content="A six-month component rebuild and Models & Specifications overhaul for Jaguar Land Rover's global website across 27 markets and both brands." />
-<meta name="twitter:image" content="https://matthewluxford.co.uk/assets/og-image.jpg" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+{% extends "layouts/base.njk" %}
+
+{% block pageStyles %}
 <style>
 :root{
   --bg:#fafaf7;--paper:#ffffff;--ink:#0a0a0a;--ink-2:#27272a;
   --muted:#9a958d;--line:#eae6dd;--dot:#c9c4b9;--dark:#0a0a0a;
   --hl:#ffe600;
-  --accent:#2563eb;
+  --accent:{{ accent or '#0a0a0a' }};
+  --accent-2:{{ accent2 or '#a7c1b1' }};
   --serif:"Fraunces",ui-serif,Georgia,serif;
   --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --hand:"Caveat",ui-serif,Georgia,serif;
@@ -129,6 +97,7 @@ img,svg{display:block;max-width:100%}
   font-size:clamp(1.1rem,1rem + .5vw,1.4rem);
   color:var(--ink-2);line-height:1.45;max-width:48ch;
 }
+.case__lead strong{color:var(--ink);font-weight:600}
 .case__meta{
   display:grid;grid-template-columns:repeat(3,auto);
   gap:clamp(1.5rem,3vw,3rem);
@@ -140,13 +109,24 @@ img,svg{display:block;max-width:100%}
 }
 .case__meta dd{margin:0;font-weight:600;font-size:1.05rem}
 @media (max-width:880px){.case__head{grid-template-columns:1fr}}
+@media (max-width:760px){.case__meta{grid-template-columns:1fr;gap:1.25rem}}
 
-/* hero image */
-.case__hero{
+/* award badge (Lifecake) */
+.award-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:999px;
+  background:var(--ink);color:#ffe600;
+  font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  margin-bottom:1rem;width:max-content;
+}
+.award-badge svg{width:14px;height:14px;color:#ffe600}
+
+/* hero — image variant */
+.case__hero-img{
   max-width:1400px;
   margin:0 auto;padding:0 var(--pad);
 }
-.case__hero img{
+.case__hero-img img{
   width:100%;
   border-radius:24px;
   display:block;
@@ -154,9 +134,61 @@ img,svg{display:block;max-width:100%}
   box-shadow:0 60px 90px -40px rgba(0,0,0,.18);
 }
 @media (max-width:760px){
-  .case__hero{padding:0;max-width:none}
-  .case__hero img{border-radius:0}
+  .case__hero-img{padding:0;max-width:none}
+  .case__hero-img img{border-radius:0}
 }
+
+/* hero — coloured card variant (Reps, Skate Farm) */
+.case__hero{
+  position:relative;
+  border-radius:32px;
+  background:#0d0d0d;
+  padding:clamp(3rem,7vw,6rem) clamp(2rem,5vw,4rem);
+  overflow:hidden;
+  display:grid;place-items:center;
+  max-width:1400px;margin:0 auto;
+  color:#fff;
+}
+.case__hero::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(800px 400px at 80% 0%, rgba(167,193,177,.18), transparent 65%),
+    radial-gradient(600px 400px at 0% 100%, rgba(242,237,230,.06), transparent 60%);
+  pointer-events:none;
+}
+.case__hero-grid{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1.3fr 1fr;
+  gap:clamp(2rem,5vw,4rem);align-items:center;
+  width:100%;max-width:1100px;
+}
+.case__hero h2{
+  font-family:var(--sans);font-weight:800;
+  font-size:clamp(1.6rem,1rem + 2.5vw,2.6rem);
+  line-height:1.05;letter-spacing:-.02em;
+  margin:0 0 1rem;color:#fff;
+}
+.case__hero h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--accent-2)}
+.case__hero p{
+  margin:0;color:rgba(255,255,255,.75);
+  font-size:clamp(.95rem,.9rem + .3vw,1.1rem);line-height:1.55;
+  max-width:50ch;
+}
+.case__hero-stats{display:grid;grid-template-columns:1fr;gap:.85rem}
+.hero-stat{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:1.1rem 1.25rem;
+  backdrop-filter:blur(8px);
+}
+.hero-stat__num{
+  font-family:var(--sans);font-weight:500;
+  font-size:clamp(1.6rem,1rem + 1.5vw,2.4rem);
+  line-height:1.05;letter-spacing:-.02em;color:#fff;
+}
+.hero-stat__num em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--accent-2)}
+.hero-stat__lab{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:.45rem}
+@media (max-width:760px){.case__hero-grid{grid-template-columns:1fr}}
 
 /* editorial image features */
 .case__feature{
@@ -164,9 +196,7 @@ img,svg{display:block;max-width:100%}
   margin:clamp(3rem,5vw,5rem) auto;
   padding:0 var(--pad);
 }
-.case__feature img{
-  width:100%;border-radius:20px;display:block;
-}
+.case__feature img{width:100%;border-radius:20px;display:block}
 .case__feature--full{max-width:none;padding:0;margin-left:0;margin-right:0}
 .case__feature--full img{border-radius:0}
 
@@ -183,6 +213,48 @@ img,svg{display:block;max-width:100%}
 .case__caption{
   font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;
   color:var(--muted);margin:.85rem 0 0;
+}
+
+/* full-bleed images / videos */
+.case__bleed{
+  margin:calc(clamp(5rem,9vw,7rem) + 40px) 0 0;
+  padding:0;
+}
+.case__bleed--top{margin-top:0}
+.case__bleed img{
+  width:100%;margin:0 auto;display:block;
+  border-radius:0;
+  box-shadow:0 40px 80px -40px rgba(0,0,0,.25);
+}
+.case__bleed--flat{margin:calc(clamp(5rem,9vw,7rem) + 28px) auto calc(clamp(5rem,9vw,7rem) + 40px);max-width:1400px;padding:0}
+.case__bleed--flat img,.case__bleed--flat video{max-width:100%}
+.case__bleed--flat img{box-shadow:none}
+.case__bleed--flat video{width:100%;margin:0 auto;display:block;border-radius:clamp(8px,1vw,14px);box-shadow:0 40px 80px -40px rgba(0,0,0,.25)}
+.case__bleed--flat figcaption{margin-top:clamp(.9rem,1.4vw,1.25rem);text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(.85rem,.8rem + .2vw,.95rem);color:var(--muted);letter-spacing:.01em}
+.case__bleed--flat + .case__body{padding-top:0}
+@media (max-width:760px){
+  .case__bleed{padding:0 var(--pad)}
+  .case__bleed img{border-radius:clamp(16px,2vw,28px);max-width:1600px}
+  .case__bleed--top,.case__bleed--flat{padding:0}
+  .case__bleed--top img{border-radius:0;max-width:none}
+  .case__bleed--flat video{border-radius:0}
+}
+
+/* 2-up gallery */
+.case__gallery{
+  max-width:1400px;margin:calc(clamp(5rem,9vw,7rem) + 40px) auto 0;
+  padding:0 var(--pad);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(1rem,2.5vw,2rem);
+}
+.case__gallery img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  border-radius:clamp(16px,2vw,24px);
+  box-shadow:0 30px 60px -35px rgba(0,0,0,.22);
+}
+@media (max-width:760px){
+  .case__gallery{grid-template-columns:1fr}
+  .case__gallery img:nth-child(2){display:none}
 }
 
 /* body */
@@ -207,20 +279,29 @@ img,svg{display:block;max-width:100%}
 .case__body__copy p{margin:0}
 .case__body__copy strong{color:var(--ink);font-weight:600}
 .case__body__copy em{font-family:var(--serif);font-style:italic}
+.case__body__copy ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:calc(.65rem - 2px)}
+@media (min-width:881px){.case__body__copy{line-height:29px}.case__body__copy ul{gap:calc(.65rem - 6px)}}
+.case__body__copy ul li{padding-left:1em;position:relative}
+.case__body__copy ul li::before{content:"·";position:absolute;left:0;color:var(--accent);font-weight:800}
+.case__body__copy .case__sub{
+  margin-top:2.6rem;margin-bottom:-1.1rem;
+  font-size:clamp(1.1rem,1rem + .4vw,1.28rem);
+  letter-spacing:-.01em;
+  color:var(--ink);font-weight:700;
+}
+.case__body__copy .case__sub:first-child{margin-top:-.4rem}
 @media (max-width:880px){.case__body{grid-template-columns:1fr}}
 
 /* outcomes */
 .outcomes{
   display:grid;grid-template-columns:repeat(3,1fr);
   gap:clamp(1rem,2.5vw,2rem);
-  padding:clamp(4rem,8vw,7rem) var(--pad) clamp(4rem,8vw,7rem);
+  padding:clamp(4rem,8vw,7rem) var(--pad);
   max-width:1400px;margin:0 auto;
 }
 .outcome{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:clamp(1.5rem,2.5vw,2rem);
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:24px;padding:clamp(1.5rem,2.5vw,2rem);
   display:flex;flex-direction:column;gap:.75rem;
 }
 .outcome__num{
@@ -256,21 +337,27 @@ img,svg{display:block;max-width:100%}
 }
 .next a.next__cta:hover{transform:translateY(-2px)}
 
-/* foot */
+/* scroll-reveal animation for body sections */
+.reveal{opacity:0;transform:translate3d(0,18px,0);transition:opacity .9s var(--ease), transform .9s var(--ease);will-change:opacity,transform}
+.reveal.is-in{opacity:1;transform:translate3d(0,0,0)}
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* mobile rhythm — editorial spacing */
+@media (max-width:760px){
+  .case__body{padding-top:clamp(4.5rem,10vw,6rem)}
+  .case__body + .case__body{padding-top:clamp(4rem,9vw,5.5rem)}
+  .case__hero{border-radius:0;margin-top:clamp(4rem,9vw,5.5rem) !important}
+  .case__bleed--flat{margin:clamp(4rem,9vw,5.5rem) auto clamp(4.5rem,10vw,6rem)}
+  .case__gallery{margin-top:clamp(4rem,9vw,5.5rem)}
+  .outcomes{padding:clamp(3.5rem,8vw,5rem) var(--pad)}
+}
+
 /* @shared: terms-footer */
 .terms-footer{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:1400px;margin:0 auto}
 .terms-footer__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
 @media (max-width:760px){.terms-footer__bottom{justify-content:center;text-align:center;gap:.25rem}}
 /* @end-shared */
 
-/* mobile rhythm — editorial spacing */
-@media (max-width:760px){
-  .case__meta{grid-template-columns:1fr;gap:1.25rem}
-  .case__body{padding-top:clamp(4.5rem,10vw,6rem)}
-  .case__body + .case__body{padding-top:clamp(4rem,9vw,5.5rem)}
-  .case__hero{border-radius:0}
-  .outcomes{padding:clamp(3.5rem,8vw,5rem) var(--pad)}
-}
 /* @shared: secret-footer */
 /* ===================================================== secret footer */
 .secret-footer{
@@ -484,123 +571,57 @@ img,svg{display:block;max-width:100%}
   }
 }
 /* @end-shared */
-
 </style>
-</head>
-<body id="top">
+{% endblock %}
 
+{% block content %}
 <div class="page">
 
-<header class="nav">
-  <a class="nav__brand" href="index.html">matthew.</a>
-  <div class="nav__right">
-    <nav class="nav__links" aria-label="Primary">
-      <a href="index.html#work">Work</a>
-      <a href="index.html#about">About</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
-    <a class="nav__cta" href="cv.html">Resume</a>
-  </div>
-</header>
+{% include "partials/nav.njk" %}
 
 <nav class="back" aria-label="Back navigation">
   <a href="index.html#work">← Back to work</a>
 </nav>
 
 <header class="case__head">
-  <h1 class="case__title">Jaguar <em>Land Rover</em></h1>
+  <h1 class="case__title">{{ caseTitle | safe }}</h1>
   <div class="case__intro">
-    <p class="case__lead">A six-month, ground-up rebuild of JLR's global website component library — pursuing efficiency, personalisation and conversion across two brands and 27 markets, with strategy informed by JD Power and Psyma performance benchmarks.</p>
+    {%- if caseAward %}
+    <span class="award-badge">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l2.39 4.84L19.6 7.6l-3.8 3.7.9 5.24L12 14.08l-4.7 2.46.9-5.24-3.8-3.7 5.21-.76z"/></svg>
+      {{ caseAward }}
+    </span>
+    {%- endif %}
+    <p class="case__lead">{{ caseLead | safe }}</p>
     <dl class="case__meta">
-      <div><dt>Role</dt><dd>Lead Product Designer</dd></div>
-      <div><dt>Timeline</dt><dd>2020 – 2021</dd></div>
-      <div><dt>Scope</dt><dd>UX · UI · DS · Motion</dd></div>
+      <div><dt>Role</dt><dd>{{ meta.role | safe }}</dd></div>
+      <div><dt>Timeline</dt><dd>{{ meta.timeline }}</dd></div>
+      <div><dt>Scope</dt><dd>{{ meta.scope | safe }}</dd></div>
     </dl>
   </div>
 </header>
 
-<section class="case__hero">
-  <img src="assets/jlr/hero.jpg" alt="Jaguar Land Rover global website refresh — hero" />
-</section>
+{{ content | safe }}
+{% block caseBody %}{% endblock %}
 
-<section class="case__body">
-  <h2>The <em>brief.</em></h2>
-  <div class="case__body__copy">
-    <p>JLR's global digital experience was carrying years of legacy. Aging infrastructure, dozens of bespoke variants per asset, and a fragmented user journey from "I want to learn about a car" to "I'm sitting in one." Components shipped slowly, performed poorly, and the brand felt inconsistent across markets.</p>
-    <p>The mandate: a <strong>six-month pilot</strong> to rebuild the component library on Adobe AEM and ship to <strong>Germany and Australia first</strong>, with the entire global rollout dependent on whether the pilot proved efficiency gains big enough to justify deployment.</p>
-  </div>
-</section>
-
-<figure class="case__feature">
-  <img src="assets/jlr/02.jpg" alt="JLR component overview — desktop layout" />
-  <figcaption class="case__caption">— Component library overview, desktop</figcaption>
-</figure>
-
-<section class="case__body">
-  <h2>The <em>approach.</em></h2>
-  <div class="case__body__copy">
-    <p>As one of two senior leads on a six-person team, I worked component-by-component. The poor performers were the ones whose responsive breakpoints fought the imagery — text overlays cropping vehicles awkwardly, requiring a different image variant for every layout.</p>
-    <p>The fix was constraint-driven: <strong>standardise on a 16:9 ratio</strong> for product imagery and let layout flexibility live in margin and typography rather than dozens of cropped variants. A <strong>16:7 cinematic exception</strong> was reserved for hero modules where dramatic vehicle positioning earned its keep.</p>
-    <p>Alongside the rebuild I ran <strong>Figma workshops</strong>, set up the component library and established the <strong>Principle animation patterns</strong> for interactive states and transitions — giving the rest of the design and dev team a shared, repeatable kit.</p>
-  </div>
-</section>
-
-<div class="case__split">
-  <img src="assets/jlr/03.jpg" alt="JLR responsive component — tablet" />
-  <img src="assets/jlr/04.jpg" alt="JLR responsive component — mobile" />
-</div>
-
-<section class="case__body">
-  <h2>Models &amp; <em>Specifications.</em></h2>
-  <div class="case__body__copy">
-    <p>In parallel, I overhauled the 'Models &amp; Specifications' pages for the global site across all 27 markets. Led the design, ran competitor and out-of-sector analysis, and made data-driven UX/UI calls for every major decision.</p>
-    <p>The trick was surfacing what users actually needed to pick the right vehicle — without the page collapsing under both brands' complex model and trim ranges. <strong>Every decision served the user first.</strong> The output had to be flexible enough to work across Jaguar's range and Land Rover's range simultaneously, because both brands shipped from the same template.</p>
-  </div>
-</section>
-
-<figure class="case__feature">
-  <img src="assets/jlr/05.jpg" alt="Models &amp; Specifications page detail" />
-  <figcaption class="case__caption">— Models &amp; Specifications, both brands</figcaption>
-</figure>
-
-<figure class="case__feature case__feature--full">
-  <img src="assets/jlr/06.jpg" alt="JLR multi-breakpoint validation" />
-</figure>
-
-<section class="outcomes">
-  <div class="outcome">
-    <span class="outcome__num"><em>↓</em> 35%</span>
-    <span class="outcome__lab">Site authoring time, end-to-end</span>
-  </div>
-  <div class="outcome">
-    <span class="outcome__num"><em>↑</em> 50%</span>
-    <span class="outcome__lab">Enquiry uplift on the configurator flow</span>
-  </div>
-  <div class="outcome">
-    <span class="outcome__num">27</span>
-    <span class="outcome__lab">Markets the rebuild rolled out to</span>
-  </div>
-</section>
-
+{% if prev or next %}
+{%- if prev %}
 <section class="next">
   <p class="next__eyebrow">Previous project</p>
-  <h2 class="next__title">Reps<em>.</em></h2>
-  <a class="next__cta" href="reps.html">← View case study</a>
+  <h2 class="next__title">{{ prev.title | safe }}</h2>
+  <a class="next__cta" href="{{ prev.slug }}">← View case study</a>
 </section>
-
+{%- endif %}
+{%- if next %}
 <section class="next" style="border-top:none;padding-top:calc(clamp(4rem,8vw,7rem) - 30px)">
   <p class="next__eyebrow">Next project</p>
-  <h2 class="next__title">The <em>Collective.</em></h2>
-  <a class="next__cta" href="collective.html">View case study →</a>
+  <h2 class="next__title">{{ next.title | safe }}</h2>
+  <a class="next__cta" href="{{ next.slug }}">View case study →</a>
 </section>
+{%- endif %}
+{% endif %}
 
-<footer class="terms-footer">
-  <div class="terms-footer__bottom">
-    <span>© 2026 Matthew Luxford</span>
-    <span><a href="#top">↑ Top of page</a></span>
-  </div>
-</footer>
-
+{% include "partials/terms-footer.njk" %}
 </div><!-- /.page -->
 
 {% include "partials/secret-footer.njk" %}
@@ -633,6 +654,24 @@ img,svg{display:block;max-width:100%}
 })();
 
 (() => {
+  const targets = document.querySelectorAll(".case__bleed:not(.case__bleed--top), .case__body, .case__hero, .case__hero-img, .case__gallery, .case__feature, .case__split, .outcomes, .next");
+  targets.forEach(el => el.classList.add("reveal"));
+  if (!("IntersectionObserver" in window)) {
+    targets.forEach(el => el.classList.add("is-in"));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add("is-in");
+        io.unobserve(e.target);
+      }
+    }
+  }, { rootMargin: "0px 0px -10% 0px", threshold: 0.08 });
+  targets.forEach(el => io.observe(el));
+})();
+
+(() => {
   const secretEl = document.querySelector(".secret-footer");
   if (!secretEl) return;
   const checkReveal = () => {
@@ -646,6 +685,4 @@ img,svg{display:block;max-width:100%}
   checkReveal();
 })();
 </script>
-
-</body>
-</html>
+{% endblock %}

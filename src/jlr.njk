@@ -1,0 +1,88 @@
+---
+title: "Jaguar Land Rover · Case Study — Matthew Luxford"
+description: "A six-month component rebuild and Models & Specifications overhaul for Jaguar Land Rover's global website across 27 markets and both brands."
+canonical: "https://matthewluxford.co.uk/jlr.html"
+ogType: "article"
+ogImage: "https://matthewluxford.co.uk/assets/og-image.jpg"
+ogImageAlt: "Hire me already! — Matthew Luxford"
+fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800"
+accent: "#2563eb"
+caseTitle: "Jaguar <em>Land Rover</em>"
+caseLead: "A six-month, ground-up rebuild of JLR's global website component library — pursuing efficiency, personalisation and conversion across two brands and 27 markets, with strategy informed by JD Power and Psyma performance benchmarks."
+meta:
+  role: "Lead Product Designer"
+  timeline: "2020 – 2021"
+  scope: "UX · UI · DS · Motion"
+prev:
+  slug: "reps.html"
+  title: "Reps<em>.</em>"
+next:
+  slug: "collective.html"
+  title: "The <em>Collective.</em>"
+---
+{% extends "layouts/case.njk" %}
+
+{% block caseBody %}
+<section class="case__hero-img">
+  <img src="assets/jlr/hero.jpg" alt="Jaguar Land Rover global website refresh — hero" />
+</section>
+
+<section class="case__body">
+  <h2>The <em>brief.</em></h2>
+  <div class="case__body__copy">
+    <p>JLR's global digital experience was carrying years of legacy. Aging infrastructure, dozens of bespoke variants per asset, and a fragmented user journey from "I want to learn about a car" to "I'm sitting in one." Components shipped slowly, performed poorly, and the brand felt inconsistent across markets.</p>
+    <p>The mandate: a <strong>six-month pilot</strong> to rebuild the component library on Adobe AEM and ship to <strong>Germany and Australia first</strong>, with the entire global rollout dependent on whether the pilot proved efficiency gains big enough to justify deployment.</p>
+  </div>
+</section>
+
+<figure class="case__feature">
+  <img src="assets/jlr/02.jpg" alt="JLR component overview — desktop layout" />
+  <figcaption class="case__caption">— Component library overview, desktop</figcaption>
+</figure>
+
+<section class="case__body">
+  <h2>The <em>approach.</em></h2>
+  <div class="case__body__copy">
+    <p>As one of two senior leads on a six-person team, I worked component-by-component. The poor performers were the ones whose responsive breakpoints fought the imagery — text overlays cropping vehicles awkwardly, requiring a different image variant for every layout.</p>
+    <p>The fix was constraint-driven: <strong>standardise on a 16:9 ratio</strong> for product imagery and let layout flexibility live in margin and typography rather than dozens of cropped variants. A <strong>16:7 cinematic exception</strong> was reserved for hero modules where dramatic vehicle positioning earned its keep.</p>
+    <p>Alongside the rebuild I ran <strong>Figma workshops</strong>, set up the component library and established the <strong>Principle animation patterns</strong> for interactive states and transitions — giving the rest of the design and dev team a shared, repeatable kit.</p>
+  </div>
+</section>
+
+<div class="case__split">
+  <img src="assets/jlr/03.jpg" alt="JLR responsive component — tablet" />
+  <img src="assets/jlr/04.jpg" alt="JLR responsive component — mobile" />
+</div>
+
+<section class="case__body">
+  <h2>Models &amp; <em>Specifications.</em></h2>
+  <div class="case__body__copy">
+    <p>In parallel, I overhauled the 'Models &amp; Specifications' pages for the global site across all 27 markets. Led the design, ran competitor and out-of-sector analysis, and made data-driven UX/UI calls for every major decision.</p>
+    <p>The trick was surfacing what users actually needed to pick the right vehicle — without the page collapsing under both brands' complex model and trim ranges. <strong>Every decision served the user first.</strong> The output had to be flexible enough to work across Jaguar's range and Land Rover's range simultaneously, because both brands shipped from the same template.</p>
+  </div>
+</section>
+
+<figure class="case__feature">
+  <img src="assets/jlr/05.jpg" alt="Models &amp; Specifications page detail" />
+  <figcaption class="case__caption">— Models &amp; Specifications, both brands</figcaption>
+</figure>
+
+<figure class="case__feature case__feature--full">
+  <img src="assets/jlr/06.jpg" alt="JLR multi-breakpoint validation" />
+</figure>
+
+<section class="outcomes">
+  <div class="outcome">
+    <span class="outcome__num"><em>↓</em> 35%</span>
+    <span class="outcome__lab">Site authoring time, end-to-end</span>
+  </div>
+  <div class="outcome">
+    <span class="outcome__num"><em>↑</em> 50%</span>
+    <span class="outcome__lab">Enquiry uplift on the configurator flow</span>
+  </div>
+  <div class="outcome">
+    <span class="outcome__num">27</span>
+    <span class="outcome__lab">Markets the rebuild rolled out to</span>
+  </div>
+</section>
+{% endblock %}
