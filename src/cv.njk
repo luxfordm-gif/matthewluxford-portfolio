@@ -114,11 +114,13 @@ p,li{text-wrap:pretty}
     /* align the contact block with the close button at top:32px */
     padding-top:2rem;
   }
+  /* drop the desktop grid-row pins so DOM order wins on mobile —
+     contact (first in markup) lands in row 1, then role, then intro. */
+  .cv-hero__contact,
   .cv-hero__role,
-  .cv-hero__intro,
-  .cv-hero__contact{grid-column:1}
+  .cv-hero__intro{grid-column:1;grid-row:auto}
   .cv-hero__contact{
-    grid-row:auto;align-items:flex-start;text-align:left;padding-top:0;
+    align-items:flex-start;text-align:left;padding-top:0;
     font-size:.92rem;line-height:1.7;color:var(--ink);
     margin-top:0;margin-bottom:0;
     /* clear the close button on the right */
