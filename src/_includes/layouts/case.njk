@@ -337,6 +337,26 @@ img,svg{display:block;max-width:100%}
 }
 .next a.next__cta:hover{transform:translateY(-2px)}
 
+/* pull quote — for occasional editorial breaks between body sections */
+.case__quote{
+  max-width:1400px;
+  margin:clamp(4rem,8vw,7rem) auto;
+  padding:0 var(--pad);
+  text-align:center;
+}
+.case__quote p{
+  font-family:var(--serif);font-style:italic;font-weight:400;
+  font-size:clamp(1.6rem,1.2rem + 1.4vw,2.6rem);
+  line-height:1.3;letter-spacing:-.01em;
+  color:var(--ink);
+  margin:0 auto;max-width:32ch;
+}
+.case__quote cite{
+  display:block;margin-top:1.25rem;
+  font-style:normal;font-family:var(--sans);
+  font-size:.85rem;letter-spacing:.04em;color:var(--muted);
+}
+
 /* scroll-reveal animation for body sections */
 .reveal{opacity:0;transform:translate3d(0,18px,0);transition:opacity .9s var(--ease), transform .9s var(--ease);will-change:opacity,transform}
 .reveal.is-in{opacity:1;transform:translate3d(0,0,0)}

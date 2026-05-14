@@ -1,0 +1,303 @@
+---
+title: "The Skate Farm · Case Study — Matthew Luxford"
+description: "A scrappy MVP that grew into 100+ pages and 22k+ Google clicks. A side project for a community-focused indoor skatepark in Sussex."
+canonical: "https://matthewluxford.co.uk/skatefarm.html"
+ogType: "article"
+ogImage: "https://matthewluxford.co.uk/assets/og-image.jpg"
+ogImageAlt: "Hire me already! — Matthew Luxford"
+fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800"
+accent: "#0f4d3a"
+accent2: "#34d399"
+caseTitle: "The Skate <em>Farm.</em>"
+caseLead: "Three pages to a hundred-plus. Day one: 32 clicks. Peak day: <strong>247</strong>. A side project I'm genuinely proud of — a community-focused indoor skatepark trying to reach families across Sussex."
+meta:
+  role: "Design &amp; CMS build"
+  timeline: "2025 – Present"
+  scope: "Web · CMS · SEO · Strategy"
+prev:
+  slug: "lifecake.html"
+  title: "Lifecake<em>.</em>"
+next:
+  slug: "reps.html"
+  title: "Reps<em>.</em>"
+---
+{% extends "layouts/case.njk" %}
+
+{% block pageStyles %}
+{{ super() }}
+<style>
+/* Skate Farm — bespoke "numbers" section: data-led chapters with tables, grids and bar lists */
+.case__numbers{
+  max-width:1400px;margin:clamp(4rem,7vw,6rem) auto 0;
+  padding:0 var(--pad);
+}
+.numbers-intro{text-align:center;max-width:820px;margin:0 auto clamp(2.5rem,5vw,4rem)}
+.numbers-intro__title{
+  font-family:var(--sans);font-weight:800;
+  font-size:clamp(2.8rem,1.6rem + 4.5vw,5.4rem);
+  letter-spacing:-.035em;line-height:1;margin:0 0 1.2rem;color:var(--ink);
+}
+.numbers-intro__title em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--accent-2)}
+.numbers-intro__lede{
+  font-size:clamp(1.05rem,1rem + .35vw,1.2rem);
+  line-height:1.7;color:var(--ink-2);margin:0 auto;max-width:58ch;
+}
+.numbers-intro__lede strong{color:var(--ink);font-weight:600}
+
+.numbers-chapter{
+  background:#0f4d3a;color:#fff;
+  border-radius:28px;
+  padding:clamp(2.5rem,4.5vw,3.5rem) clamp(2rem,4vw,3rem);
+  margin-top:clamp(1.25rem,2vw,1.75rem);
+}
+.numbers-chapter:first-of-type{margin-top:0}
+.numbers-chapter__eyebrow{
+  display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-2);font-weight:700;margin:0 0 .55rem;
+}
+.numbers-chapter__title{
+  font-family:var(--sans);font-weight:700;
+  font-size:clamp(1.6rem,1.2rem + 1.4vw,2.2rem);
+  letter-spacing:-.02em;line-height:1.15;color:#fff;margin:0 0 .8rem;
+}
+.numbers-chapter__title em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--accent-2)}
+.numbers-chapter__lede{
+  font-size:1rem;line-height:1.6;color:rgba(255,255,255,.78);
+  max-width:64ch;margin:0 0 1.8rem;
+}
+.numbers-chapter__lede strong{color:#fff;font-weight:600}
+.numbers-chapter__lede em{font-family:var(--serif);font-style:italic}
+
+.numbers-table{width:100%;border-collapse:collapse;margin-bottom:2.25rem}
+.numbers-table th, .numbers-table td{
+  padding:.85rem .5rem;text-align:left;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  font-size:clamp(.9rem,.85rem + .2vw,1rem);
+}
+.numbers-table th{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:600}
+.numbers-table td:first-child{color:rgba(255,255,255,.85)}
+.numbers-table td:nth-child(3) strong{color:var(--accent-2);font-weight:700}
+
+.numbers-callout{
+  font-size:clamp(1rem,.95rem + .3vw,1.15rem);
+  color:rgba(255,255,255,.85);
+  margin:0 0 2.5rem;line-height:1.55;
+}
+.numbers-callout strong{color:var(--accent-2);font-weight:700}
+
+.numbers-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(1rem,2vw,1.5rem);margin-bottom:2.5rem;align-items:start;
+}
+.numbers-grid__cell{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;gap:.4rem;
+}
+.numbers-grid__num{
+  font-family:var(--sans);font-weight:800;
+  font-size:clamp(1.6rem,1.2rem + 1.4vw,2.4rem);
+  letter-spacing:-.02em;line-height:1;color:#fff;
+}
+.numbers-grid__lab{font-size:.78rem;color:rgba(255,255,255,.65);line-height:1.35;margin:0}
+.numbers-grid__delta{font-size:.72rem;font-weight:700;letter-spacing:.04em;color:var(--accent-2);margin:0}
+.numbers-grid__delta--neutral{color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.02em}
+@media (max-width:880px){.numbers-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.numbers-grid{grid-template-columns:1fr}}
+
+.numbers-pages{display:flex;flex-direction:column;gap:.5rem}
+.numbers-pages__head{
+  display:flex;align-items:center;gap:1rem;
+  padding:0 0 .6rem;border-bottom:1px solid rgba(255,255,255,.12);
+  font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);font-weight:700;
+}
+.numbers-pages__head .numbers-pages__name{font-size:.65rem;letter-spacing:.12em;color:rgba(255,255,255,.45)}
+.numbers-pages__row{
+  display:flex;align-items:center;gap:1rem;
+  padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.numbers-pages__row:last-child{border-bottom:0}
+.numbers-pages__name{flex:1;font-size:.95rem;color:rgba(255,255,255,.85)}
+.numbers-pages__before{flex:0 0 90px;font-size:.78rem;color:rgba(255,255,255,.45);font-variant-numeric:tabular-nums;text-align:right}
+.numbers-pages__bar{flex:0 0 28%;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.numbers-pages__bar span{display:block;height:100%;background:var(--accent-2);border-radius:3px}
+.numbers-pages__num{font-size:.85rem;color:#fff;font-weight:700;font-variant-numeric:tabular-nums;width:80px;text-align:right}
+@media (max-width:680px){.numbers-pages__bar{display:none}.numbers-pages__before{flex:0 0 70px}}
+
+/* page-specific hero card tint */
+.case__hero{background:linear-gradient(160deg,#0f4d3a 0%,#08291e 100%)}
+.case__hero::before{
+  background:
+    radial-gradient(800px 400px at 80% 0%, rgba(52,211,153,.25), transparent 65%),
+    radial-gradient(600px 400px at 0% 100%, rgba(52,211,153,.12), transparent 60%);
+}
+</style>
+{% endblock %}
+
+{% block caseBody %}
+<section class="case__hero-img">
+  <img src="assets/skatefarm/hero.jpg" alt="The Skate Farm — community-focused indoor skatepark" loading="eager" />
+</section>
+
+<section class="case__body">
+  <h2>Why this one <em>mattered.</em></h2>
+  <div class="case__body__copy">
+    <p>My son fell in love with skateboarding about two years ago. <strong>Tom</strong> was his coach at The Skate Farm — and Tom's just one of those people. Genuinely nice, always helping someone, gives so much back to the community without ever making a thing of it. The kind of person you want to back.</p>
+    <p>So when there was a chance to help with the website, I was in. <strong>No brief, no scoping call.</strong> Just trust to crack on.</p>
+  </div>
+</section>
+
+<section class="case__hero" style="margin-top:clamp(5rem,9vw,7rem)">
+  <div class="case__hero-grid">
+    <div>
+      <h2>Shipped fast. <em>Sharpened constantly.</em></h2>
+      <p>Started with three pages doing the job. Now 100+ pages, an active blog, a network of Sussex location pages, and a habit of weekly iteration. Every search, every page, every word — earned its place.</p>
+    </div>
+    <div class="case__hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat__num">22<em>k</em></div>
+        <div class="hero-stat__lab">Google clicks since launch</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat__num">180<em>k</em></div>
+        <div class="hero-stat__lab">Search impressions</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat__num">157</div>
+        <div class="hero-stat__lab">Pages pulling organic traffic</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="case__body">
+  <h2>Working <em>it in.</em></h2>
+  <div class="case__body__copy">
+    <p>This was my third job. Already doing my nine-to-six, already had a stack of other freelance work on the side, and The Skate Farm sat under both of those. Which meant from day one the rules were simple: <strong>ship it, ship it fast, get something useful in front of people, refine over time.</strong></p>
+    <p>Every decision was made with one filter: <strong>will this help Tom reach more families?</strong> The point wasn't a portfolio-perfect mock. A community-focused indoor skatepark needs a site that earns its keep — pulling parents in across Sussex, turning searches into sessions. <em>Performance was the whole point.</em></p>
+  </div>
+</section>
+
+<section class="case__body">
+  <h2>How I <em>built it.</em></h2>
+  <div class="case__body__copy">
+    <p>Started with the basics: home, skateboarding, contact. Three pages, doing the job.</p>
+    <p>Then it became a rhythm. Small tweaks, watch the data, see what's working, do more of that. <strong>Claude became a proper teammate</strong> on this one — I'd pull Search Console exports, sit with Claude to work out what the numbers were actually saying, decide which markets were worth going after next, then build the pages to go after them. Brighton, Crawley, Horsham, Burgess Hill, Lewes, Worthing, East Grinstead, Horley — every one chosen because the data said the demand was there. Newer additions like <strong>Chichester, Tunbridge Wells, Reigate and Eastbourne</strong> all live and indexed within their first month.</p>
+    <p>Same logic with the blog. Less <em>"look at our skatepark"</em>, more <strong>"we can solve the thing you just typed into Google"</strong> — rainy day activities, indoor things to do with kids, school holiday ideas. Picked because the searches existed. Written because the searches existed.</p>
+    <p>The <strong>Sessions page</strong> — the page that actually turns visitors into bookings — is now ranking near the top of Google for the searches that matter. That's the page doing the real work.</p>
+    <p>Nothing on the site is precious. Everything earns its place.</p>
+  </div>
+</section>
+
+<section class="case__body">
+  <h2>What it <em>grew into.</em></h2>
+  <div class="case__body__copy">
+    <ul>
+      <li><strong>100+ pages</strong>, all shaped by real performance data</li>
+      <li><strong>An active blog</strong> targeting parent searches across Sussex</li>
+      <li><strong>A network of location pages</strong> covering everywhere within an hour's drive</li>
+      <li><strong>Constant iteration</strong> — every week something gets sharpened</li>
+    </ul>
+  </div>
+</section>
+
+<section class="case__numbers">
+  <div class="numbers-intro">
+    <h2 class="numbers-intro__title">The <em>numbers.</em></h2>
+    <p class="numbers-intro__lede">Site went live <strong>June 2025</strong>. Everything below is what's happened in the eleven months since — split into five short chapters so the data actually reads.</p>
+  </div>
+
+  <div class="numbers-chapter">
+    <span class="numbers-chapter__eyebrow">01 — Growth · launch vs today</span>
+    <h3 class="numbers-chapter__title">Up <em>2.3×</em>.</h3>
+    <p class="numbers-chapter__lede">First full month after launch, beside the best month so far. Same site, same team — steady iteration off real Search Console data.</p>
+    <table class="numbers-table">
+      <thead><tr><th></th><th>Launch (June 2025)</th><th>Peak (today)</th></tr></thead>
+      <tbody>
+        <tr><td>Clicks in a single day</td><td>32</td><td><strong>247</strong> · 3rd Jan 2026</td></tr>
+        <tr><td>Clicks in a month</td><td>1,279</td><td><strong>2,923</strong> · Jan 2026</td></tr>
+      </tbody>
+    </table>
+    <p class="numbers-callout">That's <strong>2.3× growth</strong> month-on-month — and <strong>52 separate days</strong> have now cleared 100 clicks.</p>
+  </div>
+
+  <div class="numbers-chapter">
+    <span class="numbers-chapter__eyebrow">02 — Total reach · cumulative since launch (11 months)</span>
+    <h3 class="numbers-chapter__title"><em>22k</em> real humans clicked through.</h3>
+    <p class="numbers-chapter__lede">Everything Google Search Console has logged from launch to today. Not sessions, not vanity views — actual people typing a query and clicking. Each card includes the lift versus the very first month.</p>
+    <div class="numbers-grid">
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">22,347</div><p class="numbers-grid__lab">Clicks from Google search</p><p class="numbers-grid__delta">↑17.5× vs first month</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">180,750</div><p class="numbers-grid__lab">Times a page showed up in results</p><p class="numbers-grid__delta">↑11× vs first month</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">17,944</div><p class="numbers-grid__lab">Visits to the homepage alone</p><p class="numbers-grid__delta">↑14× vs first month</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">157</div><p class="numbers-grid__lab">Pages now earning organic traffic</p><p class="numbers-grid__delta">+148 since launch (started with 9)</p></div>
+    </div>
+  </div>
+
+  <div class="numbers-chapter">
+    <span class="numbers-chapter__eyebrow">03 — The audience · who's finding it &amp; how</span>
+    <h3 class="numbers-chapter__title">Found <em>974</em> different ways.</h3>
+    <p class="numbers-chapter__lede">Branded searches mean people look for them by name. Non-brand means Google trusts the site for queries like "skate lessons near me" or "things to do with kids in Brighton".</p>
+    <div class="numbers-grid">
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">14,500+</div><p class="numbers-grid__lab">Branded "Skate Farm" searches</p><p class="numbers-grid__delta">People now searching by name</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">974</div><p class="numbers-grid__lab">Non-brand terms earning clicks</p><p class="numbers-grid__delta">Up from 38 in the first month</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">99%</div><p class="numbers-grid__lab">UK audience — the right catchment</p><p class="numbers-grid__delta numbers-grid__delta--neutral">No paid spend, all organic</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">86%</div><p class="numbers-grid__lab">On mobile — parents on the school run</p><p class="numbers-grid__delta numbers-grid__delta--neutral">Mobile-first build paid off</p></div>
+    </div>
+  </div>
+
+  <div class="numbers-chapter">
+    <span class="numbers-chapter__eyebrow">04 — Real-world impact · last 28 days vs Apr '25</span>
+    <h3 class="numbers-chapter__title">Pays the <em>bills.</em></h3>
+    <p class="numbers-chapter__lede">Search clicks are nice. For a local skatepark the numbers that matter are <strong>phone calls, directions and bookings</strong>. Google Business Profile, last 28 days against the same window before launch.</p>
+    <div class="numbers-grid">
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">50</div><p class="numbers-grid__lab">Phone calls from the listing</p><p class="numbers-grid__delta">↑108% vs Apr '25</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">405</div><p class="numbers-grid__lab">Directions requests — people heading there</p><p class="numbers-grid__delta">↑182% vs Apr '25</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">327</div><p class="numbers-grid__lab">Website visits straight from the profile</p><p class="numbers-grid__delta">↑240% vs Apr '25</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">3,400</div><p class="numbers-grid__lab">Profile views in the last 28 days</p><p class="numbers-grid__delta">↑310% vs Apr '25</p></div>
+      <div class="numbers-grid__cell"><div class="numbers-grid__num">903</div><p class="numbers-grid__lab">Searches showing the listing</p><p class="numbers-grid__delta">↑2,340% vs Apr '25</p></div>
+    </div>
+  </div>
+
+  <div class="numbers-chapter">
+    <span class="numbers-chapter__eyebrow">05 — Top pages · before vs now</span>
+    <h3 class="numbers-chapter__title">Built where the <em>demand</em> was.</h3>
+    <p class="numbers-chapter__lede">Every page below was built off a real search-demand signal — picked from Search Console after looking at what people were already trying to find. Most didn't exist before launch (0 clicks). Today they're the biggest doors into the site.</p>
+    <div class="numbers-pages">
+      <div class="numbers-pages__head"><span class="numbers-pages__name">Page</span><span class="numbers-pages__before">Before</span><span class="numbers-pages__bar" style="background:transparent"></span><span class="numbers-pages__num">Clicks now</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">Crawley location page</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:100%"></span></span><span class="numbers-pages__num">13,676</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">Brighton location page</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:80%"></span></span><span class="numbers-pages__num">10,883</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">Horsham location page</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:70%"></span></span><span class="numbers-pages__num">9,547</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">"Rainy day activities Sussex" blog</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:46%"></span></span><span class="numbers-pages__num">6,272</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">Burgess Hill location page</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:38%"></span></span><span class="numbers-pages__num">5,184</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">Lewes location page</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:32%"></span></span><span class="numbers-pages__num">4,361</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">Worthing location page</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:27%"></span></span><span class="numbers-pages__num">3,705</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">East Grinstead location page</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:22%"></span></span><span class="numbers-pages__num">2,988</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">"What to wear skateboarding" blog</span><span class="numbers-pages__before">0</span><span class="numbers-pages__bar"><span style="width:18%"></span></span><span class="numbers-pages__num">2,431</span></div>
+      <div class="numbers-pages__row"><span class="numbers-pages__name">Sessions / bookings page</span><span class="numbers-pages__before">142</span><span class="numbers-pages__bar"><span style="width:15%"></span></span><span class="numbers-pages__num">2,054</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="case__body">
+  <h2>What it <em>shows.</em></h2>
+  <div class="case__body__copy">
+    <p>A scrappy MVP, shipped fast, then sharpened constantly off real data — beats a perfect launch every time. <strong>Trust, speed, iteration, and a reason to care.</strong> That's the whole job.</p>
+    <p>And it doesn't hurt that I built it for someone who deserved it. <a href="https://theskatefarmcic.co.uk/" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;color:var(--ink)">Visit The Skate Farm →</a></p>
+  </div>
+</section>
+
+<section class="outcomes">
+  <div class="outcome">
+    <span class="outcome__num"><em>2.3×</em></span>
+    <span class="outcome__lab">Monthly traffic growth from first month to peak</span>
+  </div>
+  <div class="outcome">
+    <span class="outcome__num">100<em>+</em></span>
+    <span class="outcome__lab">Pages — every one earning its place</span>
+  </div>
+  <div class="outcome">
+    <span class="outcome__num">247</span>
+    <span class="outcome__lab">Clicks on the best single day · 3 Jan 2026</span>
+  </div>
+</section>
+{% endblock %}
