@@ -443,7 +443,7 @@ p,li{text-wrap:pretty}
 /* pagination dots under the work rail */
 .work__dots{
   display:flex;justify-content:center;gap:8px;
-  padding:0 var(--pad) clamp(2rem,5vw,3rem);
+  padding:clamp(14px,3vw,22px) var(--pad) clamp(2rem,5vw,3rem);
 }
 .work__dot{
   width:7px;height:7px;border-radius:50%;
@@ -617,7 +617,6 @@ p,li{text-wrap:pretty}
 .about{
   position:relative;z-index:2;
   padding:clamp(5rem,10vw,8rem) var(--pad) clamp(4rem,8vw,6rem);
-  border-top:1px solid var(--line);
 }
 .about__inner{
   max-width:1400px;
