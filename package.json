@@ -1,0 +1,14 @@
+{
+  "name": "matthewluxford-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Matthew Luxford — portfolio site",
+  "scripts": {
+    "build": "eleventy",
+    "dev": "eleventy --serve",
+    "check": "node scripts/check-shared-css.js"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

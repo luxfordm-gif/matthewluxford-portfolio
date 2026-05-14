@@ -11,6 +11,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
+const SRC = path.join(ROOT, "src");
 const FIX = process.argv.includes("--fix");
 
 const OPEN = /\/\*\s*@shared:\s*([\w-]+)\s*\*\//g;
@@ -18,9 +19,9 @@ const CLOSE = "/* @end-shared */";
 
 function listHtmlFiles() {
   return fs
-    .readdirSync(ROOT)
-    .filter((f) => f.endsWith(".html"))
-    .map((f) => path.join(ROOT, f));
+    .readdirSync(SRC)
+    .filter((f) => f.endsWith(".html") || f.endsWith(".njk"))
+    .map((f) => path.join(SRC, f));
 }
 
 function extractBlocks(file) {
