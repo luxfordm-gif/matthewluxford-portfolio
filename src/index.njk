@@ -209,7 +209,18 @@ p,li{text-wrap:pretty}
     transform:rotate(var(--r));
   }
 }
-.fcard:hover{
+@media (hover:hover){
+  .fcard:hover{
+    transform:translateY(-18px) rotate(0deg)!important;
+    box-shadow:0 50px 80px -25px rgba(0,0,0,.35);z-index:10;
+  }
+}
+/* mobile tap-to-pop — same lift as the desktop hover state.
+   JS adds .is-popped on tap and removes it on a second tap or
+   outside-tap. Link cards keep their <a> wrapper; only taps on the
+   designated link target (the masterclass pill, the AC/DC vinyl)
+   follow the link. */
+.fcard.is-popped{
   transform:translateY(-18px) rotate(0deg)!important;
   box-shadow:0 50px 80px -25px rgba(0,0,0,.35);z-index:10;
 }
@@ -392,6 +403,13 @@ p,li{text-wrap:pretty}
    each card converges to (top:170, margin-left:-109) at the 40% keyframe,
    then fans up/down to its final position. */
 @media (max-width:640px){
+  /* anchor hero to the top so the taller fan doesn't shove the title
+     off-screen — title stays where it was, fan flows below the fold. */
+  .hero{
+    min-height:auto;
+    justify-content:flex-start;
+    padding-top:clamp(6.5rem, 14vw, 9rem);
+  }
   .fan{padding:0 10px}
   .fan__inner{
     transform:none;
@@ -2106,6 +2124,40 @@ p,li{text-wrap:pretty}
       clock.textContent = `${h}:${m}:${s} ${ap}`;
     };
     tick(); setInterval(tick, 1000);
+  }
+
+  // Mobile tap-to-pop for the fanned hero cards. On phones (≤640px) the
+  // cards are stacked vertically; tapping a card lifts it above the others
+  // (.is-popped), tapping again — or tapping outside — drops it back.
+  // For the two link cards, only the designated child element follows the
+  // link; taps elsewhere on the card just toggle the pop state.
+  {
+    const mql = window.matchMedia("(max-width:640px)");
+    const cards = [...document.querySelectorAll(".fan .fcard")];
+    if (cards.length) {
+      const linkTarget = (card) => {
+        if (card.classList.contains("fcard--2")) return card.querySelector(".pill");
+        if (card.classList.contains("fcard--5")) return card.querySelector(".mu-disc-wrap");
+        return null;
+      };
+      const reset = () => cards.forEach((c) => c.classList.remove("is-popped"));
+      cards.forEach((card) => {
+        card.addEventListener("click", (e) => {
+          if (!mql.matches) return;
+          const target = linkTarget(card);
+          if (target && target.contains(e.target)) return; // let the link follow
+          e.preventDefault();
+          const wasPopped = card.classList.contains("is-popped");
+          reset();
+          if (!wasPopped) card.classList.add("is-popped");
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!mql.matches) return;
+        if (e.target.closest(".fan .fcard")) return;
+        reset();
+      });
+    }
   }
 
   // GA4: case study card clicks
