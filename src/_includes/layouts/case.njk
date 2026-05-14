@@ -89,6 +89,29 @@ img,svg{display:block;max-width:100%}
 @media (min-width:760px){
   .case__head{margin-bottom:clamp(32px,5.8vw,72px)}
 }
+
+/* head variant — split:
+   title at default size on top (use <br> in caseTitle to control the wrap);
+   lead body copy at default size underneath;
+   then Role | Timeline | Scope in a 3-column row at the bottom.
+   Opt-in via headVariant: "split". */
+.case__head--split{
+  grid-template-columns:1fr;
+  gap:clamp(1.5rem,3vw,2rem);
+}
+.case__head--split .case__intro{display:contents}
+.case__head--split .case__lead{margin:0;max-width:58ch}
+.case__head--split .case__meta{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:clamp(1.5rem,3vw,3rem);
+  margin-top:clamp(1rem,2vw,1.5rem);
+}
+.case__head--split .case__meta > div:nth-child(3){grid-column:auto}
+@media (max-width:880px){
+  .case__head--split .case__meta{grid-template-columns:1fr;gap:1.25rem;margin-top:1rem}
+}
+
 .case__title{
   font-family:var(--sans);font-weight:700;
   font-size:clamp(3rem,2rem + 7vw,9rem);
@@ -608,7 +631,7 @@ img,svg{display:block;max-width:100%}
   <a href="index.html#work">← Back to work</a>
 </nav>
 
-<header class="case__head">
+<header class="case__head{% if headVariant %} case__head--{{ headVariant }}{% endif %}">
   <h1 class="case__title">{{ caseTitle | safe }}</h1>
   <div class="case__intro">
     {%- if caseAward %}

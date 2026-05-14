@@ -8,7 +8,8 @@ ogImageAlt: "Hire me already! — Matthew Luxford"
 fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800"
 accent: "#0f4d3a"
 accent2: "#34d399"
-caseTitle: "The Skate Farm."
+headVariant: "split"
+caseTitle: "The Skate<br>Farm."
 caseLead: "Three pages to a hundred-plus. Day one: 32 clicks. Peak day: <strong>247</strong>. A side project I'm genuinely proud of — a community-focused indoor skatepark trying to reach families across Sussex."
 meta:
   role: "Design &amp; CMS build"
@@ -16,10 +17,10 @@ meta:
   scope: "Web · CMS · SEO · Strategy"
 prev:
   slug: "lifecake.html"
-  title: "Lifecake<em>.</em>"
+  title: "Lifecake."
 next:
   slug: "reps.html"
-  title: "Reps<em>.</em>"
+  title: "Reps."
 ---
 {% extends "layouts/case.njk" %}
 
@@ -135,73 +136,40 @@ next:
 {% endblock %}
 
 {% block caseBody %}
-<figure class="case__bleed case__bleed--top">
-  <picture>
-    <img src="assets/skatefarm/hero.jpg" alt="The Skate Farm — community-focused indoor skatepark" loading="eager" />
-  </picture>
-</figure>
+{% case_hero_image "assets/skatefarm/hero.jpg", "The Skate Farm — community-focused indoor skatepark" %}
 
-<section class="case__body">
-  <h2>Why this one <em>mattered.</em></h2>
-  <div class="case__body__copy">
-    <p>My son fell in love with skateboarding about two years ago. <strong>Tom</strong> was his coach at The Skate Farm — and Tom's just one of those people. Genuinely nice, always helping someone, gives so much back to the community without ever making a thing of it. The kind of person you want to back.</p>
-    <p>So when there was a chance to help with the website, I was in. <strong>No brief, no scoping call.</strong> Just trust to crack on.</p>
-  </div>
-</section>
+{% case_body "Why this one mattered." %}
+  <p>My son fell in love with skateboarding about two years ago. <strong>Tom</strong> was his coach at The Skate Farm — and Tom's just one of those people. Genuinely nice, always helping someone, gives so much back to the community without ever making a thing of it. The kind of person you want to back.</p>
+  <p>So when there was a chance to help with the website, I was in. <strong>No brief, no scoping call.</strong> Just trust to crack on.</p>
+{% endcase_body %}
 
-<section class="case__hero" style="margin-top:clamp(5rem,9vw,7rem)">
-  <div class="case__hero-grid">
-    <div>
-      <h2>Shipped fast. <em>Sharpened constantly.</em></h2>
-      <p>Started with three pages doing the job. Now 100+ pages, an active blog, a network of Sussex location pages, and a habit of weekly iteration. Every search, every page, every word — earned its place.</p>
-    </div>
-    <div class="case__hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat__num">22<em>k</em></div>
-        <div class="hero-stat__lab">Google clicks since launch</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat__num">180<em>k</em></div>
-        <div class="hero-stat__lab">Search impressions</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat__num">157</div>
-        <div class="hero-stat__lab">Pages pulling organic traffic</div>
-      </div>
-    </div>
-  </div>
-</section>
+{% case_hero "Shipped fast. <em>Sharpened constantly.</em>", "Started with three pages doing the job. Now 100+ pages, an active blog, a network of Sussex location pages, and a habit of weekly iteration. Every search, every page, every word — earned its place.", "clamp(5rem,9vw,7rem)" %}
+  {% hero_stat "22<em>k</em>", "Google clicks since launch" %}
+  {% hero_stat "180<em>k</em>", "Search impressions" %}
+  {% hero_stat "157", "Pages pulling organic traffic" %}
+{% endcase_hero %}
 
-<section class="case__body">
-  <h2>Working <em>it in.</em></h2>
-  <div class="case__body__copy">
-    <p>This was my third job. Already doing my nine-to-six, already had a stack of other freelance work on the side, and The Skate Farm sat under both of those. Which meant from day one the rules were simple: <strong>ship it, ship it fast, get something useful in front of people, refine over time.</strong></p>
-    <p>Every decision was made with one filter: <strong>will this help Tom reach more families?</strong> The point wasn't a portfolio-perfect mock. A community-focused indoor skatepark needs a site that earns its keep — pulling parents in across Sussex, turning searches into sessions. <em>Performance was the whole point.</em></p>
-  </div>
-</section>
+{% case_body "Working it in." %}
+  <p>This was my third job. Already doing my nine-to-six, already had a stack of other freelance work on the side, and The Skate Farm sat under both of those. Which meant from day one the rules were simple: <strong>ship it, ship it fast, get something useful in front of people, refine over time.</strong></p>
+  <p>Every decision was made with one filter: <strong>will this help Tom reach more families?</strong> The point wasn't a portfolio-perfect mock. A community-focused indoor skatepark needs a site that earns its keep — pulling parents in across Sussex, turning searches into sessions. <em>Performance was the whole point.</em></p>
+{% endcase_body %}
 
-<section class="case__body">
-  <h2>How I <em>built it.</em></h2>
-  <div class="case__body__copy">
-    <p>Started with the basics: home, skateboarding, contact. Three pages, doing the job.</p>
-    <p>Then it became a rhythm. Small tweaks, watch the data, see what's working, do more of that. <strong>Claude became a proper teammate</strong> on this one — I'd pull Search Console exports, sit with Claude to work out what the numbers were actually saying, decide which markets were worth going after next, then build the pages to go after them. Brighton, Crawley, Horsham, Burgess Hill, Lewes, Worthing, East Grinstead, Horley — every one chosen because the data said the demand was there. Newer additions like <strong>Chichester, Tunbridge Wells, Reigate and Eastbourne</strong> all live and indexed within their first month.</p>
-    <p>Same logic with the blog. Less <em>"look at our skatepark"</em>, more <strong>"we can solve the thing you just typed into Google"</strong> — rainy day activities, indoor things to do with kids, school holiday ideas. Picked because the searches existed. Written because the searches existed.</p>
-    <p>The <strong>Sessions page</strong> — the page that actually turns visitors into bookings — is now ranking near the top of Google for the searches that matter. That's the page doing the real work.</p>
-    <p>Nothing on the site is precious. Everything earns its place.</p>
-  </div>
-</section>
+{% case_body "How I built it." %}
+  <p>Started with the basics: home, skateboarding, contact. Three pages, doing the job.</p>
+  <p>Then it became a rhythm. Small tweaks, watch the data, see what's working, do more of that. <strong>Claude became a proper teammate</strong> on this one — I'd pull Search Console exports, sit with Claude to work out what the numbers were actually saying, decide which markets were worth going after next, then build the pages to go after them. Brighton, Crawley, Horsham, Burgess Hill, Lewes, Worthing, East Grinstead, Horley — every one chosen because the data said the demand was there. Newer additions like <strong>Chichester, Tunbridge Wells, Reigate and Eastbourne</strong> all live and indexed within their first month.</p>
+  <p>Same logic with the blog. Less <em>"look at our skatepark"</em>, more <strong>"we can solve the thing you just typed into Google"</strong> — rainy day activities, indoor things to do with kids, school holiday ideas. Picked because the searches existed. Written because the searches existed.</p>
+  <p>The <strong>Sessions page</strong> — the page that actually turns visitors into bookings — is now ranking near the top of Google for the searches that matter. That's the page doing the real work.</p>
+  <p>Nothing on the site is precious. Everything earns its place.</p>
+{% endcase_body %}
 
-<section class="case__body">
-  <h2>What it <em>grew into.</em></h2>
-  <div class="case__body__copy">
-    <ul>
-      <li><strong>100+ pages</strong>, all shaped by real performance data</li>
-      <li><strong>An active blog</strong> targeting parent searches across Sussex</li>
-      <li><strong>A network of location pages</strong> covering everywhere within an hour's drive</li>
-      <li><strong>Constant iteration</strong> — every week something gets sharpened</li>
-    </ul>
-  </div>
-</section>
+{% case_body "What it grew into." %}
+  <ul>
+    <li><strong>100+ pages</strong>, all shaped by real performance data</li>
+    <li><strong>An active blog</strong> targeting parent searches across Sussex</li>
+    <li><strong>A network of location pages</strong> covering everywhere within an hour's drive</li>
+    <li><strong>Constant iteration</strong> — every week something gets sharpened</li>
+  </ul>
+{% endcase_body %}
 
 <section class="case__numbers">
   <div class="numbers-intro">
@@ -280,26 +248,14 @@ next:
   </div>
 </section>
 
-<section class="case__body">
-  <h2>What it <em>shows.</em></h2>
-  <div class="case__body__copy">
-    <p>A scrappy MVP, shipped fast, then sharpened constantly off real data — beats a perfect launch every time. <strong>Trust, speed, iteration, and a reason to care.</strong> That's the whole job.</p>
-    <p>And it doesn't hurt that I built it for someone who deserved it. <a href="https://theskatefarmcic.co.uk/" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;color:var(--ink)">Visit The Skate Farm →</a></p>
-  </div>
-</section>
+{% case_body "What it shows." %}
+  <p>A scrappy MVP, shipped fast, then sharpened constantly off real data — beats a perfect launch every time. <strong>Trust, speed, iteration, and a reason to care.</strong> That's the whole job.</p>
+  <p>And it doesn't hurt that I built it for someone who deserved it. <a href="https://theskatefarmcic.co.uk/" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;color:var(--ink)">Visit The Skate Farm →</a></p>
+{% endcase_body %}
 
-<section class="outcomes">
-  <div class="outcome">
-    <span class="outcome__num"><em>2.3×</em></span>
-    <span class="outcome__lab">Monthly traffic growth from first month to peak</span>
-  </div>
-  <div class="outcome">
-    <span class="outcome__num">100<em>+</em></span>
-    <span class="outcome__lab">Pages — every one earning its place</span>
-  </div>
-  <div class="outcome">
-    <span class="outcome__num">247</span>
-    <span class="outcome__lab">Clicks on the best single day · 3 Jan 2026</span>
-  </div>
-</section>
+{% outcomes %}
+  {% outcome "<em>2.3×</em>", "Monthly traffic growth from first month to peak" %}
+  {% outcome "100<em>+</em>", "Pages — every one earning its place" %}
+  {% outcome "247", "Clicks on the best single day · 3 Jan 2026" %}
+{% endoutcomes %}
 {% endblock %}

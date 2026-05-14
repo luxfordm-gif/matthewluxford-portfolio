@@ -16,76 +16,43 @@ meta:
   scope: "Brand · UX · UI · iOS · Android · Web"
 prev:
   slug: "collective.html"
-  title: "The <em>Collective.</em>"
+  title: "The Collective."
 next:
   slug: "skatefarm.html"
-  title: "The Skate <em>Farm.</em>"
+  title: "The Skate Farm."
 ---
 {% extends "layouts/case.njk" %}
 
 {% block caseBody %}
-<figure class="case__bleed case__bleed--top">
-  <picture>
-    <img src="assets/lifecake/hero.jpg" alt="Lifecake — Apple Best of 2019 hero" loading="eager" />
-  </picture>
-</figure>
+{% case_hero_image "assets/lifecake/hero.jpg", "Lifecake — Apple Best of 2019 hero" %}
 
-<section class="case__body">
-  <h2>The <em>brief.</em></h2>
-  <div class="case__body__copy">
-    <p>Lifecake had millions of parents using it but the product felt fragmented. The native apps and the web platform had drifted apart visually, the brand identity was due a refresh, and the timeline experience — Lifecake's core promise of <em>"a beautiful timeline of your child's moments"</em> — wasn't telling stories, just storing photos.</p>
-    <p>The mandate: <strong>unify the experience</strong> across iOS, Android and web, refresh the brand identity and tone of voice, and ship a story-led timeline that felt as warm as the moments inside it.</p>
-  </div>
-</section>
+{% case_body "The brief." %}
+  <p>Lifecake had millions of parents using it but the product felt fragmented. The native apps and the web platform had drifted apart visually, the brand identity was due a refresh, and the timeline experience — Lifecake's core promise of <em>"a beautiful timeline of your child's moments"</em> — wasn't telling stories, just storing photos.</p>
+  <p>The mandate: <strong>unify the experience</strong> across iOS, Android and web, refresh the brand identity and tone of voice, and ship a story-led timeline that felt as warm as the moments inside it.</p>
+{% endcase_body %}
 
-<figure class="case__feature">
-  <img src="assets/lifecake/02.jpg" alt="Lifecake timeline experience" />
-  <figcaption class="case__caption">— Story-led timeline experience</figcaption>
-</figure>
+{% case_feature "assets/lifecake/02.jpg", "Lifecake timeline experience", "Story-led timeline experience" %}
 
-<section class="case__body">
-  <h2>The <em>approach.</em></h2>
-  <div class="case__body__copy">
-    <p>Started with research — interviewing parents about what they actually did with the photos they uploaded, what they shared, what they searched for, what they printed. Most weren't looking for "all photos in date order" — they were looking for a <strong>story</strong> they could send to grandparents.</p>
-    <p>From there, redesigned the timeline around moments and stories rather than a chronological grid. New visual identity — softer, warmer, more editorial. Updated the tone of voice. Implemented user-centred design practices across the small but agile team and worked closely with iOS, Android and web engineers to ship in lockstep.</p>
-    <p>Worked extensively on the iOS 13 keynote-style refresh, the responsive web overhaul, and a new "Treasure" feature for surfacing forgotten moments back to parents.</p>
-  </div>
-</section>
+{% case_body "The approach." %}
+  <p>Started with research — interviewing parents about what they actually did with the photos they uploaded, what they shared, what they searched for, what they printed. Most weren't looking for "all photos in date order" — they were looking for a <strong>story</strong> they could send to grandparents.</p>
+  <p>From there, redesigned the timeline around moments and stories rather than a chronological grid. New visual identity — softer, warmer, more editorial. Updated the tone of voice. Implemented user-centred design practices across the small but agile team and worked closely with iOS, Android and web engineers to ship in lockstep.</p>
+  <p>Worked extensively on the iOS 13 keynote-style refresh, the responsive web overhaul, and a new "Treasure" feature for surfacing forgotten moments back to parents.</p>
+{% endcase_body %}
 
-<div class="case__split">
-  <img src="assets/lifecake/03.jpg" alt="Lifecake app screen — moments view" />
-  <img src="assets/lifecake/04.jpg" alt="Lifecake app screen — story view" />
-</div>
+{% case_split "assets/lifecake/03.jpg", "Lifecake app screen — moments view", "assets/lifecake/04.jpg", "Lifecake app screen — story view" %}
 
-<section class="case__body">
-  <h2>The <em>award.</em></h2>
-  <div class="case__body__copy">
-    <p>In December 2019, Apple awarded Lifecake <strong>"Best of 2019"</strong> in the category <em>"The Storyteller Within"</em> — selected from thousands of App Store submissions. As the only web designer on a five-person team, this remains my most memorable career win.</p>
-    <p>Lifecake was featured worldwide on the App Store. The recognition validated the bet on stories over storage — the redesign made the product about <em>parents and their kids</em>, not about file management.</p>
-  </div>
-</section>
+{% case_body "The award." %}
+  <p>In December 2019, Apple awarded Lifecake <strong>"Best of 2019"</strong> in the category <em>"The Storyteller Within"</em> — selected from thousands of App Store submissions. As the only web designer on a five-person team, this remains my most memorable career win.</p>
+  <p>Lifecake was featured worldwide on the App Store. The recognition validated the bet on stories over storage — the redesign made the product about <em>parents and their kids</em>, not about file management.</p>
+{% endcase_body %}
 
-<figure class="case__feature case__feature--full">
-  <img src="assets/lifecake/award2.jpg" alt="Apple Best of 2019 — The Storyteller Within" />
-</figure>
+{% case_feature_full "assets/lifecake/award2.jpg", "Apple Best of 2019 — The Storyteller Within" %}
 
-<div class="case__split">
-  <img src="assets/lifecake/05.jpg" alt="Lifecake responsive web" />
-  <img src="assets/lifecake/06.jpg" alt="Lifecake brand refresh" />
-</div>
+{% case_split "assets/lifecake/05.jpg", "Lifecake responsive web", "assets/lifecake/06.jpg", "Lifecake brand refresh" %}
 
-<section class="outcomes">
-  <div class="outcome outcome--featured">
-    <span class="outcome__num">★ <em>'19</em></span>
-    <span class="outcome__lab">Apple Best of 2019 — "The Storyteller Within"</span>
-  </div>
-  <div class="outcome">
-    <span class="outcome__num">3.4<em>M</em></span>
-    <span class="outcome__lab">Active users worldwide</span>
-  </div>
-  <div class="outcome">
-    <span class="outcome__num">385<em>k</em></span>
-    <span class="outcome__lab">Distinct users per month</span>
-  </div>
-</section>
+{% outcomes %}
+  {% outcome "★ <em>'19</em>", "Apple Best of 2019 — \"The Storyteller Within\"", "featured" %}
+  {% outcome "3.4<em>M</em>", "Active users worldwide" %}
+  {% outcome "385<em>k</em>", "Distinct users per month" %}
+{% endoutcomes %}
 {% endblock %}
