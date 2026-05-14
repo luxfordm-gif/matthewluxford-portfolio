@@ -387,7 +387,41 @@ p,li{text-wrap:pretty}
   font-family:var(--serif);font-style:italic;margin-top:1px;
 }
 @media (max-width:760px){.fan__inner{transform:scale(.85)}}
-@media (max-width:560px){.fan__inner{transform:scale(.7);height:280px}}
+/* mobile: cards animate stacked → spread vertically (not horizontally)
+   so the outermost cards stop clipping off the edge of the viewport.
+   each card converges to (top:170, margin-left:-109) at the 40% keyframe,
+   then fans up/down to its final position. */
+@media (max-width:640px){
+  .fan{padding:0 10px}
+  .fan__inner{
+    transform:none;
+    width:218px;
+    height:600px;
+    margin:0 auto;
+  }
+  .fcard{left:50%}
+  .fcard--1{
+    margin-left:-129px;top:0;
+    --r:-7deg;--stack-tx:20px;--stack-ty:170px;--stack-r:-2deg;
+  }
+  .fcard--2{
+    margin-left:-79px;top:80px;
+    --r:5deg;--stack-tx:-30px;--stack-ty:90px;--stack-r:3deg;
+  }
+  .fcard--2 .mc-body{justify-content:flex-start;padding-top:50px}
+  .fcard--5{
+    margin-left:-109px;top:170px;
+    --r:-2deg;--stack-tx:0;--stack-ty:0;--stack-r:-1deg;
+  }
+  .fcard--3{
+    margin-left:-139px;top:240px;
+    --r:-5deg;--stack-tx:30px;--stack-ty:-70px;--stack-r:-3deg;
+  }
+  .fcard--4{
+    margin-left:-89px;top:310px;
+    --r:6deg;--stack-tx:-20px;--stack-ty:-140px;--stack-r:4deg;
+  }
+}
 
 /* ========================================================= marquee */
 .marquee{
