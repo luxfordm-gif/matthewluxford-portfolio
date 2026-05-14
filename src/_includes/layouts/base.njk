@@ -2,6 +2,37 @@
 <html lang="en">
 <head>
 {% include "partials/head-meta.njk" %}
+<style>
+/* Design tokens — single source of truth for spacing, widths, type scale.
+   Defined here so every page inherits the same values. Per-page CSS in
+   pageStyles below can reference them (e.g. padding: var(--sp-xl) var(--pad)).
+   Hand-tuned clamp() values are still allowed for one-offs; tokens are for
+   anything that should stay consistent across components. */
+:root{
+  /* spacing scale (vertical rhythm + section gaps) */
+  --sp-xs:clamp(8px,1.5vw,14px);
+  --sp-sm:clamp(14px,3vw,22px);
+  --sp-md:clamp(24px,5vw,40px);
+  --sp-lg:clamp(40px,8vw,64px);
+  --sp-xl:clamp(64px,12vw,96px);
+  --sp-2xl:clamp(96px,16vw,144px);
+
+  /* content widths */
+  --w-content:1400px;
+  --w-prose:62ch;
+  --w-narrow:48ch;
+
+  /* typography scale */
+  --fs-h1:clamp(3rem,2rem + 7vw,9rem);
+  --fs-h2:clamp(1.6rem,1.2rem + 1.5vw,2.4rem);
+  --fs-h3:clamp(1.4rem,1.2rem + .8vw,1.8rem);
+  --fs-h4:clamp(1.1rem,1rem + .4vw,1.28rem);
+  --fs-body-lg:clamp(1.1rem,1rem + .5vw,1.4rem);
+  --fs-body:clamp(.95rem,.9rem + .25vw,1.05rem);
+  --fs-body-sm:14px;
+  --fs-caption:12px;
+}
+</style>
 {% block pageStyles %}{% endblock %}
 </head>
 <body id="top">
