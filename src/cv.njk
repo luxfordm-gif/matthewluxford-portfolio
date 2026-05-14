@@ -108,16 +108,31 @@ p,li{text-wrap:pretty}
 .cv-hero__intro{grid-column:1;grid-row:2}
 .cv-hero__contact{grid-column:2;grid-row:1;align-self:start;padding-top:1rem}
 @media (max-width:720px){
-  .cv-hero{grid-template-columns:1fr;row-gap:2.5rem;padding-top:clamp(4.5rem,14vw,6rem)}
+  .cv-hero{
+    grid-template-columns:1fr;
+    row-gap:clamp(3rem, 8vw, 4.5rem);
+    /* align the contact block with the close button at top:32px */
+    padding-top:2rem;
+  }
   .cv-hero__role,
   .cv-hero__intro,
   .cv-hero__contact{grid-column:1}
   .cv-hero__contact{
     grid-row:auto;align-items:flex-start;text-align:left;padding-top:0;
     font-size:.92rem;line-height:1.7;color:var(--ink);
-    margin-top:1rem;margin-bottom:0;
+    margin-top:0;margin-bottom:0;
+    /* clear the close button on the right */
+    padding-right:60px;
   }
   .cv-hero__contact .status{margin-top:6px;font-weight:500}
+  .cv-hero__role .role-main{
+    font-size:clamp(2.25rem, 1.5rem + 4vw, 3rem);
+  }
+  .cv-hero__role .role-sub{
+    font-size:clamp(1.2rem, .9rem + 2vw, 1.6rem);
+    font-weight:500;
+    line-height:1.3;
+  }
 }
 .cv-hero__eyebrow{
   font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
