@@ -630,6 +630,7 @@ p,li{text-wrap:pretty}
 .proj__crumb{
   font-size:16px;line-height:1.5;color:var(--ink-2);
   padding:0 .25rem;max-width:50ch;
+  margin-top:-4px;
 }
 .proj__crumb b{color:var(--ink);font-weight:500}
 .proj__crumb .sep{width:3px;height:3px;border-radius:50%;background:var(--dot)}
@@ -1174,7 +1175,7 @@ p,li{text-wrap:pretty}
 .secret-footer{
   position:fixed;left:0;right:0;bottom:0;
   height:62vh;z-index:1;
-  background:#070707;
+  background-color:transparent;
   background-image:
     linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
@@ -1182,7 +1183,13 @@ p,li{text-wrap:pretty}
   color:#fff;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:6vh var(--pad);
+  pointer-events:none;
+  transition:background-color .55s var(--ease);
   cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23fde047' stroke='%23000' stroke-width='1.6'/><circle cx='12' cy='13' r='1.6' fill='%23000'/><circle cx='20' cy='13' r='1.6' fill='%23000'/><path d='M10.5 18.5 Q16 24 21.5 18.5' stroke='%23000' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>") 16 16, default;
+}
+.secret-footer.is-revealed{
+  background-color:#070707;
+  pointer-events:auto;
 }
 .secret-footer *{
   cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23fde047' stroke='%23000' stroke-width='1.6'/><circle cx='12' cy='13' r='1.6' fill='%23000'/><circle cx='20' cy='13' r='1.6' fill='%23000'/><path d='M10.5 18.5 Q16 24 21.5 18.5' stroke='%23000' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>") 16 16, pointer;
@@ -1522,28 +1529,25 @@ p,li{text-wrap:pretty}
         <div class="proj__crumb">A training app I designed and built for myself.</div>
       </a>
 
-      <a class="proj is-soon" href="skatefarm.html">
-        <div class="proj__media proj__media--06">
-          <span class="proj__badge proj__badge--side">Side project</span>
-          <span class="proj__logo" style="background:#0f4d3a;color:#fff">SF</span>
-          <div class="phone">
-            <div class="phone__screen dk">
-              <div class="mock-line s"></div>
-              <div class="mock-grid" style="grid-template-columns:repeat(2,1fr)">
-                <span style="background:#34d399"></span><span style="background:#0a0a0a"></span>
-                <span style="background:#0f4d3a"></span><span style="background:#34d399"></span>
-              </div>
+      <a class="proj is-soon" href="jlr.html">
+        <div class="proj__media proj__media--01">
+          <span class="proj__badge">Coming soon</span>
+          <span class="proj__logo">JLR</span>
+          <div class="laptop">
+            <div class="laptop__screen">
+              <div class="mock-bar"><i></i><i></i><i></i></div>
+              <div class="mock-line d"></div>
+              <div class="mock-grid"><span></span><span></span><span></span><span></span></div>
               <div class="mock-line"></div>
               <div class="mock-line s"></div>
-              <div class="mock-line d" style="margin-top:auto;height:30px;border-radius:999px;background:#34d399"></div>
             </div>
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">The Skate Farm <em>— brand &amp; app</em></h3>
-          <span class="proj__year">2025 – Present</span>
+          <h3 class="proj__name">JLR <em>— web &amp; design system</em></h3>
+          <span class="proj__year">2017 – 2024</span>
         </div>
-        <div class="proj__crumb">Scrappy MVP. 100+ pages, 22k Google clicks.</div>
+        <div class="proj__crumb">Ground-up rebuild across 27 markets and two brands.</div>
       </a>
 
       <a class="proj is-soon" href="#" aria-disabled="true">
@@ -1610,25 +1614,28 @@ p,li{text-wrap:pretty}
         <div class="proj__crumb">Brand and product overhaul. 3.4M users.</div>
       </a>
 
-      <a class="proj is-soon" href="jlr.html">
-        <div class="proj__media proj__media--01">
-          <span class="proj__badge">Coming soon</span>
-          <span class="proj__logo">JLR</span>
-          <div class="laptop">
-            <div class="laptop__screen">
-              <div class="mock-bar"><i></i><i></i><i></i></div>
-              <div class="mock-line d"></div>
-              <div class="mock-grid"><span></span><span></span><span></span><span></span></div>
+      <a class="proj is-soon" href="skatefarm.html">
+        <div class="proj__media proj__media--06">
+          <span class="proj__badge proj__badge--side">Side project</span>
+          <span class="proj__logo" style="background:#0f4d3a;color:#fff">SF</span>
+          <div class="phone">
+            <div class="phone__screen dk">
+              <div class="mock-line s"></div>
+              <div class="mock-grid" style="grid-template-columns:repeat(2,1fr)">
+                <span style="background:#34d399"></span><span style="background:#0a0a0a"></span>
+                <span style="background:#0f4d3a"></span><span style="background:#34d399"></span>
+              </div>
               <div class="mock-line"></div>
               <div class="mock-line s"></div>
+              <div class="mock-line d" style="margin-top:auto;height:30px;border-radius:999px;background:#34d399"></div>
             </div>
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">JLR <em>— web &amp; design system</em></h3>
-          <span class="proj__year">2017 – 2024</span>
+          <h3 class="proj__name">The Skate Farm <em>— brand &amp; app</em></h3>
+          <span class="proj__year">2025 – Present</span>
         </div>
-        <div class="proj__crumb">Ground-up rebuild across 27 markets and two brands.</div>
+        <div class="proj__crumb">Scrappy MVP. 100+ pages, 22k Google clicks.</div>
       </a>
     </div>
     <div class="work__controls">

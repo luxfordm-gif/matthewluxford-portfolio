@@ -271,7 +271,7 @@ img,svg{display:block;max-width:100%}
 .secret-footer{
   position:fixed;left:0;right:0;bottom:0;
   height:62vh;z-index:1;
-  background:#070707;
+  background-color:transparent;
   background-image:
     linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
@@ -279,7 +279,13 @@ img,svg{display:block;max-width:100%}
   color:#fff;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:6vh var(--pad);
+  pointer-events:none;
+  transition:background-color .55s var(--ease);
   cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23fde047' stroke='%23000' stroke-width='1.6'/><circle cx='12' cy='13' r='1.6' fill='%23000'/><circle cx='20' cy='13' r='1.6' fill='%23000'/><path d='M10.5 18.5 Q16 24 21.5 18.5' stroke='%23000' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>") 16 16, default;
+}
+.secret-footer.is-revealed{
+  background-color:#070707;
+  pointer-events:auto;
 }
 .secret-footer *{
   cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='%23fde047' stroke='%23000' stroke-width='1.6'/><circle cx='12' cy='13' r='1.6' fill='%23000'/><circle cx='20' cy='13' r='1.6' fill='%23000'/><path d='M10.5 18.5 Q16 24 21.5 18.5' stroke='%23000' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>") 16 16, pointer;
@@ -577,14 +583,14 @@ img,svg{display:block;max-width:100%}
 
 <section class="next">
   <p class="next__eyebrow">Previous project</p>
-  <h2 class="next__title">Lifecake<em>.</em></h2>
-  <a class="next__cta" href="lifecake.html">← View case study</a>
+  <h2 class="next__title">Reps<em>.</em></h2>
+  <a class="next__cta" href="reps.html">← View case study</a>
 </section>
 
 <section class="next" style="border-top:none;padding-top:calc(clamp(4rem,8vw,7rem) - 30px)">
   <p class="next__eyebrow">Next project</p>
-  <h2 class="next__title">Reps<em>.</em></h2>
-  <a class="next__cta" href="reps.html">View case study →</a>
+  <h2 class="next__title">The <em>Collective.</em></h2>
+  <a class="next__cta" href="collective.html">View case study →</a>
 </section>
 
 <footer class="terms-footer">
