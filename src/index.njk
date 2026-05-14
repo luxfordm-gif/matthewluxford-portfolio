@@ -30,7 +30,7 @@ navLinkBase: ""
   --ease:cubic-bezier(.2,.7,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
 html,body{margin:0;padding:0;max-width:100%}
 body{
   font-family:var(--sans);
@@ -431,31 +431,48 @@ p,li{text-wrap:pretty}
   scroll-snap-type:x mandatory;
   scroll-padding-left:var(--pad);
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;scrollbar-color:var(--dot) transparent;
+  scrollbar-width:none;
 }
-.work__rail::-webkit-scrollbar{height:6px}
-.work__rail::-webkit-scrollbar-thumb{background:var(--dot);border-radius:999px}
+.work__rail::-webkit-scrollbar{display:none}
 
 .proj{
   scroll-snap-align:start;display:flex;flex-direction:column;gap:1rem;
   text-decoration:none;color:inherit;
 }
 
-/* pagination dots under the work rail (mobile) */
+/* prev/next arrows under the work rail (desktop) */
+.work__controls{
+  display:flex;justify-content:center;gap:12px;
+  padding:clamp(14px,3vw,22px) var(--pad) clamp(2rem,5vw,3rem);
+}
+.work__arrow{
+  width:44px;height:44px;border-radius:50%;
+  background:transparent;color:var(--ink);
+  border:1px solid var(--line);padding:0;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease), opacity .25s var(--ease);
+}
+.work__arrow svg{display:block;width:18px;height:18px}
+.work__arrow:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);transform:translateY(-1px)}
+.work__arrow:active{transform:translateY(0) scale(.96)}
+.work__arrow[disabled]{opacity:.3;cursor:not-allowed;pointer-events:none}
+
+/* pagination dots — mobile only */
 .work__dots{display:none}
+.work__dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--dot);border:0;padding:0;cursor:pointer;
+  transition:background .3s var(--ease), transform .3s var(--ease), width .3s var(--ease);
+}
+.work__dot.is-active{
+  background:var(--ink);
+  width:22px;border-radius:999px;
+}
 @media (max-width:760px){
+  .work__controls{display:none}
   .work__dots{
     display:flex;justify-content:center;gap:8px;
-    padding:0 var(--pad) clamp(2rem,5vw,3rem);
-  }
-  .work__dot{
-    width:7px;height:7px;border-radius:50%;
-    background:var(--dot);border:0;padding:0;cursor:pointer;
-    transition:background .3s var(--ease), transform .3s var(--ease), width .3s var(--ease);
-  }
-  .work__dot.is-active{
-    background:var(--ink);
-    width:22px;border-radius:999px;
+    padding:clamp(14px,3vw,22px) var(--pad) clamp(2rem,5vw,3rem);
   }
 }
 
@@ -471,8 +488,6 @@ p,li{text-wrap:pretty}
     scroll-behavior:smooth;
     overscroll-behavior-x:contain;
   }
-  .work__rail::-webkit-scrollbar{display:none}
-  .work__rail{scrollbar-width:none}
   .proj{
     scroll-snap-align:center;
     scroll-snap-stop:always;
@@ -537,6 +552,7 @@ p,li{text-wrap:pretty}
   z-index:4;
   box-shadow:0 4px 10px -2px rgba(0,0,0,.4);
 }
+.proj__badge--side{background:#E8E4DC;color:#1A1A1A}
 .proj.is-soon .proj__media{
   filter:saturate(.9);
 }
@@ -598,7 +614,7 @@ p,li{text-wrap:pretty}
 .phone__screen.dk .mock-line.d{background:#fff}
 
 .proj__caption{
-  display:flex;justify-content:space-between;align-items:flex-start;
+  display:flex;justify-content:space-between;align-items:baseline;
   gap:1rem;padding:0 .25rem;
 }
 .proj__name{
@@ -612,8 +628,9 @@ p,li{text-wrap:pretty}
   font-variant-numeric:tabular-nums;flex-shrink:0;
 }
 .proj__crumb{
-  display:flex;gap:8px;align-items:center;flex-wrap:wrap;
-  font-size:.85rem;color:var(--muted);padding:0 .25rem;
+  font-size:16px;line-height:1.5;color:var(--ink-2);
+  padding:0 .25rem;max-width:50ch;
+  margin-top:-4px;
 }
 .proj__crumb b{color:var(--ink);font-weight:500}
 .proj__crumb .sep{width:3px;height:3px;border-radius:50%;background:var(--dot)}
@@ -622,7 +639,6 @@ p,li{text-wrap:pretty}
 .about{
   position:relative;z-index:2;
   padding:clamp(5rem,10vw,8rem) var(--pad) clamp(4rem,8vw,6rem);
-  border-top:1px solid var(--line);
 }
 .about__inner{
   max-width:1400px;
@@ -710,7 +726,7 @@ p,li{text-wrap:pretty}
 }
 .about__lead{
   font-size:clamp(1.05rem,.95rem + .55vw,1.4rem);
-  font-weight:600;line-height:37px;color:var(--ink);
+  font-weight:400;line-height:37px;color:var(--ink);
   letter-spacing:-.01em;
   max-width:32ch;
 }
@@ -1488,10 +1504,23 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">Kraken <em>— Crypto exchange</em></h3>
+          <h3 class="proj__name">Kraken <em>— crypto exchange</em></h3>
           <span class="proj__year">2024 – Present</span>
         </div>
-        <div class="proj__crumb"><b>Senior Web Designer</b><span class="sep"></span>Logged out web</div>
+        <div class="proj__crumb">Logged-out web for the global crypto exchange.</div>
+      </a>
+
+      <a class="proj is-soon" href="reps.html">
+        <div class="proj__media proj__media--07" style="background:#f6f5f0">
+          <span class="proj__badge proj__badge--side">Side project</span>
+          <img src="assets/reps-thumb.webp" alt="Reps app & brand mockup" loading="eager"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
+        </div>
+        <div class="proj__caption">
+          <h3 class="proj__name">Reps <em>— app design &amp; build</em></h3>
+          <span class="proj__year">2026</span>
+        </div>
+        <div class="proj__crumb">A training app I designed and built for myself.</div>
       </a>
 
       <a class="proj is-soon" href="jlr.html">
@@ -1509,10 +1538,10 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">Jaguar Land Rover <em>— Design System</em></h3>
+          <h3 class="proj__name">JLR <em>— web &amp; design system</em></h3>
           <span class="proj__year">2017 – 2024</span>
         </div>
-        <div class="proj__crumb"><b>Design Lead</b><span class="sep"></span>Web &amp; Native</div>
+        <div class="proj__crumb">Ground-up rebuild across 27 markets and two brands.</div>
       </a>
 
       <a class="proj is-soon" href="#" aria-disabled="true">
@@ -1530,10 +1559,30 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">Yoppie <em>— Brand &amp; App</em></h3>
+          <h3 class="proj__name">Yoppie <em>— brand &amp; app</em></h3>
           <span class="proj__year">2021 – 2022</span>
         </div>
-        <div class="proj__crumb"><b>Lead Product Designer</b><span class="sep"></span>Subscription</div>
+        <div class="proj__crumb">End-to-end design for the women's-health DTC.</div>
+      </a>
+
+      <a class="proj is-soon" href="collective.html">
+        <div class="proj__media proj__media--04">
+          <span class="proj__badge">Coming soon</span>
+          <span class="proj__logo" style="background:#fff;color:#1e293b">TC</span>
+          <div class="laptop">
+            <div class="laptop__screen">
+              <div class="mock-bar"><i></i><i></i><i></i></div>
+              <div style="flex:1;border-radius:6px;background:linear-gradient(135deg,#fde68a 0 50%,#1e293b 50%)"></div>
+              <div class="mock-line"></div>
+              <div class="mock-line s"></div>
+            </div>
+          </div>
+        </div>
+        <div class="proj__caption">
+          <h3 class="proj__name">The Collective <em>— editorial</em></h3>
+          <span class="proj__year">2020 – 2021</span>
+        </div>
+        <div class="proj__crumb">Booking flow rebuild. 500% lift in enquiries, month one.</div>
       </a>
 
       <a class="proj is-soon" href="lifecake.html">
@@ -1556,32 +1605,12 @@ p,li{text-wrap:pretty}
           <h3 class="proj__name">Lifecake <em>— Apple feature.</em></h3>
           <span class="proj__year">2018 – 2019</span>
         </div>
-        <div class="proj__crumb"><b>Lead Designer</b><span class="sep"></span>iOS &amp; Android</div>
-      </a>
-
-      <a class="proj is-soon" href="collective.html">
-        <div class="proj__media proj__media--04">
-          <span class="proj__badge">Coming soon</span>
-          <span class="proj__logo" style="background:#fff;color:#1e293b">TC</span>
-          <div class="laptop">
-            <div class="laptop__screen">
-              <div class="mock-bar"><i></i><i></i><i></i></div>
-              <div style="flex:1;border-radius:6px;background:linear-gradient(135deg,#fde68a 0 50%,#1e293b 50%)"></div>
-              <div class="mock-line"></div>
-              <div class="mock-line s"></div>
-            </div>
-          </div>
-        </div>
-        <div class="proj__caption">
-          <h3 class="proj__name">The Collective <em>— editorial</em></h3>
-          <span class="proj__year">2020 – 2021</span>
-        </div>
-        <div class="proj__crumb"><b>Lead Designer</b><span class="sep"></span>Editorial · CMS</div>
+        <div class="proj__crumb">Brand and product overhaul. 3.4M users.</div>
       </a>
 
       <a class="proj is-soon" href="skatefarm.html">
         <div class="proj__media proj__media--06">
-          <span class="proj__badge">Coming soon</span>
+          <span class="proj__badge proj__badge--side">Side project</span>
           <span class="proj__logo" style="background:#0f4d3a;color:#fff">SF</span>
           <div class="phone">
             <div class="phone__screen dk">
@@ -1600,22 +1629,16 @@ p,li{text-wrap:pretty}
           <h3 class="proj__name">The Skate Farm <em>— brand &amp; app</em></h3>
           <span class="proj__year">2025 – Present</span>
         </div>
-        <div class="proj__crumb"><b>Designer</b><span class="sep"></span>Side project</div>
+        <div class="proj__crumb">Scrappy MVP. 100+ pages, 22k Google clicks.</div>
       </a>
-
-      <a class="proj is-soon" href="reps.html">
-        <div class="proj__media proj__media--07" style="background:#f6f5f0">
-          <span class="proj__badge">Coming soon</span>
-          <img src="assets/reps-thumb.webp" alt="Reps app & brand mockup" loading="eager"
-               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
-        </div>
-        <div class="proj__caption">
-          <h3 class="proj__name">Reps <em>— app design &amp; build</em></h3>
-          <span class="proj__year">2026</span>
-        </div>
-        <div class="proj__crumb"><b>Designer &amp; Developer</b><span class="sep"></span>Side project</div>
-      </a>
-
+    </div>
+    <div class="work__controls">
+      <button class="work__arrow work__arrow--prev" type="button" aria-label="Previous work" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      </button>
+      <button class="work__arrow work__arrow--next" type="button" aria-label="Next work">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
     </div>
     <div class="work__dots" aria-hidden="true"></div>
   </section>
@@ -1630,7 +1653,7 @@ p,li{text-wrap:pretty}
 
     <div class="about__intro">
       <div class="about__lead">
-        I'm <strong>Matthew Luxford</strong>, a Senior Web Designer based in <strong>Surrey, UK</strong>.
+        I'm <strong>Matthew Luxford</strong>, a Senior&nbsp;Web&nbsp;Designer based in <strong>Surrey,&nbsp;UK</strong>.
       </div>
       <div class="about__body">
         <p>Eighteen years across UX, UI, brand, and design systems. Currently freelance and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
@@ -1831,6 +1854,31 @@ p,li{text-wrap:pretty}
     workRail.addEventListener("scroll", updateDots, { passive: true });
     window.addEventListener("resize", updateDots);
     updateDots();
+  }
+
+  // prev/next arrows for the work rail (desktop)
+  const prevBtn = document.querySelector(".work__arrow--prev");
+  const nextBtn = document.querySelector(".work__arrow--next");
+  if (workRail && prevBtn && nextBtn) {
+    const scrollByCard = (dir) => {
+      const card = workRail.querySelector(".proj");
+      if (!card) return;
+      const style = getComputedStyle(workRail);
+      const gap = parseFloat(style.columnGap || style.gap || "0") || 0;
+      const step = card.getBoundingClientRect().width + gap;
+      workRail.scrollBy({ left: dir * step, behavior: "smooth" });
+    };
+    prevBtn.addEventListener("click", () => scrollByCard(-1));
+    nextBtn.addEventListener("click", () => scrollByCard(1));
+    const updateArrows = () => {
+      const atStart = workRail.scrollLeft <= 1;
+      const atEnd = workRail.scrollLeft + workRail.clientWidth >= workRail.scrollWidth - 1;
+      prevBtn.toggleAttribute("disabled", atStart);
+      nextBtn.toggleAttribute("disabled", atEnd);
+    };
+    workRail.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+    updateArrows();
   }
 
   // drag-to-scroll on the work rail
