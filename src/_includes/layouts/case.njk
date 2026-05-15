@@ -56,9 +56,8 @@ img,svg{display:block;max-width:100%}
 .nav__brand-letters{display:inline-flex}
 .nav__brand-letters span{display:inline-block;will-change:transform}
 @keyframes navBrandWave{0%{transform:translateY(0)}45%{transform:translateY(-.5em)}100%{transform:translateY(0)}}
-.nav__brand:hover .nav__brand-letters span,
-.nav__brand:focus-visible .nav__brand-letters span{animation:navBrandWave .55s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i) * 45ms)}
-@media (prefers-reduced-motion: reduce){.nav__brand:hover .nav__brand-letters span{animation:none}}
+.nav__brand.is-waving .nav__brand-letters span{animation:navBrandWave .55s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i) * 45ms)}
+@media (prefers-reduced-motion: reduce){.nav__brand.is-waving .nav__brand-letters span{animation:none}}
 .nav__right{display:flex;align-items:center;gap:clamp(1.5rem,3vw,2.6rem)}
 .nav__links{display:flex;gap:clamp(1.25rem,2.6vw,2rem)}
 .nav__links a{font-size:1rem;color:var(--ink);font-weight:500}

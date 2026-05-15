@@ -11,3 +11,24 @@
     <a class="nav__cta" href="cv.html">My CV</a>
   </div>
 </header>
+<script>
+(function(){
+  var brand = document.querySelector('.nav__brand');
+  if (!brand) return;
+  var letters = brand.querySelectorAll('.nav__brand-letters span');
+  var last = letters[letters.length - 1];
+  if (!last) return;
+  var playing = false;
+  function start(){
+    if (playing) return;
+    playing = true;
+    brand.classList.add('is-waving');
+  }
+  last.addEventListener('animationend', function(){
+    brand.classList.remove('is-waving');
+    playing = false;
+  });
+  brand.addEventListener('mouseenter', start);
+  brand.addEventListener('focus', start);
+})();
+</script>
