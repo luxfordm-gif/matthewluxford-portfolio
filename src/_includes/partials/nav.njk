@@ -1,5 +1,7 @@
 <header class="nav">
-  <a class="nav__brand" href="{{ navBrandHref | default('index.html') }}">matthew.</a>
+  <a class="nav__brand" href="{{ navBrandHref | default('index.html') }}" aria-label="matthew.">
+    <span class="nav__brand-letters" aria-hidden="true"><span style="--i:0">m</span><span style="--i:1">a</span><span style="--i:2">t</span><span style="--i:3">t</span><span style="--i:4">h</span><span style="--i:5">e</span><span style="--i:6">w</span><span style="--i:7">.</span></span>
+  </a>
   <div class="nav__right">
     <nav class="nav__links" aria-label="Primary">
       <a href="{{ navLinkBase | default('index.html') }}#work">Work</a>
