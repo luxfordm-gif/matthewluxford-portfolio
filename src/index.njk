@@ -86,7 +86,22 @@ p,li{text-wrap:pretty}
   padding-top:14px;padding-bottom:14px;
 }
 .nav.is-hidden{transform:translateY(-110%)}
-.nav__brand{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:inherit}
+.nav__brand{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:inherit;display:inline-block;text-decoration:none}
+.nav__brand-letters{display:inline-flex}
+.nav__brand-letters span{display:inline-block;will-change:transform}
+@keyframes navBrandWave{
+  0%   {transform:translateY(0)}
+  45%  {transform:translateY(-.5em)}
+  100% {transform:translateY(0)}
+}
+.nav__brand:hover .nav__brand-letters span,
+.nav__brand:focus-visible .nav__brand-letters span{
+  animation:navBrandWave .55s cubic-bezier(.22,1,.36,1) both;
+  animation-delay:calc(var(--i) * 45ms);
+}
+@media (prefers-reduced-motion: reduce){
+  .nav__brand:hover .nav__brand-letters span{animation:none}
+}
 .nav__right{display:flex;align-items:center;gap:clamp(1.5rem,3vw,2.6rem)}
 .nav__links{display:flex;gap:clamp(1.25rem,2.6vw,2rem)}
 .nav__links a{font-size:1rem;color:inherit;font-weight:500;position:relative}
@@ -472,14 +487,30 @@ p,li{text-wrap:pretty}
 }
 .work__title{
   font-family:var(--sans);font-weight:700;
-  font-size:clamp(3.5rem,2rem + 11vw,16rem);
-  letter-spacing:-.05em;line-height:.9;
+  font-size:clamp(2.75rem,1rem + 7vw,8.75rem);
+  letter-spacing:-.04em;line-height:.95;
   margin:0;color:var(--ink);
 }
+.work__title em{font-family:var(--serif);font-style:italic;font-weight:500}
+.work__title-line{
+  display:block;
+  opacity:0;
+  transform:translateY(.6em);
+  transition:opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+}
+.work__title-line:nth-child(2){transition-delay:.12s}
+.work__title-line:nth-child(3){transition-delay:.24s}
+.work__head.is-in .work__title-line{opacity:1;transform:none}
 .work__hint{
   display:block;margin-top:clamp(1rem,2vw,1.5rem);
   font-size:.85rem;color:var(--muted);
   letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  opacity:0;transform:translateY(.5rem);
+  transition:opacity .8s cubic-bezier(.22,1,.36,1) .42s, transform .8s cubic-bezier(.22,1,.36,1) .42s;
+}
+.work__head.is-in .work__hint{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  .work__title-line,.work__hint{opacity:1;transform:none;transition:none}
 }
 .work__rail{
   display:grid;grid-auto-flow:column;
@@ -1548,7 +1579,11 @@ p,li{text-wrap:pretty}
   <!-- FEATURED WORK -->
   <section class="work" id="work">
     <header class="work__head">
-      <h2 class="work__title">Featured work</h2>
+      <h2 class="work__title">
+        <span class="work__title-line">I help companies</span>
+        <span class="work__title-line">succeed on</span>
+        <span class="work__title-line"><em>projects</em> like</span>
+      </h2>
       <span class="work__hint">(scroll to explore)</span>
     </header>
 
@@ -2086,6 +2121,27 @@ p,li{text-wrap:pretty}
     tCards.forEach((c) => tIO.observe(c));
   } else {
     tCards.forEach((c) => c.classList.add("is-visible"));
+  }
+
+  // featured-work header reveal
+  const workHead = document.querySelector(".work__head");
+  if (workHead) {
+    if ("IntersectionObserver" in window) {
+      const wIO = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-in");
+              wIO.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.25 }
+      );
+      wIO.observe(workHead);
+    } else {
+      workHead.classList.add("is-in");
+    }
   }
 
   // testimonials: "Read them all" reveals hidden ones (mobile only)

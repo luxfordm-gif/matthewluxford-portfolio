@@ -52,7 +52,13 @@ img,svg{display:block;max-width:100%}
   padding-top:14px;padding-bottom:14px;
 }
 .nav.is-hidden{transform:translateY(-110%)}
-.nav__brand{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:var(--ink)}
+.nav__brand{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:var(--ink);display:inline-block;text-decoration:none}
+.nav__brand-letters{display:inline-flex}
+.nav__brand-letters span{display:inline-block;will-change:transform}
+@keyframes navBrandWave{0%{transform:translateY(0)}45%{transform:translateY(-.5em)}100%{transform:translateY(0)}}
+.nav__brand:hover .nav__brand-letters span,
+.nav__brand:focus-visible .nav__brand-letters span{animation:navBrandWave .55s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i) * 45ms)}
+@media (prefers-reduced-motion: reduce){.nav__brand:hover .nav__brand-letters span{animation:none}}
 .nav__right{display:flex;align-items:center;gap:clamp(1.5rem,3vw,2.6rem)}
 .nav__links{display:flex;gap:clamp(1.25rem,2.6vw,2rem)}
 .nav__links a{font-size:1rem;color:var(--ink);font-weight:500}
