@@ -596,6 +596,12 @@ p,li{text-wrap:pretty}
   box-shadow:0 50px 80px -40px rgba(0,0,0,.32);
 }
 .proj__media--01{background:#2563eb}
+.proj__video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+}
+.proj__media--video{padding:0}
+.proj__caption{margin-top:18px}
 .proj__media--02{background:#fde68a}
 .proj__media--03{background:#7f1d1d}
 .proj__media--04{background:#1e293b}
@@ -1581,18 +1587,13 @@ p,li{text-wrap:pretty}
       </a>
 
       <a class="proj is-soon" href="jlr.html">
-        <div class="proj__media proj__media--01">
+        <div class="proj__media proj__media--01 proj__media--video">
           <span class="proj__badge">Coming soon</span>
           <span class="proj__logo">JLR</span>
-          <div class="laptop">
-            <div class="laptop__screen">
-              <div class="mock-bar"><i></i><i></i><i></i></div>
-              <div class="mock-line d"></div>
-              <div class="mock-grid"><span></span><span></span><span></span><span></span></div>
-              <div class="mock-line"></div>
-              <div class="mock-line s"></div>
-            </div>
-          </div>
+          <video class="proj__video" autoplay muted loop playsinline preload="metadata"
+                 poster="assets/jlr/defender-bg-poster.webp" aria-hidden="true">
+            <source src="assets/jlr/defender-bg.mp4" type="video/mp4">
+          </video>
         </div>
         <div class="proj__caption">
           <h3 class="proj__name">JLR <em>— web &amp; design system</em></h3>
@@ -1615,7 +1616,7 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">Yoppie <em>— brand &amp; app</em></h3>
+          <h3 class="proj__name">Yoppie <em>— design leadership</em></h3>
         </div>
         <div class="proj__crumb">End-to-end design for the women's-health DTC.</div>
       </a>
@@ -1679,9 +1680,9 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption">
-          <h3 class="proj__name">The Skate Farm <em>— brand &amp; app</em></h3>
+          <h3 class="proj__name">The Skate Farm <em>— brand, design &amp; build</em></h3>
         </div>
-        <div class="proj__crumb">Scrappy MVP. 100+ pages, 22k Google clicks.</div>
+        <div class="proj__crumb">Full site build. 22k organic clicks in first year.</div>
       </a>
     </div>
     <div class="work__controls">
