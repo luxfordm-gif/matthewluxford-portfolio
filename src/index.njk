@@ -1107,14 +1107,6 @@ p,li{text-wrap:pretty}
 @media (max-width:880px){
   .testimonials__shell{clip-path:inset(0 20px round 28px)}
 }
-.testimonials__shell::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(to right, rgba(255,255,255,.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
-  background-size:40px 40px;
-  mask-image:radial-gradient(ellipse 80% 60% at 80% 30%, #000 0%, transparent 80%);
-}
 .testimonials__card{
   position:relative;z-index:1;
   max-width:1900px;margin:0 auto;
@@ -1257,8 +1249,8 @@ p,li{text-wrap:pretty}
   height:62vh;z-index:1;
   background:#070707;
   background-image:
-    linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255,255,255,.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.015) 1px, transparent 1px);
   background-size:32px 32px;
   color:#fff;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
