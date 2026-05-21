@@ -1945,6 +1945,27 @@ p,li{text-wrap:pretty}
       const DURATION = 520;
       const EASE = "cubic-bezier(.22, .9, .32, 1.08)";
 
+      // Capture target snap index from the *current* (pre-animation) scroll
+      // position, and freeze snapping for the duration of the animation.
+      // With scroll-snap-type: x mandatory, Chrome re-snaps to whichever
+      // card's transformed start-edge is closest to the rail's start, so a
+      // -step translate on every visible card drags scrollLeft backwards by
+      // ~one step mid-animation. (First click stays at 0 because scrollLeft
+      // can't go negative, which masked the bug.) Removing snap during the
+      // animation lets scrollLeft stay put until we commit it ourselves.
+      const beforeIdx = Math.round(workRail.scrollLeft / step);
+      const targetIdx = Math.max(0, Math.min(projsForArrows.length - 1, beforeIdx + dir));
+      // Clamp the target to what the rail can actually scroll to. At the
+      // right edge the last "step" is smaller than `step` (cards' overflow
+      // is less than a full card-width), so animating by a full -step would
+      // slide cards past the real landing point and reveal an empty gap.
+      const maxScroll = Math.max(0, workRail.scrollWidth - workRail.clientWidth);
+      const targetScroll = Math.max(0, Math.min(maxScroll, targetIdx * step));
+      const delta = targetScroll - workRail.scrollLeft;
+      if (!delta) { busy = false; return; }
+      const prevSnap = workRail.style.scrollSnapType;
+      workRail.style.scrollSnapType = "none";
+
       // Belt-and-braces: cancel any leftover finished animations from a
       // previous step that may still be holding a fill on these cards.
       active.forEach((el) => {
@@ -1964,7 +1985,7 @@ p,li{text-wrap:pretty}
         const anim = el.animate(
           [
             { transform: "translate3d(0,0,0)" },
-            { transform: `translate3d(${-dir * step}px, 0, 0)` },
+            { transform: `translate3d(${-delta}px, 0, 0)` },
           ],
           {
             duration: DURATION,
@@ -1983,16 +2004,13 @@ p,li{text-wrap:pretty}
         /* a cancel raced in — fall through to cleanup */
       }
 
-      // Land exactly on the next snap point. scroll-snap-type: x mandatory
-      // would otherwise pull us to the nearest, but using the cumulative
-      // index keeps fractional pixel drift from accumulating across steps.
-      const beforeIdx = Math.round(workRail.scrollLeft / step);
-      const targetIdx = Math.max(0, Math.min(projsForArrows.length - 1, beforeIdx + dir));
       // Commit scrollLeft and drop the fill in the same task so the next
       // frame paints the final state directly — no "untranslated + old
-      // scrollLeft" flash in between.
-      workRail.scrollLeft = targetIdx * step;
+      // scrollLeft" flash in between. Restore snap after, so drag/wheel/
+      // touch scrolling still gets the mandatory-snap feel.
+      workRail.scrollLeft = targetScroll;
       animations.forEach((a) => a.cancel());
+      workRail.style.scrollSnapType = prevSnap;
 
       busy = false;
       updateArrows();
