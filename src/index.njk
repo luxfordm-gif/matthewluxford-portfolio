@@ -1913,7 +1913,9 @@ p,li{text-wrap:pretty}
       return card.getBoundingClientRect().width + gap;
     };
 
-    const elasticStep = (dir) => {
+    let updateArrows;
+
+    const elasticStep = async (dir) => {
       if (busy) return;
       const step = stepSize();
       if (!step) return;
@@ -1939,52 +1941,67 @@ p,li{text-wrap:pretty}
 
       busy = true;
 
-      const STAGGER = 45;      // ms between successive cards
-      const DURATION = 520;    // ms per card
-      const EASE = "cubic-bezier(.22, .9, .32, 1.08)"; // mild overshoot
+      const STAGGER = 45;
+      const DURATION = 520;
+      const EASE = "cubic-bezier(.22, .9, .32, 1.08)";
 
-      active.forEach((el, i) => {
+      // Belt-and-braces: cancel any leftover finished animations from a
+      // previous step that may still be holding a fill on these cards.
+      active.forEach((el) => {
+        el.getAnimations().forEach((a) => {
+          if (a.id === "work-rail-step") a.cancel();
+        });
+      });
+
+      // WAAPI gives us a per-card `finished` promise, so we commit
+      // scrollLeft exactly when the last card lands — no setTimeout slop,
+      // no forced reflow, and no will-change toggling (which was creating
+      // and destroying compositor layers on every click).
+      const animations = active.map((el, i) => {
         // dir > 0 (next): rightmost card leads, leftmost lags behind.
         // dir < 0 (prev): leftmost leads, rightmost lags.
         const order = dir > 0 ? active.length - 1 - i : i;
-        el.style.willChange = "transform";
-        el.style.transition = `transform ${DURATION}ms ${EASE} ${order * STAGGER}ms`;
-        el.style.transform = `translate3d(${-dir * step}px, 0, 0)`;
+        const anim = el.animate(
+          [
+            { transform: "translate3d(0,0,0)" },
+            { transform: `translate3d(${-dir * step}px, 0, 0)` },
+          ],
+          {
+            duration: DURATION,
+            delay: order * STAGGER,
+            easing: EASE,
+            fill: "forwards",
+          }
+        );
+        anim.id = "work-rail-step";
+        return anim;
       });
 
-      const total = DURATION + (active.length - 1) * STAGGER + 30;
-      window.setTimeout(() => {
-        // Strip transitions before we commit scrollLeft, otherwise the cards
-        // would animate from their translated state back to zero on top of
-        // the scroll jump.
-        active.forEach((el) => {
-          el.style.transition = "none";
-          el.style.transform = "";
-        });
-        // Force a synchronous layout read so the style flush lands before
-        // we mutate scrollLeft.
-        void workRail.offsetHeight;
-        // Land exactly on the next snap point. scroll-snap-type: x mandatory
-        // would otherwise pull us to the nearest, but using the cumulative
-        // index keeps fractional pixel drift from accumulating.
-        const beforeIdx = Math.round(workRail.scrollLeft / step);
-        const targetIdx = Math.max(0, Math.min(projsForArrows.length - 1, beforeIdx + dir));
-        workRail.scrollLeft = targetIdx * step;
-        requestAnimationFrame(() => {
-          active.forEach((el) => {
-            el.style.transition = "";
-            el.style.willChange = "";
-          });
-          busy = false;
-          updateArrows();
-        });
-      }, total);
+      try {
+        await Promise.all(animations.map((a) => a.finished));
+      } catch (e) {
+        /* a cancel raced in — fall through to cleanup */
+      }
+
+      // Land exactly on the next snap point. scroll-snap-type: x mandatory
+      // would otherwise pull us to the nearest, but using the cumulative
+      // index keeps fractional pixel drift from accumulating across steps.
+      const beforeIdx = Math.round(workRail.scrollLeft / step);
+      const targetIdx = Math.max(0, Math.min(projsForArrows.length - 1, beforeIdx + dir));
+      // Commit scrollLeft and drop the fill in the same task so the next
+      // frame paints the final state directly — no "untranslated + old
+      // scrollLeft" flash in between.
+      workRail.scrollLeft = targetIdx * step;
+      animations.forEach((a) => a.cancel());
+
+      busy = false;
+      updateArrows();
     };
 
     prevBtn.addEventListener("click", () => elasticStep(-1));
     nextBtn.addEventListener("click", () => elasticStep(1));
 
-    const updateArrows = () => {
+    updateArrows = () => {
       if (busy) return;
       const atStart = workRail.scrollLeft <= 1;
       const atEnd = workRail.scrollLeft + workRail.clientWidth >= workRail.scrollWidth - 1;
