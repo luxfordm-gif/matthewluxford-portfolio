@@ -1895,21 +1895,97 @@ p,li{text-wrap:pretty}
     updateDots();
   }
 
-  // prev/next arrows for the work rail (desktop)
+  // prev/next arrows for the work rail (desktop) — elastic, staggered step.
+  // Drag, wheel and touch scrolling keep their native scroll-snap behaviour;
+  // only the arrow buttons trigger the spring/lag animation.
   const prevBtn = document.querySelector(".work__arrow--prev");
   const nextBtn = document.querySelector(".work__arrow--next");
   if (workRail && prevBtn && nextBtn) {
-    const scrollByCard = (dir) => {
+    const projsForArrows = [...workRail.querySelectorAll(".proj")];
+    const mqElastic = window.matchMedia("(min-width: 761px) and (prefers-reduced-motion: no-preference)");
+    let busy = false;
+
+    const stepSize = () => {
       const card = workRail.querySelector(".proj");
-      if (!card) return;
+      if (!card) return 0;
       const style = getComputedStyle(workRail);
       const gap = parseFloat(style.columnGap || style.gap || "0") || 0;
-      const step = card.getBoundingClientRect().width + gap;
-      workRail.scrollBy({ left: dir * step, behavior: "smooth" });
+      return card.getBoundingClientRect().width + gap;
     };
-    prevBtn.addEventListener("click", () => scrollByCard(-1));
-    nextBtn.addEventListener("click", () => scrollByCard(1));
+
+    const elasticStep = (dir) => {
+      if (busy) return;
+      const step = stepSize();
+      if (!step) return;
+
+      // Reduced motion or below the desktop breakpoint → native smooth scroll.
+      if (!mqElastic.matches) {
+        workRail.scrollBy({ left: dir * step, behavior: "smooth" });
+        return;
+      }
+
+      // Only animate cards in (or just outside) the viewport — they're the
+      // ones the eye sees moving. Off-screen cards stay put and reappear
+      // correctly once scrollLeft is committed at the end.
+      const railRect = workRail.getBoundingClientRect();
+      const active = projsForArrows.filter((p) => {
+        const r = p.getBoundingClientRect();
+        return r.right > railRect.left - step && r.left < railRect.right + step;
+      });
+      if (!active.length) {
+        workRail.scrollBy({ left: dir * step, behavior: "smooth" });
+        return;
+      }
+
+      busy = true;
+
+      const STAGGER = 45;      // ms between successive cards
+      const DURATION = 520;    // ms per card
+      const EASE = "cubic-bezier(.22, .9, .32, 1.08)"; // mild overshoot
+
+      active.forEach((el, i) => {
+        // dir > 0 (next): rightmost card leads, leftmost lags behind.
+        // dir < 0 (prev): leftmost leads, rightmost lags.
+        const order = dir > 0 ? active.length - 1 - i : i;
+        el.style.willChange = "transform";
+        el.style.transition = `transform ${DURATION}ms ${EASE} ${order * STAGGER}ms`;
+        el.style.transform = `translate3d(${-dir * step}px, 0, 0)`;
+      });
+
+      const total = DURATION + (active.length - 1) * STAGGER + 30;
+      window.setTimeout(() => {
+        // Strip transitions before we commit scrollLeft, otherwise the cards
+        // would animate from their translated state back to zero on top of
+        // the scroll jump.
+        active.forEach((el) => {
+          el.style.transition = "none";
+          el.style.transform = "";
+        });
+        // Force a synchronous layout read so the style flush lands before
+        // we mutate scrollLeft.
+        void workRail.offsetHeight;
+        // Land exactly on the next snap point. scroll-snap-type: x mandatory
+        // would otherwise pull us to the nearest, but using the cumulative
+        // index keeps fractional pixel drift from accumulating.
+        const beforeIdx = Math.round(workRail.scrollLeft / step);
+        const targetIdx = Math.max(0, Math.min(projsForArrows.length - 1, beforeIdx + dir));
+        workRail.scrollLeft = targetIdx * step;
+        requestAnimationFrame(() => {
+          active.forEach((el) => {
+            el.style.transition = "";
+            el.style.willChange = "";
+          });
+          busy = false;
+          updateArrows();
+        });
+      }, total);
+    };
+
+    prevBtn.addEventListener("click", () => elasticStep(-1));
+    nextBtn.addEventListener("click", () => elasticStep(1));
+
     const updateArrows = () => {
+      if (busy) return;
       const atStart = workRail.scrollLeft <= 1;
       const atEnd = workRail.scrollLeft + workRail.clientWidth >= workRail.scrollWidth - 1;
       prevBtn.toggleAttribute("disabled", atStart);
