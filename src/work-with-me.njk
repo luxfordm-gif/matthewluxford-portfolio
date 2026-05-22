@@ -1,0 +1,1208 @@
+---
+title: "Work with me — Matthew Luxford"
+description: "Senior web design and AI-augmented builds. Brief to shipped, one head doing all of it."
+canonical: "https://matthewluxford.co.uk/work-with-me.html"
+ogType: "website"
+ogImage: "https://matthewluxford.co.uk/assets/og-image.jpg"
+ogImageAlt: "Work with Matthew Luxford"
+fonts: "Fraunces:ital,wght@1,300..500&family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600"
+---
+{% extends "layouts/base.njk" %}
+
+{% block pageStyles %}
+<style>
+:root{
+  --bg:#000000;
+  --ink:#f5f3ee;
+  --muted:#8a857a;
+  --line:rgba(255,255,255,.08);
+  --accent:#ffe600;
+  --sans:"Geist","Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Fraunces",ui-serif,Georgia,serif;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --pad:clamp(1.25rem,4vw,3.5rem);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+html,body{margin:0;padding:0;max-width:100%}
+body{
+  font-family:var(--sans);
+  font-size:clamp(.95rem,.9rem + .25vw,1.05rem);
+  line-height:1.55;color:var(--ink);
+  background:var(--bg);
+  overflow-x:clip;
+  text-wrap:pretty;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;background:none;border:0;cursor:pointer;color:inherit}
+::selection{background:var(--accent);color:#0F0F0E}
+
+/* ============================================================== nav */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:32px var(--pad) 18px;
+  color:#f5f3ee;
+}
+.nav__brand{
+  font-weight:700;font-size:1.05rem;letter-spacing:-.02em;
+  color:inherit;display:inline-block;text-decoration:none;
+  font-family:var(--mono);
+}
+.nav__brand-letters{display:inline-flex}
+.nav__brand-letters span{display:inline-block;will-change:transform}
+@keyframes navBrandWave{
+  0%{transform:translateY(0)}
+  45%{transform:translateY(-.5em)}
+  100%{transform:translateY(0)}
+}
+.nav__brand.is-waving .nav__brand-letters span{
+  animation:navBrandWave .55s cubic-bezier(.22,1,.36,1) both;
+  animation-delay:calc(var(--i) * 45ms);
+}
+.nav__right{display:flex;align-items:center;gap:clamp(1.5rem,3vw,2.6rem)}
+.nav__links{display:flex;gap:clamp(1.25rem,2.6vw,2rem)}
+.nav__links a{
+  font-size:1rem;color:inherit;font-weight:500;position:relative;
+}
+.nav__links a::after{
+  content:"";position:absolute;left:0;right:0;bottom:-3px;height:1.5px;
+  background:currentColor;transform:scaleX(0);transform-origin:left;
+  transition:transform .35s var(--ease);
+}
+.nav__links a:hover::after{transform:scaleX(1)}
+.nav__cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;border-radius:999px;
+  background:#fff;color:#000;
+  font-weight:500;font-size:.95rem;
+  transition:transform .25s var(--ease);
+}
+.nav__cta:hover{transform:translateY(-2px)}
+@media (max-width: 760px){
+  .nav__links{display:none}
+  .nav__right{gap:0}
+}
+
+/* ============================================================== hero */
+.hero{
+  position:relative;
+  min-height:100vh;
+  max-width:1680px;
+  margin:0 auto;
+  padding:clamp(110px,14vh,160px) var(--pad) clamp(80px,10vh,120px);
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);
+  gap:clamp(24px,4vw,56px);
+  align-items:center;
+  overflow:hidden;
+}
+.hero::before{
+  /* subtle vignette to lift the type off the bg */
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 30% 60%, rgba(255,255,255,.025), transparent 70%);
+}
+.hero__copy{position:relative;z-index:2;max-width:680px}
+.hero__title{
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:clamp(3.2rem,2rem + 8vw,9.5rem);
+  line-height:.92;
+  letter-spacing:-.035em;
+  margin:0 0 clamp(24px,3.5vw,40px);
+  color:#f5f3ee;
+}
+.hero__title span{display:block}
+.hero__sub{
+  font-size:clamp(1rem,.95rem + .3vw,1.18rem);
+  line-height:1.45;
+  color:#bdb8ad;
+  max-width:42ch;
+  margin:0 0 clamp(28px,4vw,40px);
+}
+.hero__sub em{font-family:var(--serif);font-style:italic;color:#dcd7cb}
+
+.hero__ctas{display:flex;flex-wrap:wrap;gap:14px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 22px;border-radius:999px;
+  font-weight:500;font-size:.95rem;
+  transition:transform .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease);
+}
+.btn:hover{transform:translateY(-2px)}
+.btn--primary{background:#fff;color:#000}
+.btn--ghost{background:transparent;color:#f5f3ee;border:1px solid rgba(255,255,255,.22)}
+.btn--ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.04)}
+.btn .arr{display:inline-block;transition:transform .2s var(--ease)}
+.btn:hover .arr{transform:translate(2px,-2px)}
+
+/* asset */
+.hero__asset{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:flex-end;
+  min-height:60vh;
+}
+.hero__asset img{
+  width:100%;max-width:none;height:auto;
+  filter:drop-shadow(0 40px 60px rgba(0,0,0,.55));
+}
+
+/* talk-with-matthew card */
+.tcard{
+  position:absolute;
+  right:clamp(16px,3vw,48px);
+  bottom:clamp(86px,11vh,128px);
+  z-index:3;
+  width:clamp(260px,22vw,296px);
+  background:rgba(18,18,16,.32);
+  backdrop-filter:saturate(160%) blur(20px);
+  -webkit-backdrop-filter:saturate(160%) blur(20px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px;
+  display:grid;
+  grid-template-columns:64px 1fr;
+  gap:20px;
+  align-items:center;
+  box-shadow:0 24px 48px -16px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.04) inset;
+}
+.tcard__photo{
+  width:64px;height:80px;
+  border-radius:8px;overflow:hidden;
+  background:
+    radial-gradient(120% 80% at 30% 25%, rgba(255,255,255,.06), transparent 60%),
+    linear-gradient(160deg,#2a2a26 0%,#151513 100%);
+  flex-shrink:0;
+}
+.tcard__photo img{width:100%;height:100%;object-fit:cover;display:block}
+.tcard__text{min-width:0;display:flex;flex-direction:column;gap:10px}
+.tcard__copy{
+  font-size:.88rem;line-height:1.4;color:#dcd7cb;
+  margin:0;
+  max-width:20ch;
+}
+.tcard__btn{
+  align-self:flex-start;
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.84rem;font-weight:500;
+  color:#f5f3ee;
+  padding-bottom:2px;
+  border-bottom:1px solid rgba(255,255,255,.32);
+  transition:color .2s var(--ease), border-color .2s var(--ease);
+}
+.tcard__btn:hover{color:#fff;border-color:#fff}
+.tcard__btn .arr{display:inline-block;transition:transform .2s var(--ease)}
+.tcard__btn:hover .arr{transform:translate(2px,-2px)}
+
+@media (max-width: 900px){
+  .hero{grid-template-columns:1fr;gap:32px;padding-top:clamp(96px,14vh,128px)}
+  .hero__asset{justify-content:center;min-height:auto}
+  .hero__asset img{max-width:560px}
+  .tcard{
+    position:static;width:100%;max-width:420px;margin:8px auto 0;
+  }
+}
+
+/* ============================================================== motion */
+/* entrance: start hidden + offset; transitions on transform+opacity until
+   .is-settled fires, at which point transform-transition is dropped so
+   parallax can drive transforms directly (no chase / overshoot on stop) */
+.fx-down,.fx-up,.fx-card{
+  opacity:0;will-change:transform,opacity;
+  transition:
+    transform 900ms cubic-bezier(.16,1,.3,1),
+    opacity 700ms cubic-bezier(.16,1,.3,1);
+  transition-delay:var(--fx-delay,0ms);
+}
+.fx-down{transform:translateY(-14px)}
+.fx-up{transform:translateY(24px)}
+.fx-card{transform:translateY(16px) scale(.985)}
+.fx-down.is-in,.fx-up.is-in,.fx-card.is-in{opacity:1;transform:none}
+
+/* parallax: scroll offset applied via inline --py.
+   Targets are different to entrance nodes so they never share a transform
+   property and never trip over each other's transitions. */
+.hero__copy,.hero__asset,.tcard{
+  transform:translate3d(0,var(--py,0px),0);
+  will-change:transform;
+}
+.hero__copy.is-in,.hero__asset.is-in{transform:translate3d(0,var(--py,0px),0)}
+
+/* once entrance settles, remove transform-transition so parallax updates
+   land immediately. opacity transition is preserved for accessibility. */
+.is-settled{transition:opacity 200ms ease-out !important}
+
+.tcard.is-in{
+  animation:cardFloat 6s ease-in-out 1.6s infinite;
+}
+@keyframes cardFloat{
+  0%,100%{transform:translate3d(0,calc(var(--py,0px) + 0px),0)}
+  50%    {transform:translate3d(0,calc(var(--py,0px) - 6px),0)}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .fx-down,.fx-up,.fx-card{opacity:1;transform:none;transition:none}
+  .tcard.is-in{animation:none}
+  .hero__copy,.hero__asset,.tcard{transform:none}
+}
+
+/* ============================================================== marquee */
+.marquee{
+  position:relative;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  overflow:hidden;
+  padding:18px 0;
+}
+.marquee__track{
+  display:flex;gap:0;
+  width:max-content;
+  animation:marqueeScroll 42s linear infinite;
+}
+.marquee__group{
+  display:flex;align-items:center;gap:clamp(28px,4vw,56px);
+  padding-right:clamp(28px,4vw,56px);
+  font-family:var(--mono);
+  font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#dcd7cb;
+  white-space:nowrap;
+}
+.marquee__sep{color:var(--accent);font-weight:700}
+.marquee__dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  margin:0 clamp(20px,3vw,40px);
+}
+@keyframes marqueeScroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+@media (prefers-reduced-motion: reduce){
+  .marquee__track{animation:none}
+}
+
+/* ============================================================== logo wall */
+.logos{
+  padding:clamp(64px,9vw,120px) var(--pad) clamp(64px,8vw,96px);
+}
+.logos__eyebrow{
+  display:block;text-align:center;
+  font-family:var(--mono);
+  font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;
+  color:#8a857a;
+  margin:0 0 clamp(28px,4vw,44px);
+}
+.logos__eyebrow::before{content:"/ "}
+.logos__grid{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0, 1fr));
+  gap:1px;
+  background:#161614;
+  outline:1px solid #161614;
+  max-width:1200px;
+  margin:0 auto;
+}
+.logos__cell{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  min-height:clamp(110px,12vw,160px);
+  padding:24px;
+  background:#000;
+  color:#666;
+  text-decoration:none;
+  box-shadow:inset 0 0 0 1px #161614;
+  transition:transform 300ms ease-out, color 300ms ease-out, box-shadow 300ms ease-out;
+  will-change:transform;
+}
+.logos__cell:hover{
+  transform:translate(6px,-6px);
+  color:#fff;
+  box-shadow:
+    inset 0 0 0 1px #2a2a26,
+    0 18px 36px -12px rgba(0,0,0,.65);
+  z-index:1;
+}
+.logos__name{
+  font-family:var(--sans);
+  font-weight:600;
+  font-size:clamp(.95rem,.85rem + .4vw,1.15rem);
+  letter-spacing:-.005em;
+  line-height:1;
+  white-space:nowrap;
+}
+@media (max-width: 760px){
+  .logos__grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .logos__cell{min-height:96px;padding:18px}
+}
+
+/* ============================================================== sound familiar */
+.sf{
+  position:relative;
+  height:300vh;
+  background:#000;
+}
+.sf__inner{
+  position:sticky;top:0;
+  height:100vh;
+  max-width:960px;
+  margin:0 auto;
+  padding:0 var(--pad);
+  display:flex;flex-direction:column;justify-content:center;
+  text-align:center;
+}
+.sf__bg{
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.sf__bg img{
+  width:min(58vw, 680px);
+  max-width:none;
+  opacity:.12;
+  transform:translate(-26%, 4%) rotate(-5deg);
+  animation:floppyDrift 84s ease-in-out infinite alternate;
+  filter:grayscale(.2);
+}
+@keyframes floppyDrift{
+  from{transform:translate(-26%, 4%) rotate(-5deg)}
+  to  {transform:translate(-26%, -6%) rotate(-3deg)}
+}
+.sf__inner > *{position:relative;z-index:1}
+.sf__eyebrow{
+  font-family:var(--mono);
+  font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;
+  color:#8a857a;
+  margin:0 0 18px;
+}
+.sf__eyebrow::before{content:"/ "}
+.sf__title{
+  position:relative;
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:clamp(2rem,1.4rem + 3vw,4rem);
+  line-height:1;
+  letter-spacing:-.035em;
+  margin:0 0 clamp(28px,3.5vw,44px);
+  color:#f5f3ee;
+  min-height:1em;
+}
+.sf__title-a,.sf__title-b{
+  display:inline-block;
+  transition:opacity 320ms ease-out;
+}
+.sf__title-b{
+  position:absolute;left:0;right:0;top:0;
+  opacity:0;
+}
+.sf.is-pivoted .sf__title-a{opacity:0}
+.sf.is-pivoted .sf__title-b{opacity:1}
+.sf__title-b em{font-family:var(--serif);font-style:italic;font-weight:400}
+
+.sf__pairs{
+  margin:0;padding:0;list-style:none;
+  display:flex;flex-direction:column;
+  gap:clamp(28px,3.5vw,48px);
+}
+.sf__pair{margin:0}
+.sf__pain,.sf__sol{
+  margin:0;
+  font-size:clamp(.95rem,.88rem + .4vw,1.2rem);
+  line-height:1.35;
+  letter-spacing:-.01em;
+}
+.sf__pain{
+  color:#dcd7cb;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 500ms ease-out, transform 500ms ease-out;
+}
+.sf__pair.is-in .sf__pain{opacity:1;transform:none}
+
+.sf__pain-text{
+  position:relative;display:inline;
+  background-image:linear-gradient(currentColor,currentColor);
+  background-repeat:no-repeat;
+  background-position:0 60%;
+  background-size:0% 2px;
+  transition:background-size 420ms cubic-bezier(.7,0,.2,1);
+  color:#dcd7cb;
+}
+.sf__pair.is-struck .sf__pain-text{
+  background-size:100% 2px;
+  color:#5a564e;
+}
+
+.sf__sol{
+  color:#f5f3ee;
+  margin-top:6px;
+  font-family:var(--serif);font-style:italic;font-weight:400;
+  font-size:1.05em;
+  letter-spacing:-.005em;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 500ms ease-out 80ms, transform 500ms ease-out 80ms;
+}
+.sf__sol em{font-style:italic;font-weight:500;color:#fff}
+.sf__sol a{
+  color:#fff;border-bottom:1px solid rgba(255,255,255,.4);
+  transition:border-color .2s ease-out;
+}
+.sf__sol a:hover{border-color:#fff}
+.sf__pair.is-struck .sf__sol{opacity:1;transform:none}
+
+@media (prefers-reduced-motion: reduce){
+  .sf{height:auto;padding:clamp(64px,9vw,120px) 0}
+  .sf__inner{position:static;height:auto;top:0;min-height:0}
+  .sf__title-a{opacity:0}
+  .sf__title-b{position:static;opacity:1}
+  .sf__pain,.sf__sol{opacity:1;transform:none;transition:none}
+  .sf__pain-text{background-size:100% 2px;color:#5a564e;transition:none}
+  .sf__bg img{animation:none}
+}
+
+/* ============================================================== services */
+.svc{
+  padding:clamp(80px,11vw,140px) var(--pad) clamp(80px,11vw,140px);
+  background:#000;
+}
+.svc__wrap{
+  max-width:1280px;margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap:clamp(32px,5vw,80px);
+  align-items:start;
+}
+.svc__head{
+  position:sticky;top:clamp(96px,12vh,140px);
+  display:flex;flex-direction:column;
+  gap:clamp(20px,3vw,32px);
+}
+.svc__chip{
+  align-self:flex-start;
+  font-family:var(--mono);
+  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:#cfcbc1;
+  padding:6px 10px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:4px;
+}
+.svc__title{
+  margin:0;
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:clamp(2.4rem,1.4rem + 4vw,5rem);
+  line-height:.95;
+  letter-spacing:-.035em;
+  color:#f5f3ee;
+}
+.svc__sub{
+  margin:0;
+  font-size:clamp(1rem,.9rem + .4vw,1.18rem);
+  line-height:1.45;
+  color:#bdb8ad;
+  max-width:36ch;
+}
+.svc__sub em{font-family:var(--serif);font-style:italic;color:#dcd7cb}
+
+.svc__list{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;
+  gap:clamp(16px,2vw,24px);
+}
+.svc__card{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);
+  gap:0;
+  background:#0c0c0b;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  overflow:hidden;
+  min-height:clamp(260px,28vw,360px);
+  opacity:0;
+  transform:translateX(40px);
+  transition:
+    opacity 700ms cubic-bezier(.16,1,.3,1),
+    transform 800ms cubic-bezier(.16,1,.3,1);
+  will-change:opacity, transform;
+}
+.svc__card.is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  .svc__card{opacity:1;transform:none;transition:none}
+}
+.svc__body{
+  padding:clamp(28px,3.5vw,44px);
+  display:flex;flex-direction:column;justify-content:flex-start;
+  gap:14px;
+}
+.svc__num{
+  font-family:var(--mono);
+  font-size:.78rem;letter-spacing:.14em;
+  color:#8a857a;
+  margin:0 0 6px;
+}
+.svc__num::before{content:"/ "}
+.svc__name{
+  margin:0;
+  font-family:var(--sans);
+  font-weight:700;
+  font-size:clamp(1.4rem,1rem + 1.4vw,2rem);
+  line-height:1.1;
+  letter-spacing:-.02em;
+  color:#f5f3ee;
+}
+.svc__copy{
+  margin:0;
+  font-size:clamp(.95rem,.9rem + .25vw,1.05rem);
+  line-height:1.5;
+  color:#bdb8ad;
+  max-width:42ch;
+}
+
+.svc__media{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 30% 25%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(135deg, #1f1f1d 0%, #0a0a09 100%);
+}
+.svc__media::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 1px, transparent 1px 14px);
+  pointer-events:none;
+}
+.svc__placeholder{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-family:var(--mono);
+  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.18);
+}
+
+@media (max-width: 900px){
+  .svc__wrap{grid-template-columns:1fr;gap:clamp(32px,6vw,56px)}
+  .svc__head{position:static;top:auto}
+  .svc__card{grid-template-columns:1fr;min-height:0}
+  .svc__media{aspect-ratio:16/10}
+}
+
+/* ============================================================== how it works */
+.how{
+  position:relative;
+  height:260vh;
+  background:#000;
+}
+.how__inner{
+  position:sticky;top:0;
+  height:100vh;
+  max-width:1080px;
+  margin:0 auto;
+  padding:clamp(120px,16vh,180px) var(--pad) clamp(60px,8vh,100px);
+  display:flex;flex-direction:column;justify-content:flex-start;
+}
+.how__chip{
+  align-self:flex-start;
+  font-family:var(--mono);
+  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:#cfcbc1;
+  padding:6px 10px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:4px;
+  margin:0 0 clamp(24px,3vw,36px);
+}
+.how__title{
+  margin:0 0 clamp(40px,6vw,72px);
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:clamp(2.4rem,1.4rem + 4vw,5rem);
+  line-height:.95;
+  letter-spacing:-.035em;
+  color:#f5f3ee;
+}
+.how__steps{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;
+  gap:clamp(16px,2vw,24px);
+  flex:1;
+}
+.how__step{
+  position:relative;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:clamp(20px,3vw,40px);
+  padding:clamp(14px,1.8vw,22px) 0;
+  border-top:1px solid rgba(255,255,255,.08);
+  transition:opacity 400ms ease-out;
+  opacity:.32;
+}
+.how__step:last-child{border-bottom:1px solid rgba(255,255,255,.08)}
+.how__step.is-active{opacity:1}
+.how__num{
+  font-family:var(--mono);
+  font-size:.78rem;letter-spacing:.14em;
+  color:#8a857a;
+  margin:0;
+  align-self:center;
+  min-width:3ch;
+}
+.how__num::before{content:"/"}
+.how__step.is-active .how__num{color:var(--accent)}
+.how__name{
+  margin:0;
+  font-family:var(--sans);
+  font-weight:700;
+  font-size:clamp(1.2rem,1rem + .8vw,1.6rem);
+  letter-spacing:-.015em;
+  color:#f5f3ee;
+  display:flex;align-items:baseline;gap:.6em;flex-wrap:wrap;
+}
+.how__name span{
+  font-weight:400;font-size:.85em;color:#bdb8ad;letter-spacing:-.005em;
+}
+@media (prefers-reduced-motion: reduce){
+  .how{height:auto;padding:clamp(80px,11vw,140px) 0}
+  .how__inner{position:static;height:auto;top:0}
+  .how__step{opacity:1;transition:none}
+}
+@media (max-width: 760px){
+  .how__step{grid-template-columns:1fr;gap:8px;padding:18px 0}
+  .how__num{align-self:start}
+}
+
+/* ============================================================== faq */
+.faq{
+  padding:clamp(80px,11vw,140px) var(--pad);
+  background:#000;
+}
+.faq__wrap{
+  max-width:1280px;margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap:clamp(32px,5vw,80px);
+  align-items:start;
+}
+.faq__head{
+  position:sticky;top:clamp(96px,12vh,140px);
+  display:flex;flex-direction:column;
+  gap:clamp(20px,3vw,28px);
+}
+.faq__chip{
+  align-self:flex-start;
+  font-family:var(--mono);
+  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:#cfcbc1;
+  padding:6px 10px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:4px;
+}
+.faq__chip::before{content:"/ "}
+.faq__title{
+  margin:0;
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:clamp(2.4rem,1.4rem + 4vw,5rem);
+  line-height:.95;
+  letter-spacing:-.035em;
+  color:#f5f3ee;
+}
+.faq__list{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;
+}
+.faq__item{
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.faq__item:last-child{border-bottom:1px solid rgba(255,255,255,.08)}
+.faq__item details{padding:0}
+.faq__item summary{
+  list-style:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:clamp(18px,2.4vw,26px) 4px;
+  font-size:clamp(1.05rem,.95rem + .4vw,1.25rem);
+  font-weight:600;letter-spacing:-.015em;
+  color:#f5f3ee;
+  transition:color .2s ease-out;
+}
+.faq__item summary::-webkit-details-marker{display:none}
+.faq__item summary:hover{color:#fff}
+.faq__icon{
+  position:relative;width:14px;height:14px;flex-shrink:0;
+}
+.faq__icon::before,.faq__icon::after{
+  content:"";position:absolute;left:50%;top:50%;
+  background:#cfcbc1;
+  transition:transform .35s cubic-bezier(.16,1,.3,1), background .2s ease-out;
+}
+.faq__icon::before{width:14px;height:1.5px;transform:translate(-50%,-50%)}
+.faq__icon::after {width:1.5px;height:14px;transform:translate(-50%,-50%)}
+.faq__item[open] .faq__icon::after{transform:translate(-50%,-50%) scaleY(0)}
+.faq__item[open] .faq__icon::before{background:var(--accent)}
+.faq__answer{
+  padding:0 4px clamp(20px,2.4vw,26px);
+  font-size:clamp(.95rem,.9rem + .25vw,1.05rem);
+  line-height:1.55;
+  color:#bdb8ad;
+  max-width:60ch;
+}
+.faq__answer a{
+  color:#f5f3ee;border-bottom:1px solid rgba(255,255,255,.36);
+}
+.faq__answer a:hover{border-color:#fff}
+@media (max-width: 900px){
+  .faq__wrap{grid-template-columns:1fr;gap:clamp(28px,5vw,44px)}
+  .faq__head{position:static;top:auto}
+}
+
+/* ============================================================== closing cta */
+.fin{
+  padding:clamp(120px,18vw,220px) var(--pad);
+  background:#000;
+  text-align:center;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.fin__title{
+  margin:0 auto clamp(36px,5vw,56px);
+  max-width:18ch;
+  font-family:var(--sans);
+  font-weight:800;
+  font-size:clamp(2.4rem,1.4rem + 5vw,6rem);
+  line-height:.95;
+  letter-spacing:-.04em;
+  color:#f5f3ee;
+}
+.fin__title em{font-family:var(--serif);font-style:italic;font-weight:400}
+.fin__cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:16px 32px;border-radius:999px;
+  background:#fff;color:#000;
+  font-weight:500;font-size:1.05rem;
+  transition:transform .25s var(--ease);
+}
+.fin__cta:hover{transform:translateY(-2px)}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<header class="nav">
+  <a class="nav__brand" href="index.html" aria-label="matthew.">
+    <span class="nav__brand-letters" aria-hidden="true"><span style="--i:0">/</span><span style="--i:1">m</span><span style="--i:2">a</span><span style="--i:3">t</span><span style="--i:4">t</span><span style="--i:5">h</span><span style="--i:6">e</span><span style="--i:7">w</span><span style="--i:8">_</span></span>
+  </a>
+  <div class="nav__right">
+    <nav class="nav__links" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Approach</a>
+    </nav>
+    <a class="nav__cta" href="#contact">Work with me</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero__copy">
+      <h1 class="hero__title">
+        <span class="fx-down" style="--fx-delay:0ms">Designed.</span>
+        <span class="fx-down" style="--fx-delay:90ms">Built.</span>
+        <span class="fx-down" style="--fx-delay:180ms">Shipped.</span>
+      </h1>
+      <p class="hero__sub fx-down" style="--fx-delay:320ms">Web design and build, end-to-end. <em>4&ndash;8 weeks.</em> AI where it helps.</p>
+      <div class="hero__ctas fx-down" style="--fx-delay:420ms">
+        <a class="btn btn--primary" href="mailto:hi@matthewluxford.co.uk">Email me</a>
+        <a class="btn btn--ghost" href="#approach">See my approach</a>
+      </div>
+    </div>
+
+    <div class="hero__asset fx-up" style="--fx-delay:220ms">
+      <img src="assets/work-with-me/retro-computer.webp" alt="A retro 3D computer terminal displaying the words building better websites, faster, cleaner, smarter, ship." loading="eager" />
+    </div>
+
+    <aside class="tcard fx-card" style="--fx-delay:620ms" aria-label="Talk with Matthew">
+      <div class="tcard__photo">
+        <img src="assets/work-with-me/matthew-headshot.webp" alt="Matthew Luxford, headshot." loading="eager" />
+      </div>
+      <div class="tcard__text">
+        <p class="tcard__copy">See how I can help with your project.</p>
+        <a class="tcard__btn" href="#book">
+          Book a 15-min call <span class="arr" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </aside>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <div class="marquee__group">
+        <span>Available for engagements</span><span class="marquee__dot"></span>
+        <span>4&ndash;8 week timeline</span><span class="marquee__dot"></span>
+        <span>End-to-end build</span><span class="marquee__dot"></span>
+        <span>AI integrated</span><span class="marquee__dot"></span>
+        <span>Fixed price</span><span class="marquee__dot"></span>
+      </div>
+      <div class="marquee__group">
+        <span>Available for engagements</span><span class="marquee__dot"></span>
+        <span>4&ndash;8 week timeline</span><span class="marquee__dot"></span>
+        <span>End-to-end build</span><span class="marquee__dot"></span>
+        <span>AI integrated</span><span class="marquee__dot"></span>
+        <span>Fixed price</span><span class="marquee__dot"></span>
+      </div>
+    </div>
+  </div>
+
+  {# Logo wall — text placeholders until real logo SVGs/WebPs are dropped into
+     src/assets/work-with-me/logos/. Replace .logos__name span with <img> per cell. #}
+  <section class="logos" aria-labelledby="logos-eyebrow">
+    <p id="logos-eyebrow" class="logos__eyebrow">Worked with</p>
+    <div class="logos__grid">
+      <a class="logos__cell" href="jlr.html"><span class="logos__name">Jaguar Land Rover</span></a>
+      <a class="logos__cell" href="lifecake.html"><span class="logos__name">Lifecake</span></a>
+      <div class="logos__cell"><span class="logos__name">Kraken</span></div>
+      <a class="logos__cell" href="collective.html"><span class="logos__name">The Collective</span></a>
+      <div class="logos__cell"><span class="logos__name">Yoppie</span></div>
+      <a class="logos__cell" href="https://riverfoxevents.co.uk/" target="_blank" rel="noopener"><span class="logos__name">River Fox Events</span></a>
+      <div class="logos__cell"><span class="logos__name">BBC</span></div>
+      <a class="logos__cell" href="skatefarm.html"><span class="logos__name">The Skate Farm</span></a>
+      <div class="logos__cell"><span class="logos__name">MTV</span></div>
+      <div class="logos__cell"><span class="logos__name">Mastercard</span></div>
+    </div>
+  </section>
+
+  <section class="sf" aria-labelledby="sf-title">
+    <div class="sf__inner">
+      <h2 class="sf__title" id="sf-title">
+        <span class="sf__title-a">Sound familiar?</span>
+        <span class="sf__title-b">Here&rsquo;s what&rsquo;s <em>different.</em></span>
+      </h2>
+      <ol class="sf__pairs">
+        <li class="sf__pair">
+          <p class="sf__pain"><span class="sf__pain-text">Your site doesn&rsquo;t match your business.</span></p>
+          <p class="sf__sol">Design that fits your business. 18+ years building websites.</p>
+        </li>
+        <li class="sf__pair">
+          <p class="sf__pain"><span class="sf__pain-text">Fine on a laptop. Broken on a phone.</span></p>
+          <p class="sf__sol">Mobile-first. Works everywhere.</p>
+        </li>
+        <li class="sf__pair">
+          <p class="sf__pain"><span class="sf__pain-text">No one finds you on Google.</span></p>
+          <p class="sf__sol">SEO built in. AI keeps improving it.</p>
+        </li>
+        <li class="sf__pair">
+          <p class="sf__pain"><span class="sf__pain-text">Can&rsquo;t update it without paying someone.</span></p>
+          <p class="sf__sol">Edit it yourself, from a browser.</p>
+        </li>
+        <li class="sf__pair">
+          <p class="sf__pain"><span class="sf__pain-text">Eight months in. Still not live.</span></p>
+          <p class="sf__sol">4&ndash;8 weeks. Fixed price, fixed dates.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="svc" aria-labelledby="svc-title">
+    <div class="svc__wrap">
+      <div class="svc__head">
+        <span class="svc__chip">What I offer</span>
+        <h2 class="svc__title" id="svc-title">What you get</h2>
+        <p class="svc__sub">Everything needed to ship and maintain a website that works.</p>
+      </div>
+
+      <ol class="svc__list">
+        <li class="svc__card">
+          <div class="svc__body">
+            <p class="svc__num">01</p>
+            <h3 class="svc__name">Website design and build</h3>
+            <p class="svc__copy">Mobile-first, end-to-end. Designed and built by one person. Live in 4&ndash;8 weeks.</p>
+          </div>
+          <div class="svc__media" aria-hidden="true"><span class="svc__placeholder">Image / 01</span></div>
+        </li>
+
+        <li class="svc__card">
+          <div class="svc__body">
+            <p class="svc__num">02</p>
+            <h3 class="svc__name">SEO + AI monitoring</h3>
+            <p class="svc__copy">Built in from day one. Keeps improving post-launch.</p>
+          </div>
+          <div class="svc__media" aria-hidden="true"><span class="svc__placeholder">Image / 02</span></div>
+        </li>
+
+        <li class="svc__card">
+          <div class="svc__body">
+            <p class="svc__num">03</p>
+            <h3 class="svc__name">AI features</h3>
+            <p class="svc__copy">Real AI inside your site: content help, customer chat, smart search.</p>
+          </div>
+          <div class="svc__media" aria-hidden="true"><span class="svc__placeholder">Image / 03</span></div>
+        </li>
+
+        <li class="svc__card">
+          <div class="svc__body">
+            <p class="svc__num">04</p>
+            <h3 class="svc__name">Bring your brand to the web</h3>
+            <p class="svc__copy">Already have a brand? I&rsquo;ll make it digital.</p>
+          </div>
+          <div class="svc__media" aria-hidden="true"><span class="svc__placeholder">Image / 04</span></div>
+        </li>
+
+        <li class="svc__card">
+          <div class="svc__body">
+            <p class="svc__num">05</p>
+            <h3 class="svc__name">Ongoing support</h3>
+            <p class="svc__copy">Updates, monitoring, improvements. Optional. Month-to-month.</p>
+          </div>
+          <div class="svc__media" aria-hidden="true"><span class="svc__placeholder">Image / 05</span></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="how" aria-labelledby="how-title">
+    <div class="how__inner">
+      <span class="how__chip">How it works</span>
+      <h2 class="how__title" id="how-title">From hello to live.</h2>
+      <ol class="how__steps">
+        <li class="how__step">
+          <p class="how__num">01</p>
+          <h3 class="how__name">Chat. <span>Short intro call. No prep needed.</span></h3>
+        </li>
+        <li class="how__step">
+          <p class="how__num">02</p>
+          <h3 class="how__name">Scope. <span>Written proposal. Timing, deliverables, fixed price.</span></h3>
+        </li>
+        <li class="how__step">
+          <p class="how__num">03</p>
+          <h3 class="how__name">Design &amp; ship. <span>I design, I build, I show, you approve, it ships.</span></h3>
+        </li>
+        <li class="how__step">
+          <p class="how__num">04</p>
+          <h3 class="how__name">Handover. <span>Working files, docs, 30 days of post-launch support.</span></h3>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="faq" aria-labelledby="faq-title">
+    <div class="faq__wrap">
+      <div class="faq__head">
+        <span class="faq__chip">Questions?</span>
+        <h2 class="faq__title" id="faq-title">Have questions?</h2>
+      </div>
+      <ol class="faq__list">
+        <li class="faq__item">
+          <details>
+            <summary>How fast can you start?<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__answer">Usually 2&ndash;4 weeks from contract. Depends what&rsquo;s already booked.</div>
+          </details>
+        </li>
+        <li class="faq__item">
+          <details>
+            <summary>Do you actually build the code, or just design?<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__answer">Both. Design in Figma, build in Framer, ship code. One person, end-to-end.</div>
+          </details>
+        </li>
+        <li class="faq__item">
+          <details>
+            <summary>What&rsquo;s the AI actually for?<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__answer">Content help, customer chat, smart search. Real features that work. See <a href="reps.html">Reps&nbsp;↗</a> for what that looks like.</div>
+          </details>
+        </li>
+        <li class="faq__item">
+          <details>
+            <summary>Can I update the site myself?<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__answer">Yes. Built with a CMS so you can edit from your browser. No code needed.</div>
+          </details>
+        </li>
+        <li class="faq__item">
+          <details>
+            <summary>What if I need changes after launch?<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__answer">Included: 30-day post-launch support window. After that, optional monthly retainer, or hourly as needed.</div>
+          </details>
+        </li>
+        <li class="faq__item">
+          <details>
+            <summary>How do we get started?<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__answer">Book a 15-min call or email me. We&rsquo;ll scope the project and lock a fixed price.</div>
+          </details>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="fin" aria-labelledby="fin-title">
+    <h2 class="fin__title" id="fin-title">Let&rsquo;s see if we&rsquo;re a <em>fit.</em></h2>
+    <a class="fin__cta" href="mailto:hi@matthewluxford.co.uk">Email me</a>
+  </section>
+</main>
+
+<script>
+/* nav brand wave */
+(function(){
+  var brand = document.querySelector('.nav__brand');
+  if (!brand) return;
+  var letters = brand.querySelectorAll('.nav__brand-letters span');
+  var last = letters[letters.length - 1];
+  if (!last) return;
+  var playing = false;
+  function start(){ if (playing) return; playing = true; brand.classList.add('is-waving'); }
+  last.addEventListener('animationend', function(){
+    brand.classList.remove('is-waving');
+    playing = false;
+  });
+  brand.addEventListener('mouseenter', start);
+  brand.addEventListener('focus', start);
+})();
+
+/* entrance + parallax — bails on reduced motion */
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  // entrance: reveal all .fx-* once the hero is in view, then mark settled
+  // so the transform-transition stops chasing parallax updates.
+  var fxNodes = document.querySelectorAll('.fx-down,.fx-up,.fx-card');
+  var hero = document.querySelector('.hero');
+  function settleAll(){
+    // longest delay (620ms card) + 900ms transition + small buffer
+    setTimeout(function(){
+      fxNodes.forEach(function(n){ n.classList.add('is-settled'); });
+    }, 1700);
+  }
+  if (hero && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){
+          fxNodes.forEach(function(n){ n.classList.add('is-in'); });
+          settleAll();
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.05 });
+    io.observe(hero);
+  } else {
+    fxNodes.forEach(function(n){ n.classList.add('is-in'); });
+    settleAll();
+  }
+
+  // parallax: translate copy/asset/card at different rates
+  var copy  = document.querySelector('.hero__copy');
+  var asset = document.querySelector('.hero__asset');
+  var card  = document.querySelector('.tcard');
+  if (!copy && !asset && !card) return;
+
+  var ticking = false;
+  var heroH   = hero ? hero.offsetHeight : window.innerHeight;
+  function refreshSize(){ heroH = hero ? hero.offsetHeight : window.innerHeight; }
+  addEventListener('resize', refreshSize, { passive: true });
+
+  function apply(y){
+    // only parallax while the hero is in viewport — past it, freeze
+    var clamped = Math.min(Math.max(y, 0), heroH);
+    if (copy)  copy.style.setProperty('--py',  (clamped * -0.12).toFixed(2) + 'px');
+    if (asset) asset.style.setProperty('--py', (clamped * -0.22).toFixed(2) + 'px');
+    if (card)  card.style.setProperty('--py',  (clamped * -0.04).toFixed(2) + 'px');
+  }
+
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      apply(window.scrollY || window.pageYOffset || 0);
+      ticking = false;
+    });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  apply(0);
+})();
+
+/* how it works — sticky-scroll active step driven by section progress */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.querySelectorAll('.how__step').forEach(function(s){ s.classList.add('is-active'); });
+    return;
+  }
+  var how = document.querySelector('.how');
+  if (!how) return;
+  var steps = how.querySelectorAll('.how__step');
+  if (!steps.length) return;
+  var ticking = false;
+  function update(){
+    var rect = how.getBoundingClientRect();
+    var vh = window.innerHeight;
+    var total = rect.height - vh;
+    var p = Math.min(Math.max(-rect.top / total, 0), 1);
+    // 4 phases: 0–0.25, 0.25–0.5, 0.5–0.75, 0.75–1
+    var active = Math.min(Math.floor(p / 0.25), steps.length - 1);
+    steps.forEach(function(s, i){
+      s.classList.toggle('is-active', i === active);
+    });
+  }
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){ update(); ticking = false; });
+  }
+  addEventListener('scroll', onScroll, { passive:true });
+  addEventListener('resize', onScroll, { passive:true });
+  update();
+})();
+
+/* services cards — slide-in-from-right + fade, per-card on intersect */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cards = document.querySelectorAll('.svc__card');
+  if (!cards.length || !('IntersectionObserver' in window)){
+    cards.forEach(function(c){ c.classList.add('is-in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+  cards.forEach(function(c){ io.observe(c); });
+})();
+
+/* sticky-scroll "Sound familiar?" — progress-driven state, single rAF loop */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var sf = document.querySelector('.sf');
+  if (!sf) return;
+  var pairs = Array.prototype.slice.call(sf.querySelectorAll('.sf__pair'));
+  if (!pairs.length) return;
+
+  // thresholds: pain reveal, pivot, strike. tuned per the brief.
+  var revealAt = [0.04, 0.10, 0.18, 0.26, 0.34];
+  var pivotAt  = 0.42;
+  var strikeAt = [0.50, 0.62, 0.74, 0.86, 0.97];
+
+  var ticking = false;
+  function update(){
+    var rect = sf.getBoundingClientRect();
+    var vh   = window.innerHeight;
+    // progress 0 when section top hits viewport top, 1 when section bottom hits viewport bottom
+    var total = rect.height - vh;
+    var passed = -rect.top;
+    var p = Math.min(Math.max(passed / total, 0), 1);
+
+    pairs.forEach(function(el, i){
+      el.classList.toggle('is-in',     p >= revealAt[i]);
+      el.classList.toggle('is-struck', p >= strikeAt[i]);
+    });
+    sf.classList.toggle('is-pivoted', p >= pivotAt);
+  }
+
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){ update(); ticking = false; });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll, { passive: true });
+  update();
+})();
+</script>
+
+{% endblock %}
