@@ -17,11 +17,19 @@ const FIX = process.argv.includes("--fix");
 const OPEN = /\/\*\s*@shared:\s*([\w-]+)\s*\*\//g;
 const CLOSE = "/* @end-shared */";
 
-function listHtmlFiles() {
-  return fs
-    .readdirSync(SRC)
-    .filter((f) => f.endsWith(".html") || f.endsWith(".njk"))
-    .map((f) => path.join(SRC, f));
+function listHtmlFiles(dir = SRC) {
+  // Walk src/ recursively so shared blocks living in _includes/ (layouts,
+  // partials) are checked too — not just the page files in src/ root.
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      out.push(...listHtmlFiles(full));
+    } else if (entry.name.endsWith(".html") || entry.name.endsWith(".njk")) {
+      out.push(full);
+    }
+  }
+  return out;
 }
 
 function extractBlocks(file) {

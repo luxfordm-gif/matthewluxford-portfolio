@@ -57,6 +57,7 @@ The voice across the site is direct and conversational — read the Skate Farm a
 
 - Short sentences. Fragments are fine.
 - `<strong>` for the punch words, `<em>` (rendered in Fraunces italic) for asides and rhetorical lifts.
+- **Keep `<em>` out of headings, titles and leads.** Section `h2`s, the `caseTitle` and the `caseLead` stay plain Inter — no Fraunces italic. `<em>` is for emphasis *inside body copy* and the coloured hero-card title (`case_hero`) only. (All existing case studies follow this; riverfox briefly didn't.)
 - Anti-corporate: no "stakeholder alignment", "leveraging synergies", or strategy-deck phrasing.
 - First person, honest, slightly self-deprecating where it fits.
 - Lead with the thing, not the framing. ("A PDF lands in my inbox. Then the dance begins.")
@@ -103,10 +104,10 @@ node scripts/check-shared-css.js --fix     # copy the first (alphabetical) file'
 ```
 
 Currently wrapped:
-- `secret-footer` — in `src/index.njk`, `src/cv.njk`
-- `terms-footer` — the small © + back-to-top footer across all 5 case studies
+- `secret-footer` — in `src/index.njk`, `src/cv.njk`, `src/_includes/layouts/case.njk` (the case-study layout)
+- `terms-footer` — in `src/_includes/layouts/case.njk` (single copy now the case studies share one layout)
 
-Extend by wrapping more blocks the same way — the script auto-picks them up.
+The check walks `src/` recursively, so blocks inside `_includes/` (layouts, partials) are covered too — not just the page files in `src/` root. Extend by wrapping more blocks the same way; the script auto-picks them up.
 
 ## Deploys
 

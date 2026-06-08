@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Placeholder">
+  <rect width="1600" height="1000" fill="#f6f5f0"/>
+  <g stroke="#e0d8cd" stroke-width="2">
+    <rect x="120" y="160" width="640" height="380" rx="18" fill="#fff"/>
+    <rect x="820" y="160" width="300" height="180" rx="18" fill="#1a1714" stroke="none"/>
+    <rect x="1160" y="160" width="320" height="180" rx="18" fill="#b9846a" stroke="none"/>
+    <rect x="820" y="360" width="660" height="180" rx="18" fill="#fff"/>
+  </g>
+  <g transform="translate(440 320)">
+    <path d="M-58 -42 L-28 -3 L-58 8 Z" fill="#1a1714"/>
+    <path d="M58 -42 L28 -3 L58 8 Z" fill="#1a1714"/>
+    <path d="M-38 0 Q0 56 38 0 Q0 88 -38 0 Z" fill="#1a1714"/>
+  </g>
+  <text x="800" y="700" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="40" font-weight="700" fill="#1a1714">Brand exploration — logo, palette, type</text>
+  <text x="800" y="752" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="26" fill="#9a958d">placeholder</text>
+</svg>

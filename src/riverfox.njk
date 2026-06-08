@@ -1,0 +1,77 @@
+---
+title: "River Fox Events · Case Study — Matthew Luxford"
+description: "A rebrand and full site rebuild for my wife's business — brand to live site, done end-to-end with AI in five evenings."
+canonical: "https://matthewluxford.co.uk/riverfox.html"
+ogType: "article"
+ogImage: "https://matthewluxford.co.uk/assets/river-fox-events/og-image.jpg"
+ogImageAlt: "River Fox Events — a brand built end-to-end with AI"
+twitterImageAlt: "River Fox Events — a brand built end-to-end with AI"
+fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800"
+accent: "#b9846a"
+accent2: "#b9846a"
+headVariant: "split"
+caseTitle: "River Fox<br>Events."
+caseLead: "Brand to live site in <strong>five evenings</strong>. Done end-to-end with AI — logo, brand book, tone, design, build, deploy. A side project for my wife's business, and a deliberate test of how far the AI stack actually takes you."
+meta:
+  role: "Brand, design &amp; build (everything)"
+  timeline: "2026 – Present"
+  scope: "Brand · Logo · Brand book · Web · SEO"
+prev:
+  slug: "reps.html"
+  title: "Reps."
+next:
+  slug: "jlr.html"
+  title: "JLR."
+---
+{% extends "layouts/case.njk" %}
+
+{% block caseBody %}
+{% case_hero_image "assets/river-fox-events/riverfox-hero.svg", "River Fox Events — brand and site placeholder", "assets/river-fox-events/riverfox-hero-mobile.svg" %}
+
+{% case_body "Outgrowing the name." %}
+  <p><strong>Laura's</strong> my wife. She'd run her event styling business as <strong>Lollipop Balloons</strong> for years — beautiful work, loyal clients, a growing reputation. But the name boxed her in. <em>Lollipop Balloons</em> sounds like kids' parties. The work she's actually doing now — milestone celebrations, full venue styling, brand activations for <strong>P&amp;G, The Range and Foxhills</strong> — needs a brand that signals premium without going stiff.</p>
+  <p>So: rebrand the lot. New name, new identity, new site, new positioning. <strong>Premium, but personal. Considered, but warm.</strong></p>
+  <p>And I wanted to do every part of it with AI — not as a gimmick, but as a real test. Two briefs at once: <strong>a brand and site that lets Laura chase higher-end clients without apologising for it</strong>, and <strong>a learning brief for me</strong> — push every part of the AI stack and find where it holds and where it falls over. No formal scoping. An evening at the kitchen table, a Notion doc, and one idea: <em>ship the lot.</em></p>
+{% endcase_body %}
+
+{% case_feature "assets/river-fox-events/riverfox-brand.svg", "River Fox Events brand exploration — logo, palette and type placeholder", "Brand exploration — half a dozen full concepts, sign-off in an evening." %}
+
+{% case_body "The last 20% is the job." %}
+  <p>ChatGPT's image-gen update landed mid-project. I used it for logo directions, brand-book mockups, mood boards, styling mocks — <strong>an afternoon's worth of exploration in minutes.</strong> Half a dozen full concepts over to Laura, sign-off in an evening. That used to be a week.</p>
+  <p>The win isn't doing the whole job. It's collapsing the part where you used to spin your wheels showing a client three logos they don't love.</p>
+  <p>But here's the bit nobody talks about — <strong>getting from 80% to 100% is still the slow graft.</strong> The AI hands you 80% in a flash. The last 20% is judgement, taste and time. That bit isn't automated. <em>Won't be for a while.</em></p>
+{% endcase_body %}
+
+{% case_body "Built it twice." %}
+  <p>Started in <strong>Lovable</strong> for the prototype. Felt fast. Got the site to a deployable state — then realised the output was a <strong>React app</strong>: single-page, JS-rendered, useless for SEO, terrible for accessibility. Exactly the wrong stack for a small business that lives or dies on local Google search.</p>
+  <p>A moment of <em>"oh."</em> Rebuilt the whole site in <strong>Claude Code using Eleventy</strong> — pushed to GitHub first, proper branches and commits, deployed via <strong>Netlify</strong>.</p>
+  <p>And the bit I didn't expect: until I switched to Eleventy, <strong>Claude Code was happily restyling everything inline, per page</strong> — every new page with its own CSS dumped at the top. The minute I introduced templating — partials, includes, shared layouts — that problem solved itself. <strong>One change to a partial, every page updates.</strong> The way it's meant to work.</p>
+{% endcase_body %}
+
+{% case_body "Rules beat prompts." %}
+  <p>The thing nobody tells you about Claude Code: the magic isn't in the prompts you write. It's in the <strong>default rules file</strong> you set up at the start. For River Fox I built a config that governs:</p>
+  <ul>
+    <li><strong>Word allowlists and blocklists</strong> for titles and meta — so it doesn't reach for the same five clichés on every page</li>
+    <li><strong>Dedup logic across location pages</strong> — Oxted and Reigate are eight miles apart, so their titles and share images can't share wording. Each town gets a fingerprint of its own, based on geography</li>
+    <li><strong>Tone-of-voice rules</strong> baked in — the same voice Laura signed off in the brand book, now enforced by config</li>
+    <li><strong>House style</strong> — UK spelling, em-dashes, no Oxford comma, parenthetical asides allowed</li>
+  </ul>
+  <p>The lesson: <strong>be detailed on the do's, but just as detailed on the don'ts.</strong> Prompt engineering is largely dead. What actually shapes the output is the standing rules file Claude Code reads on every task.</p>
+{% endcase_body %}
+
+{% case_gallery "assets/river-fox-events/riverfox-gallery-1.svg", "River Fox Events live site — location page placeholder", "assets/river-fox-events/riverfox-gallery-2.svg", "River Fox Events journal — content for search placeholder" %}
+
+{% case_quote "Laura — River Fox Events" %}I'm over the moon with it. The brand finally matches the work I'm doing — I can confidently send the link to higher-end clients now and know it represents the business properly.{% endcase_quote %}
+
+{% case_body "Live is just the start." %}
+  <p>Same approach as <strong>The Skate Farm</strong>. Site went live, Search Console plugged in, every page now earns its place or gets reworked. <strong>Weekly iteration</strong> — what's ranking, what's not, where the demand is, what to build next. Less a launch, more a beginning. Running this one personally for Laura, same way I do for Tom at Skate Farm. Different business, same logic: <strong>ship it fast, sharpen it constantly, follow the data.</strong></p>
+  <p>End-to-end with AI is genuinely possible — brand to live site, by one person, in evenings. But the AI doesn't tell you when the stack's wrong, won't catch when it's restyling every page inline, and won't write its own rules of engagement. <strong>You still need to know what the job needs.</strong> And a brand uplift, done with care, gives a business permission to compete in a different room. Laura's now quoting on jobs that used to feel out of reach. <em>That's the only success metric that matters.</em></p>
+  <p><a href="skatefarm.html">See how that's playing out at The Skate Farm ↗</a> &nbsp;·&nbsp; <a href="https://riverfoxevents.co.uk/" target="_blank" rel="noopener">Visit River Fox Events →</a></p>
+{% endcase_body %}
+
+{% outcomes %}
+  {% outcome "5", "Evenings — start to ship" %}
+  {% outcome "1", "Person — AI throughout" %}
+  {% outcome "∞<em>.</em>", "SEO iterations now begin" %}
+{% endoutcomes %}
+{% endblock %}
