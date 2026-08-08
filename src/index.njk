@@ -478,6 +478,41 @@ p,li{text-wrap:pretty}
 .marquee__list li:nth-child(even){color:var(--muted);font-weight:400;font-family:var(--serif);font-style:italic}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
+/* ============================================= scroll reveals (shared) */
+/* One motion language reused across sections: a masked, per-word slide-up
+   on big section headings (.reveal-h) plus a gentle fade-up for supporting
+   copy (.reveal-up). Both fire when a [data-reveal] ancestor scrolls into
+   view (JS adds .is-revealed). Initial hidden state is server-rendered so
+   there's no flash — the targeted sections all sit below the fold. */
+.reveal-h .rw{
+  display:inline-block;overflow:hidden;vertical-align:bottom;
+  padding-bottom:.14em;margin-bottom:-.14em;
+}
+.reveal-h .rw>span{
+  display:inline-block;
+  transform:translateY(110%);
+  transition:transform 1.05s var(--ease);
+  will-change:transform;
+}
+.is-revealed .reveal-h .rw>span{transform:translateY(0)}
+.reveal-h .rw:nth-child(2)>span{transition-delay:.08s}
+.reveal-h .rw:nth-child(3)>span{transition-delay:.16s}
+.reveal-h .rw:nth-child(4)>span{transition-delay:.24s}
+
+.reveal-up{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .85s var(--ease),transform .85s var(--ease);
+}
+.is-revealed .reveal-up{
+  opacity:1;transform:none;
+  transition-delay:calc(.12s + var(--i,0) * .07s);
+}
+@media (prefers-reduced-motion:reduce){
+  .reveal-h .rw{overflow:visible}
+  .reveal-h .rw>span{transform:none;transition:none}
+  .reveal-up{opacity:1;transform:none;transition:none}
+}
+
 /* ============================================================ work */
 .work{position:relative;z-index:2;padding:clamp(5rem,9vw,8rem) 0 clamp(3rem,6vw,5rem)}
 .work__head{
@@ -512,6 +547,8 @@ p,li{text-wrap:pretty}
   scroll-snap-align:start;display:flex;flex-direction:column;gap:1rem;
   text-decoration:none;color:inherit;
 }
+/* caption reveals per-card (--i set on each .proj in JS); crumb trails its title */
+.is-revealed .proj__crumb.reveal-up{transition-delay:calc(.19s + var(--i,0) * .07s)}
 
 /* prev/next arrows under the work rail (desktop) */
 .work__controls{
@@ -1552,10 +1589,10 @@ p,li{text-wrap:pretty}
   </section>
 
   <!-- FEATURED WORK -->
-  <section class="work" id="work">
+  <section class="work" id="work" data-reveal>
     <header class="work__head">
-      <h2 class="work__title">Featured work</h2>
-      <span class="work__hint">(scroll to explore)</span>
+      <h2 class="work__title reveal-h"><span class="rw"><span>Featured</span></span> <span class="rw"><span>work</span></span></h2>
+      <span class="work__hint reveal-up" style="--i:6">(scroll to explore)</span>
     </header>
 
     <div class="work__rail" tabindex="0" aria-label="Work case studies">
@@ -1566,10 +1603,10 @@ p,li{text-wrap:pretty}
           <img src="assets/reps-thumb.webp" alt="Reps app & brand mockup" loading="eager"
                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
         </div>
-        <div class="proj__caption">
+        <div class="proj__caption reveal-up">
           <h3 class="proj__name">Reps <em>— AI app design &amp; build</em></h3>
         </div>
-        <div class="proj__crumb">A training app I designed and built for myself.</div>
+        <div class="proj__crumb reveal-up">A training app I designed and built for myself.</div>
       </a>
 
       <a class="proj" href="riverfox.html">
@@ -1578,10 +1615,10 @@ p,li{text-wrap:pretty}
           <img src="assets/river-fox-events/river-fox-events-thumb.webp" alt="River Fox Events brand mark" loading="eager"
                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
         </div>
-        <div class="proj__caption">
+        <div class="proj__caption reveal-up">
           <h3 class="proj__name">River Fox Events <em>— AI branding &amp; web</em></h3>
         </div>
-        <div class="proj__crumb">An event brand built end-to-end with AI tooling.</div>
+        <div class="proj__crumb reveal-up">An event brand built end-to-end with AI tooling.</div>
       </a>
 
       <a class="proj is-soon" href="jlr.html">
@@ -1593,10 +1630,10 @@ p,li{text-wrap:pretty}
             <source src="assets/jlr/defender-bg.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="proj__caption">
+        <div class="proj__caption reveal-up">
           <h3 class="proj__name">JLR <em>— web &amp; design system</em></h3>
         </div>
-        <div class="proj__crumb">Ground-up rebuild across 27 markets and two brands.</div>
+        <div class="proj__crumb reveal-up">Ground-up rebuild across 27 markets and two brands.</div>
       </a>
 
       <a class="proj is-soon" href="skatefarm.html">
@@ -1616,10 +1653,10 @@ p,li{text-wrap:pretty}
             </div>
           </div>
         </div>
-        <div class="proj__caption">
+        <div class="proj__caption reveal-up">
           <h3 class="proj__name">The Skate Farm <em>— brand, design &amp; build</em></h3>
         </div>
-        <div class="proj__crumb">Full site build. 22k organic clicks in first year.</div>
+        <div class="proj__crumb reveal-up">Full site build. 22k organic clicks in first year.</div>
       </a>
 
       <a class="proj is-soon" href="#" aria-disabled="true">
@@ -1636,10 +1673,10 @@ p,li{text-wrap:pretty}
             </div>
           </div>
         </div>
-        <div class="proj__caption">
+        <div class="proj__caption reveal-up">
           <h3 class="proj__name">Yoppie <em>— design leadership</em></h3>
         </div>
-        <div class="proj__crumb">End-to-end design for the women's-health DTC.</div>
+        <div class="proj__crumb reveal-up">End-to-end design for the women's-health DTC.</div>
       </a>
 
       <a class="proj is-soon" href="collective.html">
@@ -1655,10 +1692,10 @@ p,li{text-wrap:pretty}
             </div>
           </div>
         </div>
-        <div class="proj__caption">
+        <div class="proj__caption reveal-up">
           <h3 class="proj__name">The Collective <em>— editorial</em></h3>
         </div>
-        <div class="proj__crumb">Booking flow rebuild. 500% lift in enquiries, month one.</div>
+        <div class="proj__crumb reveal-up">Booking flow rebuild. 500% lift in enquiries, month one.</div>
       </a>
 
       <a class="proj is-soon" href="lifecake.html">
@@ -1677,10 +1714,10 @@ p,li{text-wrap:pretty}
             </div>
           </div>
         </div>
-        <div class="proj__caption">
+        <div class="proj__caption reveal-up">
           <h3 class="proj__name">Lifecake <em>— Apple feature.</em></h3>
         </div>
-        <div class="proj__crumb">Brand and product overhaul. 3.4M users.</div>
+        <div class="proj__crumb reveal-up">Brand and product overhaul. 3.4M users.</div>
       </a>
     </div>
     <div class="work__controls">
@@ -1695,15 +1732,15 @@ p,li{text-wrap:pretty}
   </section>
 
   <!-- ABOUT -->
-  <section class="about" id="about">
+  <section class="about" id="about" data-reveal>
    <div class="about__inner">
     <div class="about__hover-img" aria-hidden="true">
       <img loading="lazy" src="https://cdn.prod.website-files.com/60e43dce81494cd0946f829e/60fec2712ef38f4ae3a670a4_family-p-1080.jpeg" alt="" />
     </div>
-    <h2 class="about__title">About</h2>
+    <h2 class="about__title reveal-h"><span class="rw"><span>About</span></span></h2>
 
     <div class="about__intro">
-      <div class="about__lead">
+      <div class="about__lead reveal-up">
         I'm <strong>Matthew Luxford</strong>, a Senior&nbsp;Web&nbsp;Designer based in <strong>Surrey,&nbsp;UK</strong>.
       </div>
       <div class="about__body">
@@ -2202,6 +2239,31 @@ p,li{text-wrap:pretty}
   tMore?.addEventListener("click", () => {
     document.querySelector(".testimonials")?.classList.add("is-expanded");
   });
+
+  // scroll reveals: masked section headings + gentle caption/lead fade-ups.
+  // A [data-reveal] section gets .is-revealed as it scrolls into view; the CSS
+  // (.reveal-h / .reveal-up) handles the motion. Same pattern as testimonials.
+  const revealSections = document.querySelectorAll("[data-reveal]");
+  if (revealSections.length) {
+    // per-card stagger index for the work captions (inherited by name + crumb)
+    document.querySelectorAll(".work .proj").forEach((p, i) => p.style.setProperty("--i", i));
+    if ("IntersectionObserver" in window) {
+      const rIO = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-revealed");
+              rIO.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0, rootMargin: "0px 0px -15% 0px" }
+      );
+      revealSections.forEach((s) => rIO.observe(s));
+    } else {
+      revealSections.forEach((s) => s.classList.add("is-revealed"));
+    }
+  }
 
   // secret footer reveal: trigger when within 40vh of document end
   const secretEl = document.querySelector(".secret-footer");
