@@ -395,6 +395,45 @@ img,svg{display:block;max-width:100%}
 .reveal.is-in{opacity:1;transform:translate3d(0,0,0)}
 @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
 
+/* masked heading reveal — same motion language as the homepage. A small JS
+   wrapper (see script below) wraps each target heading's contents in
+   .head-mask > .head-slide, preserving inner <em>/<br> markup. The slide is
+   released by the heading's own .is-in (hero, on load) or its section's .is-in
+   (body h2 + next title, via the existing scroll observer). */
+.head-mask{display:block;overflow:hidden;padding:.06em 0 .12em;margin:-.06em 0 -.12em}
+.head-slide{display:block;transform:translateY(108%);transition:transform 1.15s var(--ease);will-change:transform}
+.case__head.is-in .case__title .head-slide,
+.case__body.is-in h2 .head-slide,
+.next.is-in .next__title .head-slide{transform:translateY(0)}
+@media (prefers-reduced-motion: reduce){
+  .head-mask{overflow:visible}
+  .head-slide{transform:none;transition:none}
+}
+
+/* case hero: the lead + meta under the h1 fade up just behind it (on load) */
+.case__head .award-badge,
+.case__head .case__lead,
+.case__head .case__meta{
+  opacity:0;transform:translateY(16px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+.case__head.is-in .award-badge{opacity:1;transform:none;transition-delay:.28s}
+.case__head.is-in .case__lead{opacity:1;transform:none;transition-delay:.38s}
+.case__head.is-in .case__meta{opacity:1;transform:none;transition-delay:.52s}
+@media (prefers-reduced-motion: reduce){
+  .case__head .award-badge,
+  .case__head .case__lead,
+  .case__head .case__meta{opacity:1;transform:none;transition:none}
+}
+
+/* outcomes: swap the single block-fade for a staggered, card-by-card pop */
+.outcomes.reveal{opacity:1;transform:none;transition:none}
+.outcome{opacity:0;transform:translateY(22px) scale(.98);transition:opacity .7s var(--ease), transform .7s var(--ease)}
+.outcomes.is-in .outcome{opacity:1;transform:none}
+.outcomes.is-in .outcome:nth-child(2){transition-delay:.12s}
+.outcomes.is-in .outcome:nth-child(3){transition-delay:.24s}
+@media (prefers-reduced-motion: reduce){.outcome{opacity:1;transform:none;transition:none}}
+
 /* mobile rhythm — editorial spacing */
 @media (max-width:760px){
   .case__body{padding-top:clamp(4.5rem,10vw,6rem)}
@@ -722,6 +761,28 @@ img,svg{display:block;max-width:100%}
     }
   }, { rootMargin: "0px 0px -10% 0px", threshold: 0.08 });
   targets.forEach(el => io.observe(el));
+})();
+
+(() => {
+  // Masked heading reveal: wrap each target heading's contents in
+  // .head-mask > .head-slide (preserving inner <em>/<br>). Body h2s and the
+  // "Next" title ride the section observer's .is-in; the hero h1 sits above
+  // the fold, so release it on load.
+  const wrap = (el) => {
+    if (!el || el.dataset.masked) return;
+    const slide = document.createElement("span");
+    slide.className = "head-slide";
+    while (el.firstChild) slide.appendChild(el.firstChild);
+    const mask = document.createElement("span");
+    mask.className = "head-mask";
+    mask.appendChild(slide);
+    el.appendChild(mask);
+    el.dataset.masked = "1";
+  };
+  document.querySelectorAll(".case__title, .case__body h2, .next__title").forEach(wrap);
+  // hero sits above the fold: release the h1 mask + fade the lead/meta on load
+  const head = document.querySelector(".case__head");
+  if (head) requestAnimationFrame(() => head.classList.add("is-in"));
 })();
 
 (() => {
