@@ -402,12 +402,28 @@ img,svg{display:block;max-width:100%}
    (body h2 + next title, via the existing scroll observer). */
 .head-mask{display:block;overflow:hidden;padding:.06em 0 .12em;margin:-.06em 0 -.12em}
 .head-slide{display:block;transform:translateY(108%);transition:transform 1.15s var(--ease);will-change:transform}
-.case__title.is-in .head-slide,
+.case__head.is-in .case__title .head-slide,
 .case__body.is-in h2 .head-slide,
 .next.is-in .next__title .head-slide{transform:translateY(0)}
 @media (prefers-reduced-motion: reduce){
   .head-mask{overflow:visible}
   .head-slide{transform:none;transition:none}
+}
+
+/* case hero: the lead + meta under the h1 fade up just behind it (on load) */
+.case__head .award-badge,
+.case__head .case__lead,
+.case__head .case__meta{
+  opacity:0;transform:translateY(16px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+.case__head.is-in .award-badge{opacity:1;transform:none;transition-delay:.28s}
+.case__head.is-in .case__lead{opacity:1;transform:none;transition-delay:.38s}
+.case__head.is-in .case__meta{opacity:1;transform:none;transition-delay:.52s}
+@media (prefers-reduced-motion: reduce){
+  .case__head .award-badge,
+  .case__head .case__lead,
+  .case__head .case__meta{opacity:1;transform:none;transition:none}
 }
 
 /* outcomes: swap the single block-fade for a staggered, card-by-card pop */
@@ -764,8 +780,9 @@ img,svg{display:block;max-width:100%}
     el.dataset.masked = "1";
   };
   document.querySelectorAll(".case__title, .case__body h2, .next__title").forEach(wrap);
-  const hero = document.querySelector(".case__title");
-  if (hero) requestAnimationFrame(() => hero.classList.add("is-in"));
+  // hero sits above the fold: release the h1 mask + fade the lead/meta on load
+  const head = document.querySelector(".case__head");
+  if (head) requestAnimationFrame(() => head.classList.add("is-in"));
 })();
 
 (() => {
