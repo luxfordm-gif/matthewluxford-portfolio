@@ -491,21 +491,21 @@ p,li{text-wrap:pretty}
 .reveal-h .rw>span{
   display:inline-block;
   transform:translateY(110%);
-  transition:transform 1.05s var(--ease);
+  transition:transform 1.25s var(--ease);
   will-change:transform;
 }
 .is-revealed .reveal-h .rw>span{transform:translateY(0)}
-.reveal-h .rw:nth-child(2)>span{transition-delay:.08s}
-.reveal-h .rw:nth-child(3)>span{transition-delay:.16s}
-.reveal-h .rw:nth-child(4)>span{transition-delay:.24s}
+.reveal-h .rw:nth-child(2)>span{transition-delay:.1s}
+.reveal-h .rw:nth-child(3)>span{transition-delay:.2s}
+.reveal-h .rw:nth-child(4)>span{transition-delay:.3s}
 
 .reveal-up{
   opacity:0;transform:translateY(20px);
-  transition:opacity .85s var(--ease),transform .85s var(--ease);
+  transition:opacity 1s var(--ease),transform 1s var(--ease);
 }
 .is-revealed .reveal-up{
   opacity:1;transform:none;
-  transition-delay:calc(.12s + var(--i,0) * .07s);
+  transition-delay:calc(.15s + var(--i,0) * .08s);
 }
 @media (prefers-reduced-motion:reduce){
   .reveal-h .rw{overflow:visible}
@@ -525,11 +525,6 @@ p,li{text-wrap:pretty}
   letter-spacing:-.05em;line-height:.9;
   margin:0;color:var(--ink);
 }
-.work__hint{
-  display:block;margin-top:clamp(1rem,2vw,1.5rem);
-  font-size:.85rem;color:var(--muted);
-  letter-spacing:.06em;text-transform:uppercase;font-weight:600;
-}
 .work__rail{
   display:grid;grid-auto-flow:column;
   grid-auto-columns:clamp(280px, 40vw, 520px);
@@ -548,7 +543,7 @@ p,li{text-wrap:pretty}
   text-decoration:none;color:inherit;
 }
 /* caption reveals per-card (--i set on each .proj in JS); crumb trails its title */
-.is-revealed .proj__crumb.reveal-up{transition-delay:calc(.19s + var(--i,0) * .07s)}
+.is-revealed .proj__crumb.reveal-up{transition-delay:calc(.23s + var(--i,0) * .08s)}
 
 /* prev/next arrows under the work rail (desktop) */
 .work__controls{
@@ -1592,7 +1587,6 @@ p,li{text-wrap:pretty}
   <section class="work" id="work" data-reveal>
     <header class="work__head">
       <h2 class="work__title reveal-h"><span class="rw"><span>Featured</span></span> <span class="rw"><span>work</span></span></h2>
-      <span class="work__hint reveal-up" style="--i:6">(scroll to explore)</span>
     </header>
 
     <div class="work__rail" tabindex="0" aria-label="Work case studies">
@@ -2257,7 +2251,7 @@ p,li{text-wrap:pretty}
             }
           });
         },
-        { threshold: 0, rootMargin: "0px 0px -15% 0px" }
+        { threshold: 0, rootMargin: "0px 0px -30% 0px" }
       );
       revealSections.forEach((s) => rIO.observe(s));
     } else {
