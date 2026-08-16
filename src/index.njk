@@ -28,6 +28,19 @@ navLinkBase: ""
   --hand:"Caveat",ui-serif,Georgia,serif;
   --pad:clamp(1.25rem,4vw,3.5rem);
   --ease:cubic-bezier(.2,.7,.2,1);
+
+  /* Anchor landings. The nav is position:fixed, so it covers the top of the
+     page and nothing in normal flow accounts for it. --nav-h is its measured
+     height — keep it in step with .nav's padding and CTA size. --anchor-gap is
+     the breathing room we want between the nav and a heading we've just landed
+     on. The section paddings below are tokens rather than literals because the
+     scroll-margin rules subtract them; keeping one copy stops the two drifting
+     apart. */
+  --nav-h:95px;
+  --anchor-gap:1.5rem;
+  --work-pad-top:clamp(5rem,9vw,8rem);
+  --work-head-pad-top:clamp(2rem,5vw,4rem);
+  --about-pad-top:clamp(5rem,10vw,8rem);
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;overflow-x:clip}
@@ -521,15 +534,17 @@ p,li{text-wrap:pretty}
 }
 
 /* ============================================================ work */
-.work{position:relative;z-index:2;padding:clamp(5rem,9vw,8rem) 0 clamp(3rem,6vw,5rem)}
+.work{position:relative;z-index:2;padding:var(--work-pad-top) 0 clamp(3rem,6vw,5rem)}
 .work__head{
-  padding:clamp(2rem,5vw,4rem) var(--pad) clamp(2rem,4vw,3rem);
+  padding:var(--work-head-pad-top) var(--pad) clamp(2rem,4vw,3rem);
   text-align:center;
 }
-/* #work carries the section's 128px top padding *plus* .work__head's own,
-   so an anchor jump landed its title ~64px lower than #about's. Cancel the
-   head padding for scroll landings only — the visual layout is untouched. */
-#work{scroll-margin-top:calc(clamp(2rem,5vw,4rem) * -1)}
+/* A jump to #work used to land the section top at the viewport top, which put
+   the title exactly its own padding below it — clamp()ed, so 115px on desktop
+   (clears the 95px nav) but only 80px on mobile, where the nav then covered it.
+   Cancel the section's own padding and land the *title* --anchor-gap below the
+   nav instead, so it reads the same at every width. Visual layout untouched. */
+#work{scroll-margin-top:calc(var(--nav-h) + var(--anchor-gap) - var(--work-pad-top) - var(--work-head-pad-top))}
 .work__title{
   font-family:var(--sans);font-weight:700;
   font-size:clamp(2.6rem,1.4rem + 6.5vw,9rem);
@@ -808,8 +823,10 @@ p,li{text-wrap:pretty}
 /* ========================================================== about */
 .about{
   position:relative;z-index:2;
-  padding:clamp(5rem,10vw,8rem) var(--pad) clamp(4rem,8vw,6rem);
+  padding:var(--about-pad-top) var(--pad) clamp(4rem,8vw,6rem);
 }
+/* Same fixed-nav problem as #work — see the note there. */
+#about{scroll-margin-top:calc(var(--nav-h) + var(--anchor-gap) - var(--about-pad-top))}
 .about__inner{
   max-width:1400px;
   margin:0 auto;
