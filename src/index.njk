@@ -816,9 +816,14 @@ p,li{text-wrap:pretty}
   position:relative;
 }
 .about__exp{
-  cursor:pointer;
   position:relative;
   z-index:1;
+}
+/* The rows only become interactive at ≤880px, where tapping one expands its
+   description — the click handler early-returns above that. So the pointer
+   cursor belongs to that breakpoint, not to the hover-image behaviour. */
+@media (max-width:880px){
+  .about__exp{cursor:pointer}
 }
 .about__exp::before{
   content:"";
