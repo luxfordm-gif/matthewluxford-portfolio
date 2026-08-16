@@ -32,6 +32,18 @@
   --fs-body-sm:14px;
   --fs-caption:12px;
 }
+
+/* Mobile tap highlight — kill the grey/blue box iOS and Android flash over
+   anything tappable on touch. Set on html (the property inherits) and repeated
+   on the interactive elements for older Android WebViews that don't inherit it.
+   Press feedback comes from the :active styles on individual components
+   instead; focus rings are a separate property and are untouched. */
+html,
+a, button, summary, label,
+input, select, textarea,
+[role="button"], [tabindex]{
+  -webkit-tap-highlight-color:transparent;
+}
 </style>
 {% block pageStyles %}{% endblock %}
 </head>
