@@ -14,6 +14,10 @@
      down, then navigates. Anything it can't safely intercept (new tabs,
      modified clicks, downloads, external links, same-page anchors) falls
      through to normal browser navigation.
+
+   Below 760px both halves become a short crossfade instead — see the mobile
+   media query. The no-JS guarantee holds there too: the fade-out is CSS, so
+   the panel still clears itself if the script never runs.
 --------------------------------------------------------------------------- #}
 <div class="pt" aria-hidden="true">
   <div class="pt__bar"></div>
@@ -73,6 +77,31 @@
   0%{transform:scaleX(0)}
   100%{transform:scaleX(.35)}
 }
+/* Mobile — you navigate far more on a phone, so the full choreography (280ms
+   out + 1s hold + 500ms slide = ~1.78s a tap) becomes a tax rather than a
+   flourish. Below 760px it's a plain crossfade instead: no hold, no progress
+   bar, ~360ms round trip.
+
+   Fade rather than a faster slide on purpose — at this speed a panel crossing
+   the whole viewport height reads as a jolt, while opacity stays smooth at any
+   duration. The logo drops its own fade and rides the panel's opacity, so it
+   flashes the brand without adding a wait. Keep the durations here in step with
+   LEAVE_MS in the script below. */
+@media (max-width:760px){
+  .pt{animation:ptFadeOut .2s ease-out both}
+  .pt__bar{display:none}
+  .pt__logo{animation:none}
+  .pt.is-leaving{animation:ptFadeIn .16s ease-out both}
+  .pt.is-leaving .pt__logo{animation:none}
+}
+@keyframes ptFadeIn{
+  0%{opacity:0}
+  100%{opacity:1}
+}
+@keyframes ptFadeOut{
+  0%{opacity:1}
+  100%{opacity:0}
+}
 /* no motion preference — skip it entirely rather than flashing a black panel */
 @media (prefers-reduced-motion:reduce){
   .pt{display:none}
@@ -84,7 +113,12 @@
   if (!panel) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  var LEAVE_MS = 280;
+  // How long to hold before navigating — must match the leave animation for
+  // the breakpoint in play, or the panel sits finished and black waiting on a
+  // timer that outlasts it. Read per click so rotating the phone can't strand
+  // the wrong value.
+  var fast = window.matchMedia("(max-width: 760px)");
+  function leaveMs() { return fast.matches ? 160 : 280; }
   var leaving = false;
 
   // Back/forward can restore this page from the bfcache with the panel still
@@ -118,7 +152,7 @@
     e.preventDefault();
     leaving = true;
     panel.classList.add("is-leaving");
-    setTimeout(function () { location.href = url.href; }, LEAVE_MS);
+    setTimeout(function () { location.href = url.href; }, leaveMs());
   });
 })();
 </script>
