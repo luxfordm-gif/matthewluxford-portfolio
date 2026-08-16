@@ -1,0 +1,124 @@
+{# ---------------------------------------------------------------------------
+   Page transition — a short black panel with the logo and a progress bar,
+   shown between page loads.
+
+   SELF-CONTAINED ON PURPOSE. To remove the whole effect, delete the single
+   `{% include "partials/page-transition.njk" %}` line from
+   src/_includes/layouts/base.njk. Nothing else references it.
+
+   How it works, in two halves:
+   - Arriving: CSS alone plays the panel off-screen upward, so the page is
+     revealed bottom-first. This runs with or without JS — if the script never
+     executes, the panel still clears itself and the site behaves normally.
+   - Leaving: JS intercepts same-origin link clicks, slides the panel back
+     down, then navigates. Anything it can't safely intercept (new tabs,
+     modified clicks, downloads, external links, same-page anchors) falls
+     through to normal browser navigation.
+--------------------------------------------------------------------------- #}
+<div class="pt" aria-hidden="true">
+  <div class="pt__bar"></div>
+  <span class="pt__logo">matthew.</span>
+</div>
+<style>
+.pt{
+  position:fixed;inset:0;z-index:300;
+  background:var(--ink,#0a0a0a);
+  display:grid;place-items:center;
+  /* never traps a click, even mid-animation */
+  pointer-events:none;
+  will-change:transform;
+  /* the 1s delay is the hold — `both` keeps the panel covering through it,
+     then it lifts away over .5s */
+  animation:ptReveal .5s cubic-bezier(.65,0,.35,1) 1s both;
+}
+.pt__logo{
+  font-family:var(--sans,system-ui);font-weight:700;
+  font-size:1.27rem;letter-spacing:-.02em;color:#fff;
+  animation:ptLogoOut .35s ease-out .8s both;
+}
+.pt__bar{
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:#fff;transform-origin:left;
+  /* fills across the hold, completing just as the panel leaves */
+  animation:ptBar 1s cubic-bezier(.65,0,.35,1) both;
+}
+/* arriving — panel lifts away, revealing the page from the bottom up */
+@keyframes ptReveal{
+  0%{transform:translateY(0)}
+  100%{transform:translateY(-100%)}
+}
+@keyframes ptLogoOut{
+  0%{opacity:1}
+  100%{opacity:0}
+}
+@keyframes ptBar{
+  0%{transform:scaleX(.35)}
+  100%{transform:scaleX(1)}
+}
+/* leaving — panel drops back over the page before the browser navigates */
+.pt.is-leaving{
+  animation:ptCover .28s cubic-bezier(.65,0,.35,1) both;
+}
+.pt.is-leaving .pt__logo{animation:ptLogoIn .28s ease-out both}
+.pt.is-leaving .pt__bar{animation:ptBarIn .28s linear both}
+@keyframes ptCover{
+  0%{transform:translateY(-100%)}
+  100%{transform:translateY(0)}
+}
+@keyframes ptLogoIn{
+  0%{opacity:0}
+  100%{opacity:1}
+}
+@keyframes ptBarIn{
+  0%{transform:scaleX(0)}
+  100%{transform:scaleX(.35)}
+}
+/* no motion preference — skip it entirely rather than flashing a black panel */
+@media (prefers-reduced-motion:reduce){
+  .pt{display:none}
+}
+</style>
+<script>
+(function () {
+  var panel = document.querySelector(".pt");
+  if (!panel) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var LEAVE_MS = 280;
+  var leaving = false;
+
+  // Back/forward can restore this page from the bfcache with the panel still
+  // covering it. Clear it whenever the page is shown again.
+  window.addEventListener("pageshow", function () {
+    leaving = false;
+    panel.classList.remove("is-leaving");
+  });
+
+  document.addEventListener("click", function (e) {
+    if (leaving) return;
+    // let the browser handle new tabs, downloads and modified clicks
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    var link = e.target.closest && e.target.closest("a[href]");
+    if (!link) return;
+    if (link.target && link.target !== "_self") return;
+    if (link.hasAttribute("download")) return;
+
+    var url;
+    try { url = new URL(link.getAttribute("href"), location.href); }
+    catch (err) { return; }
+
+    // same-origin page loads only — not mailto/tel, not external links
+    if (url.origin !== location.origin) return;
+    // same-page anchors scroll, they don't navigate
+    if (url.pathname === location.pathname && url.hash) return;
+    if (url.href === location.href) return;
+
+    e.preventDefault();
+    leaving = true;
+    panel.classList.add("is-leaving");
+    setTimeout(function () { location.href = url.href; }, LEAVE_MS);
+  });
+})();
+</script>
