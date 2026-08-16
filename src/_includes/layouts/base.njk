@@ -36,6 +36,8 @@
 {% block pageStyles %}{% endblock %}
 </head>
 <body id="top">
+{# delete this one line to remove the page transition entirely #}
+{% include "partials/page-transition.njk" %}
 {% block content %}{% endblock %}
 </body>
 </html>

@@ -43,7 +43,9 @@ button{font:inherit;background:none;border:0;cursor:pointer;color:inherit}
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:60;
   display:flex;align-items:center;justify-content:space-between;
-  padding:32px var(--pad) 18px;
+  padding:24px var(--pad);
+  /* transparent, but it keeps this bar the same 95px as every other page */
+  border-bottom:1px solid transparent;
   color:#f5f3ee;
 }
 .nav__brand{

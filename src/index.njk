@@ -65,7 +65,7 @@ p,li{text-wrap:pretty}
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:60;
   display:flex;align-items:center;justify-content:space-between;
-  padding:32px var(--pad) 18px;
+  padding:24px var(--pad);
   transition:transform .45s var(--ease), background .35s var(--ease), border-color .35s var(--ease), backdrop-filter .35s var(--ease), padding .35s var(--ease);
   border-bottom:1px solid transparent;
   mix-blend-mode:difference;
@@ -83,8 +83,15 @@ p,li{text-wrap:pretty}
   border-bottom-color:rgba(20,20,20,.06);
   mix-blend-mode:normal;
   color:var(--ink);
-  padding-top:14px;padding-bottom:14px;
 }
+/* Over a dark section the light blurred band reads as a white slab, so invert
+   it. Driven by [data-nav-dark] elements + the scroll handler. */
+.nav.is-floating.is-on-dark{
+  background:rgba(10,10,10,.72);
+  border-bottom-color:rgba(255,255,255,.10);
+  color:#fff;
+}
+.nav.is-floating.is-on-dark .nav__cta{background:#fff;color:var(--ink)}
 .nav.is-hidden{transform:translateY(-110%)}
 .nav__brand{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:inherit;display:inline-block;text-decoration:none}
 .nav__brand-letters{display:inline-flex}
@@ -519,11 +526,24 @@ p,li{text-wrap:pretty}
   padding:clamp(2rem,5vw,4rem) var(--pad) clamp(2rem,4vw,3rem);
   text-align:center;
 }
+/* #work carries the section's 128px top padding *plus* .work__head's own,
+   so an anchor jump landed its title ~64px lower than #about's. Cancel the
+   head padding for scroll landings only — the visual layout is untouched. */
+#work{scroll-margin-top:calc(clamp(2rem,5vw,4rem) * -1)}
 .work__title{
   font-family:var(--sans);font-weight:700;
-  font-size:clamp(3.5rem,2rem + 11vw,16rem);
+  font-size:clamp(2.6rem,1.4rem + 6.5vw,9rem);
   letter-spacing:-.05em;line-height:.9;
   margin:0;color:var(--ink);
+}
+/* "(scroll to explore)" cue — desktop only; touch users get the dots instead */
+.work__hint{
+  display:none;margin-top:clamp(1rem,2vw,1.5rem);
+  font-size:.85rem;color:var(--muted);
+  letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+}
+@media (min-width:761px){
+  .work__hint{display:block}
 }
 .work__rail{
   display:grid;grid-auto-flow:column;
@@ -544,6 +564,7 @@ p,li{text-wrap:pretty}
 }
 /* caption reveals per-card (--i set on each .proj in JS); crumb trails its title */
 .is-revealed .proj__crumb.reveal-up{transition-delay:calc(.23s + var(--i,0) * .08s)}
+.is-revealed .proj__tags.reveal-up{transition-delay:calc(.31s + var(--i,0) * .08s)}
 
 /* prev/next arrows under the work rail (desktop) */
 .work__controls{
@@ -657,13 +678,14 @@ p,li{text-wrap:pretty}
 
 .proj__badge{
   position:absolute;top:18px;right:18px;
-  background:#ffe600;color:#0a0a0a;
+  background:#0a0a0a;color:#fff;
   padding:6px 12px;border-radius:999px;
   font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   z-index:4;
   box-shadow:0 4px 10px -2px rgba(0,0,0,.4);
 }
-.proj__badge--side{background:#E8E4DC;color:#1A1A1A}
+/* "Side project" reads the same as "Coming soon" now — kept as a hook */
+.proj__badge--side{background:#0a0a0a;color:#fff}
 .proj.is-soon .proj__media{
   filter:saturate(.9);
 }
@@ -725,22 +747,63 @@ p,li{text-wrap:pretty}
 .phone__screen.dk .mock-line.d{background:#fff}
 
 .proj__caption{
-  display:flex;justify-content:space-between;align-items:baseline;
-  gap:1rem;padding:0 .25rem;
+  display:flex;flex-direction:column;gap:2px;
+  padding:0 .25rem;
 }
 .proj__name{
   font-family:var(--sans);font-weight:600;
-  font-size:clamp(1.1rem,1rem + .4vw,1.4rem);
-  letter-spacing:-.02em;margin:0;color:var(--ink);
+  font-size:clamp(1.45rem,1.15rem + 1vw,2rem);
+  letter-spacing:-.03em;line-height:1.1;
+  margin:0;color:var(--ink);
 }
-.proj__name em{font-family:var(--serif);font-style:italic;font-weight:400}
+/* the "AI app design & build" descriptor, on its own line under the title.
+   Inter, not Fraunces — only Fraunces' italic axis is loaded (see `fonts` in
+   the front matter), so roman Fraunces would render as a synthesised fallback */
+.proj__kind{
+  font-family:var(--sans);font-weight:400;
+  font-size:clamp(1rem,.95rem + .3vw,1.2rem);
+  line-height:1.3;margin:0;color:var(--muted);
+}
 .proj__crumb{
   font-size:16px;line-height:1.5;color:var(--ink-2);
   padding:0 .25rem;max-width:50ch;
-  margin-top:-4px;
+  margin-top:2px;
 }
 .proj__crumb b{color:var(--ink);font-weight:500}
 .proj__crumb .sep{width:3px;height:3px;border-radius:50%;background:var(--dot)}
+
+/* what-I-did facts — a short black rule, then the facts run inline,
+   separated by dots. Shown from 960px up rather than the 761px carousel
+   breakpoint: cards are clamp(280px,40vw,520px), and the longest run
+   (Lifecake, ~366px) only stays on one line once 40vw clears ~374px. Below
+   that it wraps and the rules stop lining up across the rail. */
+.proj__tags{display:none}
+@media (min-width:960px){
+  .proj__crumb{margin-bottom:6px}
+  .proj__tags{
+    display:block;
+    /* auto pushes the block to the card's base so the rule lines up across
+       the rail whatever the title and description wrap to */
+    margin:auto .25rem 0;
+  }
+  .proj__tags::before{
+    content:"";display:block;
+    width:34px;height:1px;background:var(--ink);
+    margin-bottom:12px;
+  }
+  /* not interactive — labels, not buttons, so no hover or cursor change.
+     Sits between --muted and --ink-2: clearly secondary to the sentence
+     above it, but not as faint as the descriptor under the title. */
+  .proj__tag{
+    font-size:.9rem;line-height:1.6;
+    color:#6b665e;white-space:nowrap;
+  }
+  /* slashes, not middots — the page's dotted background pattern makes a
+     middot separator hard to pick out */
+  .proj__tag + .proj__tag::before{
+    content:"/";color:var(--dot);margin:0 .4em;
+  }
+}
 
 /* ========================================================== about */
 .about{
@@ -774,15 +837,27 @@ p,li{text-wrap:pretty}
 .about__hover-img{
   position:fixed;left:0;top:0;
   --w:330px;
+  --h:240px;
   width:var(--w);
+  /* Height is reserved per row (from data-h) rather than left to height:auto.
+     Deriving it from the image meant the box kept the *previous* image's
+     height until the new one decoded, then snapped — and because the panel is
+     centred with translate(-50%,-50%), that snap re-centred it on the cursor.
+     Reserving the box makes the geometry known the instant a row is shown. */
+  height:var(--h);
   background:#fff;
   border-radius:6px;padding:6px;
   pointer-events:none;
   opacity:0;
   --rot:10deg;
-  transform:translate(-50%, -50%) rotate(var(--rot)) scale(.86);
+  /* --tilt is added to each row's own --rot by the pointer handler, so the
+     card leans into the direction you're moving and settles back when you
+     stop. Additive, so every row keeps its own base angle. */
+  --tilt:0deg;
+  transform:translate(-50%, -50%) rotate(calc(var(--rot) + var(--tilt))) scale(.86);
   transform-origin:center;
-  transition:opacity .3s var(--ease), transform .4s var(--ease);
+  transition:opacity .3s var(--ease), transform .4s var(--ease),
+             width .35s var(--ease), height .35s var(--ease);
   box-shadow:
     0 0 0 1px rgba(0,0,0,.04),
     0 35px 70px -25px rgba(0,0,0,.4),
@@ -790,12 +865,13 @@ p,li{text-wrap:pretty}
   z-index:30;
 }
 .about__hover-img img{
-  width:100%;height:auto;
+  width:100%;height:100%;
+  object-fit:cover;
   display:block;border-radius:3px;
 }
 .about__hover-img.is-active{
   opacity:1;
-  transform:translate(-50%, -50%) rotate(var(--rot)) scale(1);
+  transform:translate(-50%, -50%) rotate(calc(var(--rot) + var(--tilt))) scale(1);
 }
 @media (max-width:880px){
   .about__hover-img{display:none}
@@ -1144,7 +1220,9 @@ p,li{text-wrap:pretty}
   max-width:1900px;margin:0 auto;
   padding:0 clamp(2rem,5vw,5rem);
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,1000px);
+  /* the head column needs a floor — otherwise the 1000px quote column
+     starves it at ~1280px and the title wraps to a ragged three lines */
+  grid-template-columns:minmax(min(100%,22rem),1fr) minmax(0,1000px);
   gap:clamp(2.5rem,6vw,6rem);
   align-items:start;
 }
@@ -1159,7 +1237,6 @@ p,li{text-wrap:pretty}
   position:sticky;
   top:clamp(4rem,8vw,7rem);
   display:flex;flex-direction:column;
-  max-width:24ch;
 }
 @media (max-width:880px){
   .testimonials__head-inner{position:static;top:auto;margin-bottom:2rem}
@@ -1174,9 +1251,10 @@ p,li{text-wrap:pretty}
 }
 .testimonials__title{
   font-family:var(--sans);font-weight:800;
-  font-size:clamp(2.4rem,6vw,5rem);
+  font-size:clamp(2.4rem,4vw,5rem);
   letter-spacing:-.04em;line-height:.95;
   margin:0;color:#fff;
+  text-wrap:balance;
 }
 .testimonials__title sup{
   color:#ffe600;
@@ -1587,6 +1665,7 @@ p,li{text-wrap:pretty}
   <section class="work" id="work" data-reveal>
     <header class="work__head">
       <h2 class="work__title reveal-h"><span class="rw"><span>Featured</span></span> <span class="rw"><span>work</span></span></h2>
+      <span class="work__hint reveal-up">(scroll to explore)</span>
     </header>
 
     <div class="work__rail" tabindex="0" aria-label="Work case studies">
@@ -1598,9 +1677,15 @@ p,li{text-wrap:pretty}
                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
         </div>
         <div class="proj__caption reveal-up">
-          <h3 class="proj__name">Reps <em>— AI app design &amp; build</em></h3>
+          <h3 class="proj__name">Reps</h3>
+          <p class="proj__kind">AI app design &amp; build</p>
         </div>
-        <div class="proj__crumb reveal-up">A training app I designed and built for myself.</div>
+        <div class="proj__crumb reveal-up">A training app I designed and built for myself, replacing four years of PDF plans and tidied-up Google Docs.</div>
+        <div class="proj__tags reveal-up">
+          {% proj_tag "Solo built" %}
+          {% proj_tag "Claude-assisted" %}
+          {% proj_tag "Supabase" %}
+        </div>
       </a>
 
       <a class="proj" href="riverfox.html">
@@ -1610,9 +1695,15 @@ p,li{text-wrap:pretty}
                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
         </div>
         <div class="proj__caption reveal-up">
-          <h3 class="proj__name">River Fox Events <em>— AI branding &amp; web</em></h3>
+          <h3 class="proj__name">River Fox Events</h3>
+          <p class="proj__kind">AI branding &amp; web</p>
         </div>
-        <div class="proj__crumb reveal-up">An event brand built end-to-end with AI tooling.</div>
+        <div class="proj__crumb reveal-up">A rebrand and full site rebuild for my wife's business — logo, brand book, tone and build, done end-to-end with AI.</div>
+        <div class="proj__tags reveal-up">
+          {% proj_tag "AI end-to-end" %}
+          {% proj_tag "Full brand suite" %}
+          {% proj_tag "Live in a week" %}
+        </div>
       </a>
 
       <a class="proj is-soon" href="jlr.html">
@@ -1625,9 +1716,15 @@ p,li{text-wrap:pretty}
           </video>
         </div>
         <div class="proj__caption reveal-up">
-          <h3 class="proj__name">JLR <em>— web &amp; design system</em></h3>
+          <h3 class="proj__name">JLR</h3>
+          <p class="proj__kind">Web &amp; design system</p>
         </div>
-        <div class="proj__crumb reveal-up">Ground-up rebuild across 27 markets and two brands.</div>
+        <div class="proj__crumb reveal-up">A six-month, ground-up rebuild of the global component library, shipped across two brands and 27 markets.</div>
+        <div class="proj__tags reveal-up">
+          {% proj_tag "AEM components" %}
+          {% proj_tag "Two brands" %}
+          {% proj_tag "27 markets" %}
+        </div>
       </a>
 
       <a class="proj is-soon" href="skatefarm.html">
@@ -1648,9 +1745,15 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption reveal-up">
-          <h3 class="proj__name">The Skate Farm <em>— brand, design &amp; build</em></h3>
+          <h3 class="proj__name">The Skate Farm</h3>
+          <p class="proj__kind">Brand, design &amp; build</p>
         </div>
-        <div class="proj__crumb reveal-up">Full site build. 22k organic clicks in first year.</div>
+        <div class="proj__crumb reveal-up">Three pages grown into a hundred-plus for a community skatepark, pulling 22k organic clicks in the first year.</div>
+        <div class="proj__tags reveal-up">
+          {% proj_tag "CMS build" %}
+          {% proj_tag "100+ pages" %}
+          {% proj_tag "22k clicks" %}
+        </div>
       </a>
 
       <a class="proj is-soon" href="#" aria-disabled="true">
@@ -1668,9 +1771,14 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption reveal-up">
-          <h3 class="proj__name">Yoppie <em>— design leadership</em></h3>
+          <h3 class="proj__name">Yoppie</h3>
+          <p class="proj__kind">Design leadership</p>
         </div>
-        <div class="proj__crumb reveal-up">End-to-end design for the women's-health DTC.</div>
+        <div class="proj__crumb reveal-up">Design leadership and end-to-end product design across every digital surface for the women's-health DTC.</div>
+        <div class="proj__tags reveal-up">
+          {% proj_tag "Design leadership" %}
+          {% proj_tag "End-to-end design" %}
+        </div>
       </a>
 
       <a class="proj is-soon" href="collective.html">
@@ -1687,9 +1795,15 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption reveal-up">
-          <h3 class="proj__name">The Collective <em>— editorial</em></h3>
+          <h3 class="proj__name">The Collective</h3>
+          <p class="proj__kind">Editorial</p>
         </div>
-        <div class="proj__crumb reveal-up">Booking flow rebuild. 500% lift in enquiries, month one.</div>
+        <div class="proj__crumb reveal-up">A strategic rebuild of the booking flow for the world's largest co-living operator — 500% more enquiries in month one.</div>
+        <div class="proj__tags reveal-up">
+          {% proj_tag "Booking flow" %}
+          {% proj_tag "iOS &amp; Android" %}
+          {% proj_tag "↑ 500% enquiries" %}
+        </div>
       </a>
 
       <a class="proj is-soon" href="lifecake.html">
@@ -1709,9 +1823,15 @@ p,li{text-wrap:pretty}
           </div>
         </div>
         <div class="proj__caption reveal-up">
-          <h3 class="proj__name">Lifecake <em>— Apple feature.</em></h3>
+          <h3 class="proj__name">Lifecake</h3>
+          <p class="proj__kind">Apple feature</p>
         </div>
-        <div class="proj__crumb reveal-up">Brand and product overhaul. 3.4M users.</div>
+        <div class="proj__crumb reveal-up">Brand and product overhaul across iOS, Android and web for 3.4M families — Apple's Best Storytelling App of 2019.</div>
+        <div class="proj__tags reveal-up">
+          {% proj_tag "Apple Best of 2019" %}
+          {% proj_tag "3.4M users" %}
+          {% proj_tag "iOS, Android &amp; web" %}
+        </div>
       </a>
     </div>
     <div class="work__controls">
@@ -1731,7 +1851,7 @@ p,li{text-wrap:pretty}
     <div class="about__hover-img" aria-hidden="true">
       <img loading="lazy" src="https://cdn.prod.website-files.com/60e43dce81494cd0946f829e/60fec2712ef38f4ae3a670a4_family-p-1080.jpeg" alt="" />
     </div>
-    <h2 class="about__title reveal-h"><span class="rw"><span>About</span></span></h2>
+    <h2 class="about__title reveal-h"><span class="rw"><span>About</span></span> <span class="rw"><span>me</span></span></h2>
 
     <div class="about__intro">
       <div class="about__lead reveal-up">
@@ -1790,13 +1910,13 @@ p,li{text-wrap:pretty}
 
   <!-- TESTIMONIALS -->
   <section class="testimonials" aria-label="Testimonials">
-   <div class="testimonials__shell">
+   <div class="testimonials__shell" data-nav-dark>
     <div class="testimonials__card">
 
       <div class="testimonials__head">
         <div class="testimonials__head-inner">
           <img class="testimonials__gif" src="assets/giphy.gif" alt="" loading="lazy" />
-          <h2 class="testimonials__title">Testimonials<sup>*</sup></h2>
+          <h2 class="testimonials__title">What others say<sup>*</sup></h2>
           <p class="testimonials__sub">* I didn't force them to write these... trust me</p>
         </div>
       </div>
@@ -2101,20 +2221,49 @@ p,li{text-wrap:pretty}
 
   // nav: hide on scroll-down, show w/ blur on scroll-up
   const nav = document.querySelector(".nav");
+  const darkZones = [...document.querySelectorAll("[data-nav-dark]")];
   let lastY = window.scrollY, ticking = false;
+
+  // Jumping to an in-page anchor moves the page down, which the delta check
+  // below would read as a scroll-down and hide the nav — right after the user
+  // reached for it. Hold it visible until the jump settles; it should only
+  // hide when the user scrolls down themselves.
+  let anchorHold = 0;
+  // Same deal arriving from another page (a case study's nav links point at
+  // index.html#work): the browser's jump to the hash would read as a
+  // scroll-down and hide the nav the moment the page opens.
+  if (location.hash && document.querySelector(location.hash)) {
+    anchorHold = performance.now() + 900;
+  }
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest?.('a[href*="#"]');
+    if (!link) return;
+    const url = new URL(link.getAttribute("href"), location.href);
+    if (url.pathname !== location.pathname || !url.hash) return;
+    if (!document.querySelector(url.hash)) return;
+    anchorHold = performance.now() + 900;
+  });
+
   const updateNav = () => {
     const y = window.scrollY;
     const delta = y - lastY;
+    const holding = performance.now() < anchorHold;
     if (y < 24) {
       nav.classList.remove("is-floating", "is-hidden");
       nav.classList.add("is-pinned");
-    } else if (delta > 6) {
+    } else if (delta > 6 && !holding) {
       nav.classList.add("is-hidden");
       nav.classList.remove("is-floating", "is-pinned");
-    } else if (delta < -6) {
+    } else if (delta < -6 || holding) {
       nav.classList.remove("is-hidden", "is-pinned");
       nav.classList.add("is-floating");
     }
+    // invert the bar wherever it overlaps a dark section
+    const probe = nav.getBoundingClientRect().bottom - 2;
+    nav.classList.toggle("is-on-dark", darkZones.some((z) => {
+      const r = z.getBoundingClientRect();
+      return r.top <= probe && r.bottom >= probe;
+    }));
     lastY = y;
     ticking = false;
   };
@@ -2156,44 +2305,117 @@ p,li{text-wrap:pretty}
   const hoverImg = document.querySelector(".about__hover-img");
   const hoverPic = hoverImg?.querySelector("img");
   const fallbackSrc = hoverPic?.src;
-  if (hoverImg && hoverPic) {
-    // preload per-row images so hot-swap is instant; cache promises
-    const loaded = new Map();
+  const expRows = [...document.querySelectorAll(".about__exp")];
+  const expHost = expRows[0]?.parentElement;
+  if (hoverImg && hoverPic && expHost) {
+    // preload per-row images so hot-swap is instant. `pending` caches the
+    // in-flight promise, `settled` the resolved value — the latter lets an
+    // already-decoded image swap in synchronously, with no dropped frame.
+    const pending = new Map();
+    const settled = new Map();
     const tryLoad = (src) => {
       if (!src) return Promise.resolve(null);
-      if (loaded.has(src)) return loaded.get(src);
+      if (pending.has(src)) return pending.get(src);
       const p = new Promise((resolve) => {
         const img = new Image();
         img.onload = () => resolve(src);
         img.onerror = () => resolve(null);
         img.src = src;
-      });
-      loaded.set(src, p);
+      }).then((ok) => { settled.set(src, ok); return ok; });
+      pending.set(src, p);
       return p;
     };
+    expRows.forEach((row) => tryLoad(row.dataset.img));
 
-    document.querySelectorAll(".about__exp").forEach((row) => {
+    let currentRow = null;
+    let pointer = null;
+    // guards against a slow load from a row you've already scrolled past
+    // resolving late and overwriting the row you're actually on
+    let token = 0;
+
+    const place = (x, y) => {
+      hoverImg.style.left = x + "px";
+      hoverImg.style.top = y + "px";
+    };
+
+    // Lean the card into the direction of travel. The angle rides on top of
+    // each row's own --rot, so a row tilted -11deg and one tilted +10deg both
+    // lean the same way relative to themselves. Flip TILT_PER_PX's sign to
+    // reverse the direction.
+    const TILT_PER_PX = 0.7;
+    const TILT_MAX = 10;
+    let lastX = null, tiltReset = 0;
+    const tilt = (x) => {
+      if (lastX !== null) {
+        const dx = x - lastX;
+        const deg = Math.max(-TILT_MAX, Math.min(TILT_MAX, dx * TILT_PER_PX));
+        hoverImg.style.setProperty("--tilt", deg.toFixed(2) + "deg");
+        // mousemove stops firing when the cursor stops, so ease back to level
+        clearTimeout(tiltReset);
+        tiltReset = setTimeout(() => {
+          hoverImg.style.setProperty("--tilt", "0deg");
+        }, 120);
+      }
+      lastX = x;
+    };
+
+    // Crossing between rows only swaps src + rotation — `is-active` stays on
+    // throughout. Tearing it down per row made every boundary a 400ms
+    // fade-out/rotate/fade-in pulse, which read as the image jumping about.
+    const show = (row) => {
+      if (row === currentRow) return;
+      currentRow = row;
       const src = row.dataset.img;
-      const rot = row.dataset.rot || "10deg";
-      const w = row.dataset.w || "330px";
-      // warm cache
-      tryLoad(src);
-      row.addEventListener("mouseenter", async (e) => {
-        // set position FIRST so the image doesn't flash at (0,0) on first hover
-        hoverImg.style.left = e.clientX + "px";
-        hoverImg.style.top = e.clientY + "px";
-        hoverImg.style.setProperty("--rot", rot);
-        hoverImg.style.setProperty("--w", w);
-        const ok = await tryLoad(src);
-        hoverPic.src = ok || fallbackSrc;
-        hoverImg.classList.add("is-active");
+      hoverImg.style.setProperty("--rot", row.dataset.rot || "10deg");
+      hoverImg.style.setProperty("--w", row.dataset.w || "330px");
+      hoverImg.style.setProperty("--h", row.dataset.h || "240px");
+      const mine = ++token;
+      if (settled.has(src)) {
+        hoverPic.src = settled.get(src) || fallbackSrc;
+      } else {
+        tryLoad(src).then((ok) => {
+          if (mine === token) hoverPic.src = ok || fallbackSrc;
+        });
+      }
+      hoverImg.classList.add("is-active");
+    };
+
+    const hide = () => {
+      if (!currentRow) return;
+      currentRow = null;
+      token++;
+      clearTimeout(tiltReset);
+      hoverImg.style.setProperty("--tilt", "0deg");
+      hoverImg.classList.remove("is-active");
+    };
+
+    // Tracked on the document, not on the rows: moving the cursor away (over
+    // the testimonials, say) has to keep `pointer` current, or scrolling back
+    // up re-shows the image at wherever the cursor last was over a row.
+    // One delegated handler also avoids per-row enter/leave pairs.
+    document.addEventListener("mousemove", (e) => {
+      pointer = { x: e.clientX, y: e.clientY };
+      place(pointer.x, pointer.y);
+      tilt(pointer.x);
+      const row = e.target.closest?.(".about__exp");
+      if (row) show(row); else hide();
+    }, { passive: true });
+    // cursor left the window entirely — no mousemove will fire
+    document.addEventListener("mouseleave", hide);
+
+    // mousemove doesn't fire while the page scrolls under a still cursor, so
+    // re-resolve the row under the pointer on scroll instead
+    let queued = false;
+    window.addEventListener("scroll", () => {
+      if (!pointer || queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        const el = document.elementFromPoint(pointer.x, pointer.y);
+        const row = el?.closest?.(".about__exp");
+        if (row) show(row); else hide();
       });
-      row.addEventListener("mouseleave", () => hoverImg.classList.remove("is-active"));
-      row.addEventListener("mousemove", (e) => {
-        hoverImg.style.left = e.clientX + "px";
-        hoverImg.style.top = e.clientY + "px";
-      });
-    });
+    }, { passive: true });
   }
 
   // testimonials: inject 5 stars at the top of each, then fade + stagger-in on scroll

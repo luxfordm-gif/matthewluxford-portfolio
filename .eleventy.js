@@ -31,7 +31,7 @@ module.exports = function (eleventyConfig) {
       : "";
     return `<figure class="case__bleed case__bleed--top">
   <picture>${source}
-    <img src="${src}" alt="${alt}" loading="eager" />
+    <img src="${src}" alt="${alt}" loading="eager" fetchpriority="high" />
   </picture>
 </figure>`;
   });
@@ -48,7 +48,7 @@ module.exports = function (eleventyConfig) {
   // on the right. Pass an optional marginTop override (Reps does this).
   eleventyConfig.addPairedShortcode("case_hero", function (content, title, lede, marginTop) {
     const style = marginTop ? ` style="margin-top:${marginTop}"` : "";
-    return `<section class="case__hero"${style}>
+    return `<section class="case__hero" data-nav-dark${style}>
   <div class="case__hero-grid">
     <div>
       <h2>${title}</h2>
@@ -119,6 +119,12 @@ module.exports = function (eleventyConfig) {
     <span class="outcome__num">${num}</span>
     <span class="outcome__lab">${lab}</span>
   </div>`;
+  });
+
+  // Pill under a card in the homepage Featured work carousel — one short,
+  // concrete fact about the work. Keep labels to two or three words.
+  eleventyConfig.addShortcode("proj_tag", function (label) {
+    return `<span class="proj__tag">${label}</span>`;
   });
 
   return {

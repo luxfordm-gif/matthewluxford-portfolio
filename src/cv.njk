@@ -58,7 +58,9 @@ p,li{text-wrap:pretty}
 /* ============================================================== nav */
 /* close button pinned to the top-right, mirroring the Resume CTA position used across the site */
 .nav__close{
-  position:fixed;top:32px;right:var(--pad);z-index:60;
+  /* 27px, not 32: the button is 40px tall and the nav bar on every other page
+     is 95px, so this puts its centre on the same y=47 as their CTA and links */
+  position:fixed;top:27px;right:var(--pad);z-index:60;
   display:inline-flex;align-items:center;justify-content:center;
   width:40px;height:40px;border-radius:8px;
   background:var(--ink);color:var(--paper);

@@ -39,7 +39,7 @@ img,svg{display:block;max-width:100%}
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:60;
   display:flex;align-items:center;justify-content:space-between;
-  padding:32px var(--pad) 18px;
+  padding:24px var(--pad);
   transition:transform .45s var(--ease), background .35s var(--ease), border-color .35s var(--ease), backdrop-filter .35s var(--ease), padding .35s var(--ease);
   border-bottom:1px solid transparent;
 }
@@ -49,8 +49,17 @@ img,svg{display:block;max-width:100%}
   backdrop-filter:saturate(160%) blur(14px);
   -webkit-backdrop-filter:saturate(160%) blur(14px);
   border-bottom-color:rgba(20,20,20,.06);
-  padding-top:14px;padding-bottom:14px;
 }
+/* Over a dark section the light blurred band reads as a white slab, so invert
+   it. Driven by [data-nav-dark] elements + the scroll handler. */
+.nav.is-floating.is-on-dark{
+  background:rgba(10,10,10,.72);
+  border-bottom-color:rgba(255,255,255,.10);
+  color:#fff;
+}
+.nav.is-floating.is-on-dark .nav__brand{color:#fff}
+.nav.is-floating.is-on-dark .nav__links a{color:#fff}
+.nav.is-floating.is-on-dark .nav__cta{background:#fff;color:var(--ink)}
 .nav.is-hidden{transform:translateY(-110%)}
 .nav__brand{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:var(--ink);display:inline-block;text-decoration:none}
 .nav__brand-letters{display:inline-flex}
@@ -60,7 +69,13 @@ img,svg{display:block;max-width:100%}
 @media (prefers-reduced-motion: reduce){.nav__brand.is-waving .nav__brand-letters span{animation:none}}
 .nav__right{display:flex;align-items:center;gap:clamp(1.5rem,3vw,2.6rem)}
 .nav__links{display:flex;gap:clamp(1.25rem,2.6vw,2rem)}
-.nav__links a{font-size:1rem;color:var(--ink);font-weight:500}
+.nav__links a{font-size:1rem;color:var(--ink);font-weight:500;position:relative}
+.nav__links a::after{
+  content:"";position:absolute;left:0;right:0;bottom:-3px;height:1.5px;
+  background:currentColor;transform:scaleX(0);transform-origin:left;
+  transition:transform .35s var(--ease);
+}
+.nav__links a:hover::after{transform:scaleX(1)}
 .nav__cta{
   display:inline-flex;align-items:center;gap:8px;
   padding:11px 22px;border-radius:999px;
@@ -722,6 +737,7 @@ img,svg{display:block;max-width:100%}
 (() => {
   const nav = document.querySelector(".nav");
   if (!nav) return;
+  const darkZones = [...document.querySelectorAll("[data-nav-dark]")];
   let lastY = window.scrollY, ticking = false;
   const updateNav = () => {
     const y = window.scrollY;
@@ -736,6 +752,12 @@ img,svg{display:block;max-width:100%}
       nav.classList.remove("is-hidden", "is-pinned");
       nav.classList.add("is-floating");
     }
+    // invert the bar wherever it overlaps a dark section
+    const probe = nav.getBoundingClientRect().bottom - 2;
+    nav.classList.toggle("is-on-dark", darkZones.some((z) => {
+      const r = z.getBoundingClientRect();
+      return r.top <= probe && r.bottom >= probe;
+    }));
     lastY = y;
     ticking = false;
   };
