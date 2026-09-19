@@ -318,7 +318,9 @@ p,li{text-wrap:pretty}
 }
 .fcard--3 .ph{
   width:100%;height:100%;
-  background-image:url("https://cdn.prod.website-files.com/60e43dce81494cd0946f829e/60fec2712ef38f4ae3a670a4_family-p-1080.jpeg");
+  /* Drop a local photo in here — assets/family.webp or similar. This used to
+     hotlink a Webflow CDN we no longer control, which stopped resolving and
+     left the card blank. Until there is a local file it stays a plain panel. */
   background-size:cover;
   background-position:center;
   filter:grayscale(.15) contrast(1.02);
@@ -1876,7 +1878,7 @@ p,li{text-wrap:pretty}
   <section class="about" id="about" data-reveal>
    <div class="about__inner">
     <div class="about__hover-img" aria-hidden="true">
-      <img loading="lazy" src="https://cdn.prod.website-files.com/60e43dce81494cd0946f829e/60fec2712ef38f4ae3a670a4_family-p-1080.jpeg" alt="" />
+      <img loading="lazy" src="assets/og-image.jpg" alt="" />
     </div>
     <h2 class="about__title reveal-h"><span class="rw"><span>About</span></span> <span class="rw"><span>me</span></span></h2>
 
@@ -1885,7 +1887,7 @@ p,li{text-wrap:pretty}
         I'm <strong>Matthew Luxford</strong>, a Senior&nbsp;Web&nbsp;Designer based in <strong>Surrey,&nbsp;UK</strong>.
       </div>
       <div class="about__body">
-        <p>Eighteen years across UX, UI, brand, and design systems. Currently freelance and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
+        <p>Eighteen years across UX, UI, brand, and design systems. Four years in at <strong>Kraken</strong>, and <strong>open to the right senior role in 2026</strong> — remote or hybrid, worldwide.</p>
         <p>Happiest doing full-cycle work, from kickoff brief to shipped code. I care about the work, not the title — and I genuinely love getting stuck in. Right now I'm leaning hard into <strong>AI</strong> as a working partner.</p>
         <p>I'm a recently converted <a class="gif-link" href="#" onclick="event.preventDefault()">road cyclist<img class="gif-link__pop" src="assets/cyclist.webp" alt="" loading="lazy" /></a> <em>(apologies in advance)</em>. The rest — BBQs, Bella the lazy dog, the actual job titles — is on <a class="dotted-link" href="cv.html">the CV&nbsp;↗</a>.</p>
       </div>
