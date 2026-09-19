@@ -1878,7 +1878,7 @@ p,li{text-wrap:pretty}
   <section class="about" id="about" data-reveal>
    <div class="about__inner">
     <div class="about__hover-img" aria-hidden="true">
-      <img loading="lazy" src="assets/og-image.jpg" alt="" />
+      <img loading="lazy" alt="" />
     </div>
     <h2 class="about__title reveal-h"><span class="rw"><span>About</span></span> <span class="rw"><span>me</span></span></h2>
 
@@ -2333,7 +2333,6 @@ p,li{text-wrap:pretty}
   // about: hover image follows cursor over experience rows
   const hoverImg = document.querySelector(".about__hover-img");
   const hoverPic = hoverImg?.querySelector("img");
-  const fallbackSrc = hoverPic?.src;
   const expRows = [...document.querySelectorAll(".about__exp")];
   const expHost = expRows[0]?.parentElement;
   if (hoverImg && hoverPic && expHost) {
@@ -2399,14 +2398,16 @@ p,li{text-wrap:pretty}
       hoverImg.style.setProperty("--w", row.dataset.w || "330px");
       hoverImg.style.setProperty("--h", row.dataset.h || "240px");
       const mine = ++token;
-      if (settled.has(src)) {
-        hoverPic.src = settled.get(src) || fallbackSrc;
-      } else {
-        tryLoad(src).then((ok) => {
-          if (mine === token) hoverPic.src = ok || fallbackSrc;
-        });
-      }
-      hoverImg.classList.add("is-active");
+      const apply = (ok) => {
+        if (mine !== token) return;
+        // No image for this row: show nothing. Substituting an unrelated
+        // picture is worse than an absent one.
+        if (!ok) { hoverImg.classList.remove("is-active"); return; }
+        hoverPic.src = ok;
+        hoverImg.classList.add("is-active");
+      };
+      if (settled.has(src)) apply(settled.get(src));
+      else tryLoad(src).then(apply);
     };
 
     const hide = () => {
