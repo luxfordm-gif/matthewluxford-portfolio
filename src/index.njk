@@ -318,7 +318,9 @@ p,li{text-wrap:pretty}
 }
 .fcard--3 .ph{
   width:100%;height:100%;
-  background-image:url("https://cdn.prod.website-files.com/60e43dce81494cd0946f829e/60fec2712ef38f4ae3a670a4_family-p-1080.jpeg");
+  /* Drop a local photo in here — assets/family.webp or similar. This used to
+     hotlink a Webflow CDN we no longer control, which stopped resolving and
+     left the card blank. Until there is a local file it stays a plain panel. */
   background-size:cover;
   background-position:center;
   filter:grayscale(.15) contrast(1.02);
@@ -1799,12 +1801,13 @@ p,li{text-wrap:pretty}
         </div>
         <div class="proj__caption reveal-up">
           <h3 class="proj__name">Yoppie</h3>
-          <p class="proj__kind">Design leadership</p>
+          <p class="proj__kind">Brand &amp; e-commerce</p>
         </div>
-        <div class="proj__crumb reveal-up">Design leadership and end-to-end product design across every digital surface for the women's-health DTC.</div>
+        <div class="proj__crumb reveal-up">Sole creative in a nine-person women's-health company — the full e-commerce store, plus a questionnaire that guides customers to the right products.</div>
         <div class="proj__tags reveal-up">
-          {% proj_tag "Design leadership" %}
-          {% proj_tag "End-to-end design" %}
+          {% proj_tag "Sole creative" %}
+          {% proj_tag "E-commerce build" %}
+          {% proj_tag "Product finder" %}
         </div>
       </a>
 
@@ -1823,9 +1826,9 @@ p,li{text-wrap:pretty}
         </div>
         <div class="proj__caption reveal-up">
           <h3 class="proj__name">The Collective</h3>
-          <p class="proj__kind">Editorial</p>
+          <p class="proj__kind">UX &amp; product</p>
         </div>
-        <div class="proj__crumb reveal-up">A strategic rebuild of the booking flow for the world's largest co-living operator — 500% more enquiries in month one.</div>
+        <div class="proj__crumb reveal-up">A rebuild of the booking flow for the world's largest co-living operator — 500% more enquiries in month one.</div>
         <div class="proj__tags reveal-up">
           {% proj_tag "Booking flow" %}
           {% proj_tag "iOS &amp; Android" %}
@@ -1851,7 +1854,7 @@ p,li{text-wrap:pretty}
         </div>
         <div class="proj__caption reveal-up">
           <h3 class="proj__name">Lifecake</h3>
-          <p class="proj__kind">Apple feature</p>
+          <p class="proj__kind">Brand &amp; product</p>
         </div>
         <div class="proj__crumb reveal-up">Brand and product overhaul across iOS, Android and web for 3.4M families — Apple's Best Storytelling App of 2019.</div>
         <div class="proj__tags reveal-up">
@@ -1876,7 +1879,7 @@ p,li{text-wrap:pretty}
   <section class="about" id="about" data-reveal>
    <div class="about__inner">
     <div class="about__hover-img" aria-hidden="true">
-      <img loading="lazy" src="https://cdn.prod.website-files.com/60e43dce81494cd0946f829e/60fec2712ef38f4ae3a670a4_family-p-1080.jpeg" alt="" />
+      <img loading="lazy" alt="" />
     </div>
     <h2 class="about__title reveal-h"><span class="rw"><span>About</span></span> <span class="rw"><span>me</span></span></h2>
 
@@ -1885,7 +1888,7 @@ p,li{text-wrap:pretty}
         I'm <strong>Matthew Luxford</strong>, a Senior&nbsp;Web&nbsp;Designer based in <strong>Surrey,&nbsp;UK</strong>.
       </div>
       <div class="about__body">
-        <p>Eighteen years across UX, UI, brand, and design systems. Currently freelance and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
+        <p>Eighteen years across UX, UI, brand, and design systems. Four years in at <strong>Kraken</strong>, and <strong>open to the right senior role in 2026</strong> — remote or hybrid, worldwide.</p>
         <p>Happiest doing full-cycle work, from kickoff brief to shipped code. I care about the work, not the title — and I genuinely love getting stuck in. Right now I'm leaning hard into <strong>AI</strong> as a working partner.</p>
         <p>I'm a recently converted <a class="gif-link" href="#" onclick="event.preventDefault()">road cyclist<img class="gif-link__pop" src="assets/cyclist.webp" alt="" loading="lazy" /></a> <em>(apologies in advance)</em>. The rest — BBQs, Bella the lazy dog, the actual job titles — is on <a class="dotted-link" href="cv.html">the CV&nbsp;↗</a>.</p>
       </div>
@@ -2331,7 +2334,6 @@ p,li{text-wrap:pretty}
   // about: hover image follows cursor over experience rows
   const hoverImg = document.querySelector(".about__hover-img");
   const hoverPic = hoverImg?.querySelector("img");
-  const fallbackSrc = hoverPic?.src;
   const expRows = [...document.querySelectorAll(".about__exp")];
   const expHost = expRows[0]?.parentElement;
   if (hoverImg && hoverPic && expHost) {
@@ -2397,14 +2399,16 @@ p,li{text-wrap:pretty}
       hoverImg.style.setProperty("--w", row.dataset.w || "330px");
       hoverImg.style.setProperty("--h", row.dataset.h || "240px");
       const mine = ++token;
-      if (settled.has(src)) {
-        hoverPic.src = settled.get(src) || fallbackSrc;
-      } else {
-        tryLoad(src).then((ok) => {
-          if (mine === token) hoverPic.src = ok || fallbackSrc;
-        });
-      }
-      hoverImg.classList.add("is-active");
+      const apply = (ok) => {
+        if (mine !== token) return;
+        // No image for this row: show nothing. Substituting an unrelated
+        // picture is worse than an absent one.
+        if (!ok) { hoverImg.classList.remove("is-active"); return; }
+        hoverPic.src = ok;
+        hoverImg.classList.add("is-active");
+      };
+      if (settled.has(src)) apply(settled.get(src));
+      else tryLoad(src).then(apply);
     };
 
     const hide = () => {
