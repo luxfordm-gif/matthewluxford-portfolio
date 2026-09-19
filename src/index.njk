@@ -704,6 +704,11 @@ p,li{text-wrap:pretty}
 .proj.is-soon .proj__media{
   filter:saturate(.9);
 }
+/* A work card with no destination yet carries no href, so it is neither
+   focusable nor clickable. Suppress the hover lift too — a card that rises
+   under the cursor is promising a click it cannot honour. */
+.proj:not([href]){cursor:default}
+.proj:not([href]):hover .proj__media{transform:none;box-shadow:none}
 
 .proj__logo{
   position:absolute;top:18px;left:18px;
@@ -1778,7 +1783,7 @@ p,li{text-wrap:pretty}
         </div>
       </a>
 
-      <a class="proj is-soon" href="#" aria-disabled="true">
+      <a class="proj is-soon">
         <div class="proj__media proj__media--02">
           <span class="proj__badge">Coming soon</span>
           <span class="proj__logo" style="background:#0a0a0a;color:#fde68a">Y</span>
