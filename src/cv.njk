@@ -108,6 +108,8 @@ p,li{text-wrap:pretty}
 }
 .cv-hero__role{grid-column:1;grid-row:1}
 .cv-hero__intro{grid-column:1;grid-row:2}
+/* full hero width so all four proof items sit on one row */
+.cv-proof{grid-column:1 / -1;grid-row:3}
 .cv-hero__contact{grid-column:2;grid-row:1;align-self:start;padding-top:1.2rem}
 @media (max-width:720px){
   .cv-hero{
@@ -122,7 +124,8 @@ p,li{text-wrap:pretty}
      contact (first in markup) lands in row 1, then role, then intro. */
   .cv-hero__contact,
   .cv-hero__role,
-  .cv-hero__intro{grid-column:1;grid-row:auto}
+  .cv-hero__intro,
+  .cv-proof{grid-column:1;grid-row:auto}
   .cv-hero__contact{
     align-items:flex-start;text-align:left;padding-top:0;
     font-size:.92rem;line-height:1.7;color:var(--ink);
@@ -195,6 +198,33 @@ p,li{text-wrap:pretty}
 .cv-hero__intro p:last-child{margin-bottom:0}
 .cv-hero__intro strong{color:var(--ink);font-weight:600}
 .cv-hero__intro em{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
+
+/* proof strip — the four hard facts, sat above the fold so a six-second
+   scan hits evidence before prose. */
+.cv-proof{
+  margin-top:clamp(1.25rem,2.5vw,1.75rem);
+  display:flex;flex-wrap:wrap;gap:.55rem;
+}
+.cv-proof li{
+  display:flex;flex-direction:column;gap:.15rem;
+  padding:.55rem .9rem .6rem;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:8px;
+  box-shadow:inset 3px 0 0 var(--hl);
+}
+.cv-proof b{
+  font-size:1rem;font-weight:700;letter-spacing:-.02em;
+  line-height:1.2;color:var(--ink);
+}
+.cv-proof span{font-size:.72rem;letter-spacing:.01em;color:var(--muted)}
+
+/* short framing note under a section heading */
+.cv-section__note{
+  margin:0 0 1.75rem;max-width:62ch;
+  font-size:.92rem;line-height:1.7;color:var(--ink-2);
+}
+.cv-section__note strong{color:var(--ink);font-weight:600}
 
 /* notable achievement callout */
 .cv-callout{
@@ -615,14 +645,19 @@ body.near-secret-footer .cv-download-fade{
   .page{background:#fff!important;background-image:none!important}
   .nav{display:none}
   .nav__close{display:none}
-  .cv-aside__contact{font-size:8pt;color:#000;display:flex;flex-direction:column;align-items:flex-end;text-align:right;margin-bottom:5mm}
-  .cv-aside__contact .dot{display:none}
-  .cv-aside__contact .status{color:#000}
+  .cv-hero__contact{font-size:8pt;color:#000;display:flex;flex-direction:column;align-items:flex-end;text-align:right;margin-bottom:5mm}
+  .cv-hero__contact .dot{display:none}
+  .cv-hero__contact .status{color:#000}
   .cv-hero{padding:6mm 0 5mm;border-bottom:1px solid #000}
   .cv-hero__eyebrow{background:none;color:#000;padding:0;font-size:8pt;margin-bottom:3mm;font-weight:700}
   .cv-hero__name{font-size:38pt;transform:none;letter-spacing:0}
   .cv-hero__role{font-size:11pt;margin-top:2mm}
   .cv-hero__intro{font-size:9pt;margin-top:3mm;max-width:none}
+  .cv-proof{margin-top:3mm;gap:0 5mm;break-inside:avoid}
+  .cv-proof li{padding:0;border:0;border-radius:0;background:none;box-shadow:none!important}
+  .cv-proof b{font-size:9pt}
+  .cv-proof span{font-size:7.5pt;color:#444}
+  .cv-section__note{font-size:8.5pt;color:#000;margin-bottom:3mm;max-width:none}
   .cv-grid{padding:6mm 0;gap:8mm;max-width:none;grid-template-columns:1.85fr 1fr}
   .cv-section__h{background:#000;color:#fff;padding:2.5pt 6pt;font-size:8pt;margin-bottom:3mm;border-radius:2pt}
   .cv-section + .cv-section{margin-top:6mm}
@@ -632,6 +667,7 @@ body.near-secret-footer .cv-download-fade{
   .cv-job__title em{font-size:9pt}
   .cv-job__loc{font-size:7.5pt;color:#444}
   .cv-job__desc{font-size:8.5pt;margin-top:1.5mm}
+  .cv-aside__note{font-size:8pt;color:#333;margin-top:2mm;line-height:1.45}
   .cv-tags{font-size:8.5pt;color:#000}
   .cv-tags li{display:inline;padding:0;border:0;background:none;color:#000}
   .cv-list li{font-size:8.5pt;color:#000;border-bottom:1px solid #ddd}
@@ -666,10 +702,14 @@ body.near-secret-footer .cv-download-fade{
     <span class="role-sub">18+ years working end-to-end: UX, IA, UI, design systems, front-end</span>
   </p>
   <div class="cv-hero__intro">
-    <p>I'm a Senior Web Designer based in <strong>Surrey, UK</strong>. I work end-to-end across UX, UI, brand and design systems, sitting comfortably between users, business and engineering. Currently freelance and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
-    <p>I'm a dad of two and a recently converted road cyclist <em>(apologies in advance)</em>. When I was permanent, I was always chasing the next job title, grinding towards design director. Since going contract, that's changed — <strong>I care about the work, not the title</strong> — and I genuinely love getting stuck in. Full-cycle work, from kickoff brief through to delivery, is where I'm happiest. I've worn a lot of hats, so I talk to developers without the ego and translate between design and code.</p>
-    <p>More recently, I've been actively exploring <strong>AI</strong> — not as a replacement, but as a tool. I'll use whatever level works: design, code generation, or the latest trend. If it makes me more efficient and helps me deliver better work, I'm all in.</p>
+    <p>Senior Web Designer based in <strong>Surrey, UK</strong>, working end-to-end across UX, UI, brand and design systems — at home between users, business and engineering. Four years contracting at <strong>Kraken</strong>, and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
   </div>
+  <ul class="cv-proof">
+    <li><b>★ Apple Best of 2019</b><span>Lifecake · App Store award</span></li>
+    <li><b>3.4M+ users</b><span>Lifecake platform</span></li>
+    <li><b>500% lift</b><span>booking enquiries · The Collective</span></li>
+    <li><b>27 markets</b><span>dual brands · Jaguar Land Rover</span></li>
+  </ul>
 </section>
 
 <!-- TWO-COLUMN GRID -->
@@ -691,12 +731,13 @@ body.near-secret-footer .cv-download-fade{
 
     <section class="cv-section">
       <h2 class="cv-section__h">Experience</h2>
+      <p class="cv-section__note">Contract and freelance since 2015 — engagements often ran in parallel, so some dates overlap. Going contract is also why the titles stop climbing: <strong>I care about the work, not the ladder</strong>. Full-cycle, kickoff brief through to delivery, is where I'm happiest — and I talk to developers without the ego.</p>
 
       <article class="cv-job">
-        <span class="cv-job__years">2024 — 2025</span>
+        <span class="cv-job__years">2022 — present</span>
         <h3 class="cv-job__title">Senior IC, Web Designer <em>· Kraken</em></h3>
-        <span class="cv-job__loc">Remote · Crypto exchange</span>
-        <p class="cv-job__desc">Senior individual contributor on the web team. Crypto moves fast, and so did we — designed across product and engineering on a live trading platform, with review cycles measured in hours, not weeks. NDA on the work itself, but the pace raised my baseline for what shipping fast actually looks like.</p>
+        <span class="cv-job__loc">Remote · Crypto exchange · NDA</span>
+        <p class="cv-job__desc">Four years embedded as a senior individual contributor on the web team of one of crypto's largest exchanges. Designing across product and engineering on a live trading platform, with review cycles measured in hours, not weeks. The work itself is under NDA.</p>
       </article>
 
       <article class="cv-job">
@@ -796,16 +837,12 @@ body.near-secret-footer .cv-download-fade{
         <li>Figma</li>
         <li>Affinity</li>
         <li>GitHub</li>
-        <li>Slack</li>
-        <li>Jira</li>
-        <li>Trello</li>
-        <li>Google Docs</li>
         <li>Claude</li>
         <li>Granola AI</li>
         <li>Nano Banana 2</li>
         <li>Wispr Flow</li>
       </ul>
-      <p class="cv-aside__note"><em>— plus whatever's new this week. The AI space moves fast.</em></p>
+      <p class="cv-aside__note">AI as a tool, not a replacement — design, code generation, whatever makes the work better and faster. <em>Plus whatever's new this week. The space moves fast.</em></p>
     </section>
 
     <section class="cv-section">
@@ -825,7 +862,7 @@ body.near-secret-footer .cv-download-fade{
         <span class="lab">LinkedIn</span>
         <a href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener">linkedin.com/in/matthewluxford</a>
         <span class="lab">Portfolio</span>
-        <a href="index.html">matthewluxford.com</a>
+        <a href="index.html">matthewluxford.co.uk</a>
         <span class="lab">Based</span>
         <span>Surrey, UK · worldwide</span>
       </div>
