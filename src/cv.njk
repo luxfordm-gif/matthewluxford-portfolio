@@ -52,7 +52,7 @@ h1,h2,h3,h4{text-wrap:balance}
 img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 ul,ol{margin:0;padding:0;list-style:none}
-::selection{background:var(--hl);color:#000}
+::selection{background:var(--ink);color:var(--bg)}
 p,li{text-wrap:pretty}
 
 /* ============================================================== nav */
@@ -66,7 +66,7 @@ p,li{text-wrap:pretty}
   background:var(--ink);color:var(--paper);
   transition:background .25s var(--ease),transform .2s var(--ease);
 }
-.nav__close:hover{background:var(--hl);color:#000}
+.nav__close:hover{background:var(--ink-2)}
 .nav__close:active{transform:scale(.94)}
 .nav{display:none}
 
@@ -152,13 +152,6 @@ p,li{text-wrap:pretty}
     margin-top:clamp(1.5rem, 3.5vw, 2rem);
   }
 }
-.cv-hero__eyebrow{
-  font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);font-weight:600;
-  display:inline-block;padding:4px 10px;
-  background:var(--hl);color:#000;border-radius:4px;
-  margin-bottom:1.25rem;
-}
 .cv-hero__name{
   font-family:var(--hand);
   font-size:clamp(3.5rem,2rem + 5vw,6rem);
@@ -184,9 +177,11 @@ p,li{text-wrap:pretty}
   text-wrap:balance;
 }
 .cv-hero__role .role-sub{
-  display:block;margin-top:.35em;
-  font-family:var(--serif);font-style:italic;font-weight:400;
+  display:block;margin-top:.4em;
+  /* plain Inter — this is the job title, not an aside */
+  font-family:var(--sans);font-style:normal;font-weight:500;
   font-size:clamp(1rem,.9rem + .55vw,1.35rem);
+  letter-spacing:-.01em;
   color:var(--ink-2);
 }
 .cv-hero__intro{
@@ -200,24 +195,43 @@ p,li{text-wrap:pretty}
 .cv-hero__intro em{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
 
 /* proof strip — the four hard facts, sat above the fold so a six-second
-   scan hits evidence before prose. */
+   scan hits evidence before prose. No cards: big number, label, one line
+   of context, sat on a hairline. */
 .cv-proof{
-  margin-top:clamp(1.25rem,2.5vw,1.75rem);
-  display:flex;flex-wrap:wrap;gap:.55rem;
+  margin-top:clamp(2rem,4vw,3rem);
+  padding-top:clamp(1.5rem,3vw,2.25rem);
+  border-top:1px solid var(--line);
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(1.5rem,3vw,2.5rem);
 }
-.cv-proof li{
-  display:flex;flex-direction:column;gap:.15rem;
-  padding:.55rem .9rem .6rem;
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:8px;
-  box-shadow:inset 3px 0 0 var(--hl);
-}
+.cv-proof li{display:flex;flex-direction:column;gap:.5rem}
 .cv-proof b{
-  font-size:1rem;font-weight:700;letter-spacing:-.02em;
-  line-height:1.2;color:var(--ink);
+  /* same treatment as the case-study .outcome__num */
+  font-family:var(--sans);font-weight:800;
+  font-size:clamp(2rem,1.1rem + 2.6vw,3.25rem);
+  line-height:1;letter-spacing:-.04em;color:var(--ink);
 }
-.cv-proof span{font-size:.72rem;letter-spacing:.01em;color:var(--muted)}
+.cv-proof__lab{
+  font-size:.72rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink);
+}
+.cv-proof__desc{font-size:.85rem;line-height:1.45;color:var(--muted)}
+@media (max-width:880px){
+  .cv-proof{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.75rem 1.5rem}
+}
+/* phones: one fact per row, hairline between, so the numbers stay big */
+@media (max-width:560px){
+  .cv-proof{
+    grid-template-columns:1fr;
+    gap:0;
+    padding-top:1.5rem;
+  }
+  .cv-proof li{gap:.3rem;padding:1.1rem 0}
+  .cv-proof li + li{border-top:1px solid var(--line)}
+  .cv-proof li:first-child{padding-top:0}
+  .cv-proof li:last-child{padding-bottom:0}
+}
 
 /* short framing note under a section heading */
 .cv-section__note{
@@ -226,29 +240,24 @@ p,li{text-wrap:pretty}
 }
 .cv-section__note strong{color:var(--ink);font-weight:600}
 
-/* notable achievement callout */
+/* notable achievement — plain block, no card, no rule */
 .cv-callout{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-left:6px solid var(--hl);
-  border-radius:10px;
-  padding:1.1rem 1.25rem 1.2rem;
-  margin-bottom:2rem;
+  margin:0 0 2.5rem;
 }
 .cv-callout__lab{
-  display:inline-block;
-  font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  display:block;
+  font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
   color:var(--muted);
-  margin-bottom:.65rem;
+  margin-bottom:.5rem;
 }
 .cv-callout__title{
   font-family:var(--sans);font-weight:700;
-  font-size:1rem;letter-spacing:-.005em;line-height:1.3;
-  margin:0 0 .35rem;
+  font-size:1.15rem;letter-spacing:-.015em;line-height:1.3;
+  margin:0 0 .5rem;
 }
 .cv-callout__title em{font-family:var(--serif);font-style:italic;font-weight:400}
 .cv-callout__desc{
-  font-size:.88rem;line-height:1.55;color:var(--ink-2);margin:0;
+  font-size:.95rem;line-height:1.7;color:var(--ink-2);margin:0;max-width:62ch;
 }
 
 /* outside of work */
@@ -357,7 +366,7 @@ p,li{text-wrap:pretty}
   font-size:.85rem;
 }
 .cv-contact a{color:var(--ink);font-weight:500}
-.cv-contact a:hover{color:var(--hl-2);background:var(--ink);padding:0 4px;border-radius:3px}
+.cv-contact a:hover{color:var(--paper);background:var(--ink);padding:0 4px;border-radius:3px}
 .cv-contact .lab{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:-2px}
 
 /* ===================================================== download CTA */
@@ -380,7 +389,7 @@ body.near-secret-footer .cv-download-fade{
 }
 .cv-download:hover{
   transform:translateY(-3px) scale(1.04);
-  background:var(--hl);color:#000;
+  background:var(--ink-2);
 }
 .cv-download:active{transform:translateY(-1px) scale(1)}
 
@@ -649,14 +658,22 @@ body.near-secret-footer .cv-download-fade{
   .cv-hero__contact .dot{display:none}
   .cv-hero__contact .status{color:#000}
   .cv-hero{padding:6mm 0 5mm;border-bottom:1px solid #000}
-  .cv-hero__eyebrow{background:none;color:#000;padding:0;font-size:8pt;margin-bottom:3mm;font-weight:700}
   .cv-hero__name{font-size:38pt;transform:none;letter-spacing:0}
   .cv-hero__role{font-size:11pt;margin-top:2mm}
   .cv-hero__intro{font-size:9pt;margin-top:3mm;max-width:none}
-  .cv-proof{margin-top:3mm;gap:0 5mm;break-inside:avoid}
-  .cv-proof li{padding:0;border:0;border-radius:0;background:none;box-shadow:none!important}
-  .cv-proof b{font-size:9pt}
-  .cv-proof span{font-size:7.5pt;color:#444}
+  /* the print page is ~720px wide, so the responsive breakpoints would
+     otherwise drop these into two columns — keep all four on one row. */
+  .cv-proof{
+    margin-top:3mm;padding-top:3mm;border-top:1px solid #000;
+    grid-template-columns:repeat(4,minmax(0,1fr));gap:0 5mm;break-inside:avoid;
+  }
+  .cv-proof li{padding:0;gap:.5mm;border:0!important}
+  .cv-proof b{font-size:15pt}
+  .cv-proof__lab{font-size:7.5pt;color:#000}
+  .cv-proof__desc{font-size:7.5pt;color:#444}
+  .cv-callout{margin-bottom:4mm}
+  .cv-callout__title{font-size:10.5pt}
+  .cv-callout__desc{font-size:8.5pt;max-width:none}
   .cv-section__note{font-size:8.5pt;color:#000;margin-bottom:3mm;max-width:none}
   .cv-grid{padding:6mm 0;gap:8mm;max-width:none;grid-template-columns:1.85fr 1fr}
   .cv-section__h{background:#000;color:#fff;padding:2.5pt 6pt;font-size:8pt;margin-bottom:3mm;border-radius:2pt}
@@ -668,6 +685,7 @@ body.near-secret-footer .cv-download-fade{
   .cv-job__loc{font-size:7.5pt;color:#444}
   .cv-job__desc{font-size:8.5pt;margin-top:1.5mm}
   .cv-aside__note{font-size:8pt;color:#333;margin-top:2mm;line-height:1.45}
+  .cv-outside p{font-size:8.5pt;color:#000;line-height:1.45;margin-bottom:2mm}
   .cv-tags{font-size:8.5pt;color:#000}
   .cv-tags li{display:inline;padding:0;border:0;background:none;color:#000}
   .cv-list li{font-size:8.5pt;color:#000;border-bottom:1px solid #ddd}
@@ -693,22 +711,37 @@ body.near-secret-footer .cv-download-fade{
 <!-- HERO -->
 <section class="cv-hero">
   <p class="cv-hero__contact">
-    <span><b>Matthew Luxford</b> · Senior Web Designer</span>
     <span><a href="mailto:luxfordm@gmail.com">luxfordm@gmail.com</a> · Surrey / Remote</span>
     <span class="status"><span class="dot"></span>Open to senior roles · 2026</span>
   </p>
   <p class="cv-hero__role">
-    <span class="role-main">Senior Web Designer</span>
-    <span class="role-sub">18+ years working end-to-end: UX, IA, UI, design systems, front-end</span>
+    <span class="role-main">Matthew Luxford</span>
+    <span class="role-sub">Senior Web Designer and Creative Lead</span>
   </p>
   <div class="cv-hero__intro">
     <p>Senior Web Designer based in <strong>Surrey, UK</strong>, working end-to-end across UX, UI, brand and design systems — at home between users, business and engineering. Four years at <strong>Kraken</strong> on consumer web, and <strong>open to senior roles in 2026</strong> — remote or hybrid, worldwide.</p>
   </div>
   <ul class="cv-proof">
-    <li><b>4 yrs · Kraken</b><span>sole designer · consumer web · multi-asset</span></li>
-    <li><b>★ Apple Best of 2019</b><span>Lifecake · App Store award</span></li>
-    <li><b>3.4M+ users</b><span>Lifecake platform</span></li>
-    <li><b>500% lift</b><span>booking enquiries · The Collective</span></li>
+    <li>
+      <b>18+</b>
+      <span class="cv-proof__lab">Years experience</span>
+      <span class="cv-proof__desc">UX, UI and front-end build</span>
+    </li>
+    <li>
+      <b>4 yrs</b>
+      <span class="cv-proof__lab">At Kraken</span>
+      <span class="cv-proof__desc">Sole designer, consumer web</span>
+    </li>
+    <li>
+      <b>★ Best</b>
+      <span class="cv-proof__lab">App Store 2019</span>
+      <span class="cv-proof__desc">Apple award for Lifecake</span>
+    </li>
+    <li>
+      <b>500%</b>
+      <span class="cv-proof__lab">Enquiry lift</span>
+      <span class="cv-proof__desc">Conversion boost at The Collective</span>
+    </li>
   </ul>
 </section>
 
