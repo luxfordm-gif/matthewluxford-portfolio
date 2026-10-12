@@ -6,7 +6,7 @@ canonical: "https://matthewluxford.co.uk/"
 ogType: "website"
 ogImage: "https://matthewluxford.co.uk/assets/og-image.jpg"
 ogImageAlt: "Hire me already! — Matthew Luxford"
-fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800;900&family=Caveat+Brush"
+fonts: "Caveat:wght@500;600&family=EB+Garamond:ital,wght@1,400..600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800;900&family=Caveat+Brush"
 navBrandHref: "#top"
 navLinkBase: ""
 ---
@@ -24,6 +24,9 @@ navLinkBase: ""
   --dot:#c9c4b9;
   --dark:#0a0a0a;
   --serif:"Fraunces",ui-serif,Georgia,serif;
+  /* trial secondary serif — on the snake's key words, the hero's italic line
+     and the WIP note, to compare against Fraunces in place */
+  --serif-2:"EB Garamond",ui-serif,Georgia,serif;
   --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --hand:"Caveat",ui-serif,Georgia,serif;
   --pad:clamp(1.25rem,4vw,3.5rem);
@@ -194,7 +197,7 @@ p,li{text-wrap:pretty}
 }
 .hero__title .ln:nth-child(1)>span{animation-delay:.05s}
 .hero__title .ln:nth-child(2)>span{animation-delay:.18s}
-.hero__title .it{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.02em}
+.hero__title .it{font-family:var(--serif-2);font-style:italic;font-weight:400;letter-spacing:-.015em}
 @keyframes rise{to{transform:translateY(0);opacity:1}}
 
 .hero__prev{
@@ -490,6 +493,40 @@ p,li{text-wrap:pretty}
     margin-left:-89px;top:310px;
     --r:6deg;--stack-tx:-20px;--stack-ty:-140px;--stack-r:4deg;
   }
+}
+
+/* ================================================ work in progress */
+.wip{
+  position:relative;z-index:2;
+  min-height:100vh;min-height:100svh;
+  display:grid;place-items:center;
+  padding:clamp(4rem,10vh,7rem) var(--pad);
+  text-align:center;
+}
+.wip__inner{max-width:1100px;margin:0 auto}
+.wip__title{
+  font-family:var(--sans);font-weight:700;
+  font-size:clamp(2.6rem,1.2rem + 5.6vw,7.2rem);
+  letter-spacing:-.045em;line-height:.95;
+  margin:0 0 clamp(1.5rem,3vw,2.5rem);
+  color:var(--ink);
+}
+.wip__title .it{
+  display:block;
+  font-family:var(--serif-2);font-style:italic;font-weight:400;
+  letter-spacing:-.015em;
+}
+.wip__copy{
+  margin:0 auto;max-width:44ch;
+  font-size:clamp(1.05rem,.95rem + .65vw,1.5rem);line-height:1.45;
+  letter-spacing:-.01em;color:var(--ink-2);
+  text-wrap:pretty;
+}
+.wip__copy strong{color:var(--ink);font-weight:600}
+.wip__copy em{font-family:var(--serif-2);font-style:italic;font-size:1.1em;color:var(--ink)}
+@media (max-width:760px){
+  .wip{min-height:auto;padding:clamp(4rem,14vh,6rem) var(--pad)}
+  .wip__title{font-size:clamp(2.6rem,1.4rem + 7vw,4rem)}
 }
 
 /* ========================================================= marquee */
@@ -966,46 +1003,6 @@ p,li{text-wrap:pretty}
 .about__body p:last-child{margin-bottom:0}
 .about__body em{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
 
-/* inline link with GIF hover-popup */
-.gif-link{
-  position:relative;
-  display:inline;
-  color:inherit;
-  text-decoration:none;
-  background:#ffe600;
-  padding:2px 6px;
-  margin:0 -2px;
-  border-radius:3px;
-  -webkit-box-decoration-break:clone;
-  box-decoration-break:clone;
-  cursor:pointer;
-  transition:background .25s var(--ease);
-}
-.gif-link:hover{background:#ffd900}
-.gif-link__pop{
-  position:absolute;
-  left:50%;bottom:calc(100% + 12px);
-  width:440px;height:auto;max-width:none;
-  border-radius:8px;padding:5px;
-  background:#fff;
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,.04),
-    0 24px 48px -18px rgba(0,0,0,.4),
-    0 8px 18px -8px rgba(0,0,0,.18);
-  opacity:0;pointer-events:none;
-  transform:translate(-50%, 14px) scale(.8) rotate(-4deg);
-  transform-origin:bottom center;
-  transition:opacity .35s var(--ease), transform .45s cubic-bezier(.34,1.5,.64,1);
-  z-index:20;
-  display:block;
-}
-.gif-link:hover .gif-link__pop{
-  opacity:1;
-  transform:translate(-50%, 0) scale(1) rotate(-4deg);
-}
-@media (prefers-reduced-motion:reduce){
-  .gif-link__pop{display:none}
-}
 .about__body strong{color:var(--ink);font-weight:600}
 .about__body a.dotted-link{
   text-decoration:underline dotted #000;
@@ -1236,6 +1233,148 @@ p,li{text-wrap:pretty}
     padding:1rem 0 1.5rem;
     margin-top:.75rem;
   }
+}
+
+/* ========================================================== beyond the screen
+   A pinned, full-width passage between About and the testimonials. One long
+   line of copy is laid along a tall, wavy SVG path — the snake — with the
+   polaroids tucked inside its bends. Scrolling the page through the
+   section's runway slides the whole snake through the viewport: later words
+   arrive from the right, dive and climb across the screen, and dissolve out
+   on the left. Words ink in as they cross the reading line. The copy itself
+   lives once, in a visually hidden paragraph the snake is generated from, so
+   screen readers and search get real text. JS builds the path from the
+   measured text, places the polaroids, drives the transforms, and sets
+   --runway (pinned scroll distance) on the section. */
+.beyond{
+  position:relative;z-index:2;
+  background:var(--bg);
+  --runway:300vh;
+  height:calc(100vh + var(--runway));
+}
+/* the page's dotted background meets the solid stage here — fade the dots
+   out above and back in below rather than cutting them off */
+.beyond::before,
+.beyond::after{
+  content:"";position:absolute;left:0;right:0;height:clamp(90px,14vh,160px);
+  pointer-events:none;
+}
+.beyond::before{bottom:100%;background:linear-gradient(to bottom,transparent,var(--bg))}
+.beyond::after{top:100%;background:linear-gradient(to bottom,var(--bg),transparent)}
+.beyond__frame{
+  position:sticky;top:0;
+  height:100vh;height:100svh;
+  overflow:hidden;
+}
+.beyond__stage{
+  position:absolute;inset:0;overflow:hidden;
+  --th:0deg;
+  /* the fade: a long dissolve on the right where the words arrive, a
+     slightly shorter one on the left where they leave, soft top and bottom */
+  -webkit-mask:linear-gradient(90deg,transparent 6%,#000 32% 58%,transparent 94%),linear-gradient(180deg,transparent,#000 5% 95%,transparent);
+  -webkit-mask-composite:source-in;
+  mask:linear-gradient(90deg,transparent 6%,#000 32% 58%,transparent 94%),linear-gradient(180deg,transparent,#000 5% 95%,transparent);
+  mask-composite:intersect;
+}
+.beyond__sr{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;
+}
+.beyond__svg{
+  position:absolute;inset:0;width:100%;height:100%;
+  overflow:visible;
+}
+.beyond__text{
+  font-family:var(--sans);font-weight:700;
+  font-size:clamp(2.2rem,1.3rem + 3.6vw,5.2rem);
+  letter-spacing:-.035em;
+  dominant-baseline:middle;
+  white-space:pre;
+  fill:var(--dot);
+}
+.beyond__text .w{transition:fill .35s var(--ease)}
+.beyond__text .w.is-on{fill:var(--ink)}
+.beyond__link{cursor:pointer}
+.beyond__link .w.is-on{fill:#ffe600}
+.beyond__link:hover .w.is-on{fill:#ffd900}
+.beyond__text .w.is-key{
+  font-family:var(--serif-2);font-style:italic;font-weight:400;
+  font-size:1.14em;letter-spacing:-.01em;
+}
+/* polaroids — an HTML layer on the snake's spine that travels slower than
+   the text, so a handful of photos last the whole passage with two or three
+   in view at a time. They sit in bands above and below the text's reach. JS
+   sets each one's --x/--y, a per-frame --dx for the near/far ones so they
+   drift at their own speed, and --vb (a touch of blur while scrolling,
+   cleared when it stops). Counter-rotated so they sit upright with a tilt
+   (--r). data-depth="near" is bigger and softer, "far" smaller and further
+   back. */
+.beyond__pols{
+  position:absolute;left:50%;top:50%;width:0;height:0;
+  transform-origin:0 0;
+  will-change:transform;
+}
+/* --focus (0–1, set by JS from how near the pointer is) brings a polaroid
+   into focus: it sharpens, loses its tilt and lifts a touch */
+@property --focus{syntax:"<number>";inherits:false;initial-value:0}
+.beyond__pol{
+  position:absolute;left:calc(var(--x,0px) + var(--dx,0px));top:var(--y,0px);
+  width:clamp(130px,12vw,200px);
+  margin:0;padding:8px 8px 36px;
+  background:var(--paper);border-radius:4px;
+  box-shadow:0 0 0 1px var(--line),0 26px 46px -18px rgba(0,0,0,.22),0 6px 14px -4px rgba(0,0,0,.07);
+  --focus:0;
+  transform:translate(-50%,-50%) rotate(calc(var(--th) + var(--r,0deg) * (1 - var(--focus)))) scale(calc(var(--s,1) + var(--focus) * .07));
+  filter:blur(calc((var(--b,0px) + var(--vb,0px)) * (1 - var(--focus))));
+  transition:--focus .45s var(--ease);
+  pointer-events:none;
+}
+.beyond__pol.is-focus{z-index:3}
+.beyond__pol[data-depth="near"]{--s:1.15;--b:2.5px;z-index:2}
+.beyond__pol[data-depth="far"]{--s:.78;--b:1px;opacity:.92}
+.beyond__pol img,
+.beyond__pol__ph{
+  display:block;width:100%;aspect-ratio:1;
+  object-fit:cover;border-radius:2px;
+}
+.beyond__pol__ph{
+  background:
+    repeating-linear-gradient(45deg,var(--dot) 0 2px,transparent 2px 10px),
+    var(--line);
+}
+.beyond__pol figcaption{
+  position:absolute;left:0;right:0;bottom:8px;
+  font-family:var(--hand);font-weight:600;
+  font-size:1.2rem;line-height:1;
+  text-align:center;color:var(--ink-2);
+}
+/* a quiet way past (or back out of) the passage: sits bottom-right while
+   the frame is pinned */
+.beyond__nav{
+  position:absolute;right:var(--pad);bottom:clamp(1.25rem,3vw,2.25rem);
+  z-index:5;display:flex;gap:.5rem;
+}
+.beyond__skip{
+  display:inline-flex;align-items:center;gap:.45em;
+  font:600 .8rem/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink);background:rgba(255,255,255,.7);
+  border:1px solid var(--line);border-radius:999px;
+  /* all caps, no descenders: a touch more on top sits the glyphs on centre */
+  padding:.78em 1em .62em;cursor:pointer;
+  backdrop-filter:blur(6px);
+  transition:background .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease);
+}
+.beyond__skip:hover{background:#fff;border-color:var(--dot);transform:translateY(-1px)}
+.beyond__skip:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media (max-width:880px){
+  .beyond__text{font-size:clamp(1.9rem,1rem + 4.4vw,2.8rem)}
+  .beyond__pol{width:clamp(96px,26vw,130px);padding:6px 6px 26px}
+  .beyond__pol figcaption{font-size:1rem;bottom:5px}
+}
+@media (prefers-reduced-motion:reduce){
+  .beyond{height:auto}
+  .beyond__frame{position:static;height:70vh;height:70svh}
+  .beyond__text .w{fill:var(--ink);transition:none}
 }
 
 /* ===================================================== testimonials */
@@ -1692,6 +1831,14 @@ p,li{text-wrap:pretty}
     </div>
   </section>
 
+  <!-- WORK IN PROGRESS -->
+  <section class="wip" aria-label="Work in progress">
+    <div class="wip__inner">
+      <h2 class="wip__title">FYI, this site isn't finished. <span class="it">Not even close.</span></h2>
+      <p class="wip__copy">Nothing here is complete. If you've come expecting my latest work, you'll be a bit disappointed — <em>it isn't up yet.</em> This stays until it is, mostly so it nags me to finish the thing in my spare time.</p>
+    </div>
+  </section>
+
   <!-- BRAND MARQUEE -->
   <section class="marquee" aria-label="Selected clients">
     <div class="marquee__track">
@@ -1904,7 +2051,6 @@ p,li{text-wrap:pretty}
       <div class="about__body">
         <p>Eighteen years across UX, UI, brand, and design systems. Four years in at <strong>Kraken</strong>, and <strong>open to the right senior role in 2026</strong> — remote or hybrid, worldwide.</p>
         <p>Happiest doing full-cycle work, from kickoff brief to shipped code. I care about the work, not the title — and I genuinely love getting stuck in. Right now I'm leaning hard into <strong>AI</strong> as a working partner.</p>
-        <p>I'm a recently converted <a class="gif-link" href="#" onclick="event.preventDefault()">road cyclist<img class="gif-link__pop" src="assets/cyclist.webp" alt="" loading="lazy" /></a> <em>(apologies in advance)</em>. The rest — BBQs, Bella the lazy dog, the actual job titles — is on <a class="dotted-link" href="cv.html">the CV&nbsp;↗</a>.</p>
       </div>
     </div>
 
@@ -1948,6 +2094,42 @@ p,li{text-wrap:pretty}
       <div class="about__exp__when">2007 – 2016</div>
       <div class="about__exp__role"><span class="about__exp__place">A decade of agency &amp; in-house</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Design Director, Creative Lead and Senior Designer across ten London studios — LONO, Totally Communications, OLIVER, EY-Seren, Big Group, Global Beach and more. Where the craft was sharpened.</div>
+    </div>
+   </div>
+  </section>
+
+  <!-- BEYOND THE SCREEN -->
+  <section class="beyond" id="beyond" aria-label="Beyond the screen">
+   <!-- the copy, once: the snake on screen is generated from this -->
+   <p class="beyond__sr">Beyond the screen. <b>The gym</b> — early, heavy, and the quietest hour of my day. <b>Mario Kart</b> — Super Nintendo then, Switch now. Still losing to my kids. <b>Family</b> — dad of two, plus Bella the Cavapoo. The best reason to log off on time. <b>Road bike</b> — too fast, too far. Apologies in advance. <b>Barbecue</b> — one of many. Ask the neighbours. <a href="cv.html">Now read my CV</a></p>
+   <div class="beyond__frame">
+    <div class="beyond__stage" aria-hidden="true">
+      <!-- Polaroids sit inside the snake's bends and move with it; --r = tilt,
+           JS picks the spot. They're placeholders until real photos land:
+           drop the shot into assets/beyond/ (WebP, roughly square — see the
+           image pipeline in CLAUDE.md) and swap the .beyond__pol__ph span for
+           <img src="assets/beyond/lifting.webp" alt="" loading="lazy" />. -->
+      <div class="beyond__pols">
+        <figure class="beyond__pol" style="--r:-7deg"><span class="beyond__pol__ph"></span><figcaption>6am</figcaption></figure>
+        <figure class="beyond__pol" data-depth="far" style="--r:5deg"><span class="beyond__pol__ph"></span><figcaption>the gym</figcaption></figure>
+        <figure class="beyond__pol" data-depth="near" style="--r:4deg"><span class="beyond__pol__ph"></span><figcaption>Rainbow Road</figcaption></figure>
+        <figure class="beyond__pol" style="--r:-6deg"><span class="beyond__pol__ph"></span><figcaption>Bella</figcaption></figure>
+        <figure class="beyond__pol" data-depth="far" style="--r:6deg"><span class="beyond__pol__ph"></span><figcaption>the kids</figcaption></figure>
+        <figure class="beyond__pol" style="--r:-5deg"><span class="beyond__pol__ph"></span><figcaption>Sunday, 6am</figcaption></figure>
+        <figure class="beyond__pol" data-depth="near" style="--r:7deg"><span class="beyond__pol__ph"></span><figcaption>Box Hill</figcaption></figure>
+        <figure class="beyond__pol" style="--r:-4deg"><span class="beyond__pol__ph"></span><figcaption>low and slow</figcaption></figure>
+      </div>
+      <!-- the snake: path shape and text are filled in by JS -->
+      <svg class="beyond__svg" focusable="false">
+        <g class="beyond__snake">
+          <path id="beyond-path" fill="none" d="M0 0 H 100000" />
+          <text class="beyond__text"><textPath href="#beyond-path"></textPath></text>
+        </g>
+      </svg>
+    </div>
+    <div class="beyond__nav">
+      <button class="beyond__skip" type="button" data-go="prev">Back <span aria-hidden="true">↑</span></button>
+      <button class="beyond__skip" type="button" data-go="next">Skip <span aria-hidden="true">↓</span></button>
     </div>
    </div>
   </section>
@@ -2522,6 +2704,203 @@ p,li{text-wrap:pretty}
       revealSections.forEach((s) => rIO.observe(s));
     } else {
       revealSections.forEach((s) => s.classList.add("is-revealed"));
+    }
+  }
+
+  // Beyond the screen: the pinned snake. The shape is described in the CSS
+  // note; here we build the text from the hidden paragraph, lay a wavy path
+  // under it, park the polaroids on their own slower layer, and run a frame
+  // loop while the section is on screen that slides the snake with scroll
+  // and keeps the curve itself rippling — the bends travel along the body
+  // slower than the words, so the copy visibly flows through them, and a
+  // slow time-based drift keeps it alive when the page is still.
+  const beyond = document.querySelector(".beyond");
+  if (beyond) {
+    const frame = beyond.querySelector(".beyond__frame");
+    const stage = beyond.querySelector(".beyond__stage");
+    const snake = stage.querySelector(".beyond__snake");
+    const path = stage.querySelector("#beyond-path");
+    const textPath = stage.querySelector("textPath");
+    const polsLayer = stage.querySelector(".beyond__pols");
+    const pols = [...polsLayer.querySelectorAll(".beyond__pol")];
+    const source = beyond.querySelector(".beyond__sr");
+    const NS = "http://www.w3.org/2000/svg";
+    const SPINE = 5; // degrees the snake's spine drops, left to right
+    const RAD = (SPINE * Math.PI) / 180;
+    const BEND_DRIFT = 0.45; // how fast the bends travel with scroll, relative to the words
+    const IDLE_DRIFT = 0.035; // px of phase per ms when the page is still
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    beyond.querySelectorAll(".beyond__skip").forEach((btn) => {
+      const target = btn.dataset.go === "prev" ? beyond.previousElementSibling : beyond.nextElementSibling;
+      if (!target) return;
+      btn.addEventListener("click", () => {
+        target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      });
+    });
+
+    // one tspan per word; <b> marks the key word of each line
+    const words = [];
+    const addWords = (text, key, parent) => {
+      text.split(/\s+/).filter(Boolean).forEach((w) => {
+        const t = document.createElementNS(NS, "tspan");
+        t.setAttribute("class", key ? "w is-key" : "w");
+        t.textContent = w + " ";
+        parent.appendChild(t);
+        words.push(t);
+      });
+    };
+    source.childNodes.forEach((n) => {
+      if (n.nodeType === 3) addWords(n.textContent, false, textPath);
+      else if (n.nodeType === 1 && n.tagName === "A") {
+        // a link in the copy is a real link on the curve too; the hidden
+        // paragraph's copy is the one keyboards and screen readers get
+        const a = document.createElementNS(NS, "a");
+        a.setAttribute("href", n.getAttribute("href"));
+        a.setAttribute("tabindex", "-1");
+        a.setAttribute("class", "beyond__link");
+        textPath.appendChild(a);
+        addWords(n.textContent, false, a);
+      } else if (n.nodeType === 1) addWords(n.textContent, n.tagName === "B", textPath);
+    });
+    // near polaroids drift a little faster than their layer, far ones slower
+    const speed = pols.map((pol) => ({ near: 1.2, far: 0.85 }[pol.dataset.depth] || 1));
+
+    let geo = null;
+    // the wave: a long main swell plus a smaller, faster ripple, both with a
+    // travelling phase. y = A·sin(kx + φ) + A/4·sin(2.3kx − .6φ + 1)
+    const waveY = (x, ph) => geo.A * Math.sin(geo.k * x + ph) + geo.A * 0.25 * Math.sin(2.3 * geo.k * x - 0.6 * ph + 1);
+    const waveDy = (x, ph) => geo.A * geo.k * Math.cos(geo.k * x + ph) + geo.A * 0.25 * 2.3 * geo.k * Math.cos(2.3 * geo.k * x - 0.6 * ph + 1);
+    const buildPath = (ph) => {
+      const step = 30;
+      let d = "";
+      for (let x = 0; x <= geo.X; x += step) {
+        const y = waveY(x, ph), dy = waveDy(x, ph);
+        if (!d) { d = `M0 ${y.toFixed(1)}`; continue; }
+        const px = x - step, py = waveY(px, ph), pdy = waveDy(px, ph);
+        d += ` C${(px + step / 3).toFixed(1)} ${(py + (pdy * step) / 3).toFixed(1)} ${(x - step / 3).toFixed(1)} ${(y - (dy * step) / 3).toFixed(1)} ${x} ${y.toFixed(1)}`;
+      }
+      path.setAttribute("d", d);
+    };
+    const measure = () => {
+      const w = stage.clientWidth, h = stage.clientHeight;
+      // measure word advances on a straight path
+      path.setAttribute("d", "M0 0 H 100000");
+      let cum = 0;
+      const wordMid = [];
+      words.forEach((t) => {
+        const l = t.getComputedTextLength();
+        wordMid.push(cum + l / 2);
+        cum += l;
+      });
+      const textLen = cum;
+      // long and tall enough that the text dives and climbs, with roughly
+      // one bend on screen at a time and the steepest stretch around 50°,
+      // so it flows rather than zigzags. Arc length is always ≥ x, so a
+      // path as long as the text in x is long enough for the text.
+      const lam = Math.min(Math.max(w * 1.05, 700), 1500);
+      const A = Math.min(h * 0.24, lam * 0.17);
+      geo = { A, k: (2 * Math.PI) / lam, X: textLen + 30 };
+      buildPath(0);
+      // from the stage centre to where the spine leaves it, plus a margin
+      const enter = Math.min(w / 2 / Math.cos(RAD), h / 2 / Math.sin(RAD)) + 80;
+      const endX = path.getPointAtLength(textLen).x;
+      // the opener is already on screen when you arrive (it starts a little
+      // right of centre rather than off the edge), and the last word leaves
+      // fully before the section unpins
+      const start = enter * 0.4;
+      Object.assign(geo, {
+        enter: start,
+        travel: endX + enter + start,
+        read: enter * 0.35, // words ink in once past this spine-x
+        // arc-to-x ratio is near-constant for the wave, so word positions
+        // can be approximated without walking the path every frame
+        wordX: wordMid.map((s) => (s * endX) / textLen),
+      });
+      // polaroids: one every ~40% of the viewport along their own layer,
+      // alternating above and below the band the text sweeps through, with
+      // a fixed (not random, so it's stable) scatter — just clear of the
+      // text but inside the soft edges
+      const polH = pols[0] ? pols[0].offsetHeight : 180;
+      const gap = w * 0.5;
+      const lift = Math.min(A * 1.25 + polH / 2 - 30, h / 2 - polH / 2 - 70);
+      pols.forEach((pol, i) => {
+        const j1 = ((i * 7919) % 100) / 100 - 0.5, j2 = ((i * 104729) % 100) / 100 - 0.5;
+        pol.style.setProperty("--x", i * gap + j1 * gap * 0.35 + "px");
+        pol.style.setProperty("--y", (i % 2 ? 1 : -1) * (lift + j2 * 30) + "px");
+      });
+      geo.ptravel = (pols.length - 1) * gap + enter + start;
+      stage.style.setProperty("--th", -SPINE + "deg");
+      // ~0.7px of scroll per px of travel, never shorter than two screens
+      beyond.style.setProperty("--runway", Math.max(geo.travel * 0.7, window.innerHeight * 2) + "px");
+    };
+
+    // pointer focus: a polaroid near the pointer sharpens and straightens
+    let ptr = null;
+    stage.addEventListener("pointermove", (e) => { ptr = { x: e.clientX, y: e.clientY }; });
+    stage.addEventListener("pointerleave", () => { ptr = null; });
+    const focusPols = () => {
+      pols.forEach((pol) => {
+        let f = 0;
+        if (ptr) {
+          const r = pol.getBoundingClientRect();
+          const d = Math.hypot(ptr.x - (r.left + r.width / 2), ptr.y - (r.top + r.height / 2));
+          f = Math.max(0, Math.min(1, 1 - (d - r.width * 0.5) / 200));
+        }
+        if (f || pol.dataset.f) {
+          pol.style.setProperty("--focus", f.toFixed(2));
+          pol.classList.toggle("is-focus", f > 0.5);
+          if (f) pol.dataset.f = "1"; else delete pol.dataset.f;
+        }
+      });
+    };
+    let lastTx = null, vb = 0, idle = 0, lastT = 0;
+    const paint = (p, dt) => {
+      const tx = geo.enter - p * geo.travel;
+      const cx = stage.clientWidth / 2, cy = stage.clientHeight / 2;
+      // the curve: bends drift with scroll at a fraction of the words' speed,
+      // and keep creeping when the page is still
+      if (!reduce) idle += dt * IDLE_DRIFT;
+      buildPath(-geo.k * ((1 - BEND_DRIFT) * (geo.enter - tx) + idle));
+      snake.setAttribute("transform", `translate(${cx} ${cy}) rotate(${SPINE}) translate(${tx} 0)`);
+      const ptx = geo.enter - p * geo.ptravel;
+      polsLayer.style.transform = `rotate(${SPINE}deg) translateX(${ptx}px)`;
+      pols.forEach((pol, i) => { if (speed[i] !== 1) pol.style.setProperty("--dx", ptx * (speed[i] - 1) + "px"); });
+      const readX = geo.read - tx;
+      words.forEach((el, i) => el.classList.toggle("is-on", geo.wordX[i] < readX));
+      // motion blur on the polaroids: bumped by how far the snake moved this
+      // frame, decayed frame by frame so it clears the moment you stop
+      if (lastTx !== null && !reduce) vb = Math.max(vb * 0.78, Math.min(4, Math.abs(tx - lastTx) * 0.05));
+      if (vb < 0.05) vb = 0;
+      stage.style.setProperty("--vb", vb.toFixed(2) + "px");
+      lastTx = tx;
+      focusPols();
+    };
+    const progress = () => {
+      const span = beyond.offsetHeight - frame.offsetHeight;
+      const p = span > 0 ? -beyond.getBoundingClientRect().top / span : 1;
+      return Math.max(0, Math.min(1, p));
+    };
+    // the frame loop runs only while the section is on screen
+    let running = false, raf = 0;
+    const tick = (t) => {
+      if (!running) return;
+      const dt = lastT ? Math.min(50, t - lastT) : 0;
+      lastT = t;
+      if (geo) paint(progress(), dt);
+      raf = requestAnimationFrame(tick);
+    };
+    const start = () => { if (running) return; running = true; lastT = 0; raf = requestAnimationFrame(tick); };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
+    const refresh = () => { measure(); if (geo) paint(reduce ? 0.45 : progress(), 0); };
+    window.addEventListener("resize", refresh);
+    refresh();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+    if (!reduce) {
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver((entries) => {
+          entries.forEach((e) => (e.isIntersecting ? start() : stop()));
+        }).observe(beyond);
+      } else start();
     }
   }
 
