@@ -1029,20 +1029,28 @@ p,li{text-wrap:pretty}
 .deck__arrow{width:36px;height:36px;border-color:transparent;color:var(--muted)}
 .deck__arrow svg{width:16px;height:16px}
 .deck__arrow:hover{background:transparent;color:var(--ink);border-color:var(--line)}
+/* phone: a compact portrait card, about three-quarters of the screen wide,
+   so the fan reads as a stack of cards with room around it rather than one
+   card filling the viewport */
 @media (max-width:760px){
-  .deck__cards{height:clamp(500px,130vw,620px)}
+  .deck__cards{height:clamp(400px,112vw,480px)}
   .deck__card{
-    grid-template-columns:1fr;grid-template-rows:minmax(0,1.05fr) auto;
-    width:88vw;border-radius:20px;gap:12px;padding:12px;
+    grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;
+    width:min(74vw,330px);border-radius:18px;gap:10px;padding:10px;
     transform:
-      translate(calc(var(--oe) * 3%),calc(var(--a) * -4%))
+      translate(calc(var(--oe) * 4%),calc(var(--a) * -3.5%))
       rotate(calc(var(--oe) * 3.5deg))
       scale(calc(1 - var(--a) * .03));
   }
-  .deck__media{order:-1;border-radius:14px}
-  .deck__body{padding:.5rem .35rem .3rem}
-  .deck__name{font-size:clamp(1.25rem,1rem + 2.2vw,1.6rem);margin:.6rem 0 .9rem}
-  .deck__cta{margin-top:0}
+  .deck__media{order:-1;border-radius:12px}
+  .deck__body{padding:.3rem .3rem .2rem}
+  .deck__brand{font-size:.85rem;flex-wrap:wrap;row-gap:.2em}
+  .deck__brand small{font-size:.7rem}
+  .deck__name{font-size:clamp(1.05rem,.85rem + 1.2vw,1.25rem);line-height:1.15;margin:.55rem 0 .7rem}
+  .deck__cta{margin-top:0;font-size:.82rem}
+  .deck__stats{gap:.9rem;padding:.85rem}
+  .deck__stat b{font-size:clamp(1.3rem,1rem + 1.4vw,1.6rem)}
+  .deck__stat span{font-size:.68rem}
 }
 @media (prefers-reduced-motion:reduce){
   .deck__card{transition:none}
