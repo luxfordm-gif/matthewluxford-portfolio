@@ -1029,18 +1029,21 @@ p,li{text-wrap:pretty}
 .deck__arrow{width:36px;height:36px;border-color:transparent;color:var(--muted)}
 .deck__arrow svg{width:16px;height:16px}
 .deck__arrow:hover{background:transparent;color:var(--ink);border-color:var(--line)}
-/* phone: a compact portrait card, about two-thirds of the screen wide,
+/* phone: a compact portrait card, about three-quarters of the screen wide,
    so the fan reads as a stack of cards with room around it rather than one
    card filling the viewport */
 @media (max-width:760px){
   .deck__cards{height:clamp(400px,112vw,480px)}
   .deck__card{
     grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;
-    width:min(66vw,300px);border-radius:18px;gap:10px;padding:10px;
+    width:min(74vw,330px);border-radius:18px;gap:10px;padding:10px;
+    /* one card peeks out each side, tucked in close, so the fan stays
+       inside the front card's footprint instead of spreading to the edges */
     transform:
-      translate(calc(var(--oe) * 4%),calc(var(--a) * -3.5%))
-      rotate(calc(var(--oe) * 3.5deg))
+      translate(calc(var(--oe) * 2.5%),calc(var(--a) * -3%))
+      rotate(calc(var(--oe) * 3deg))
       scale(calc(1 - var(--a) * .03));
+    opacity:clamp(0,2 - var(--a),1);
   }
   .deck__media{order:-1;border-radius:12px}
   .deck__body{padding:.3rem .3rem .2rem}
