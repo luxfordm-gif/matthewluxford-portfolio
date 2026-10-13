@@ -1029,14 +1029,14 @@ p,li{text-wrap:pretty}
 .deck__arrow{width:36px;height:36px;border-color:transparent;color:var(--muted)}
 .deck__arrow svg{width:16px;height:16px}
 .deck__arrow:hover{background:transparent;color:var(--ink);border-color:var(--line)}
-/* phone: a compact portrait card, about three-quarters of the screen wide,
+/* phone: a compact portrait card, about two-thirds of the screen wide,
    so the fan reads as a stack of cards with room around it rather than one
    card filling the viewport */
 @media (max-width:760px){
   .deck__cards{height:clamp(400px,112vw,480px)}
   .deck__card{
     grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;
-    width:min(74vw,330px);border-radius:18px;gap:10px;padding:10px;
+    width:min(66vw,300px);border-radius:18px;gap:10px;padding:10px;
     transform:
       translate(calc(var(--oe) * 4%),calc(var(--a) * -3.5%))
       rotate(calc(var(--oe) * 3.5deg))
