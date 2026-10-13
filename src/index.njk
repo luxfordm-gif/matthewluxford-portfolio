@@ -6,7 +6,7 @@ canonical: "https://matthewluxford.co.uk/"
 ogType: "website"
 ogImage: "https://matthewluxford.co.uk/assets/og-image.jpg"
 ogImageAlt: "Hire me already! — Matthew Luxford"
-fonts: "Caveat:wght@500;600&family=EB+Garamond:ital,wght@1,400..600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700;800;900&family=Caveat+Brush"
+fonts: "Caveat:wght@500;600&family=EB+Garamond:ital,wght@0,400..600;1,400..600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@300;400;500;600;700;800;900&family=Caveat+Brush"
 navBrandHref: "#top"
 navLinkBase: ""
 ---
@@ -39,11 +39,16 @@ navLinkBase: ""
      on. The section paddings below are tokens rather than literals because the
      scroll-margin rules subtract them; keeping one copy stops the two drifting
      apart. */
+  /* one scale for every section title, taken from the hero */
+  --h2:clamp(2rem,1.25rem + 4.05vw,4.9rem);
   --nav-h:95px;
   --anchor-gap:1.5rem;
   --work-pad-top:clamp(5rem,9vw,8rem);
   --work-head-pad-top:clamp(2rem,5vw,4rem);
   --about-pad-top:clamp(5rem,10vw,8rem);
+}
+@media (max-width:760px){
+  :root{--h2:clamp(2.15rem,1.3rem + 4.6vw,3rem)}
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;overflow-x:clip}
@@ -176,7 +181,7 @@ p,li{text-wrap:pretty}
 }
 .hero__title{
   font-family:var(--sans);font-weight:700;
-  font-size:clamp(2rem,1.25rem + 4.05vw,4.9rem);
+  font-size:var(--h2);
   line-height:1.05;letter-spacing:-.035em;
   margin:0 auto;max-width:22ch;color:var(--ink);
   text-wrap:balance;
@@ -184,7 +189,7 @@ p,li{text-wrap:pretty}
 .hero__title .ln{display:block;overflow:visible;padding:.05em 0 .12em;text-wrap:balance}
 @media (max-width:760px){
   .hero__title{
-    font-size:clamp(2.15rem,1.3rem + 4.6vw,3rem);
+    font-size:var(--h2);
     max-width:14ch;
     text-wrap:balance;
     -webkit-text-wrap:balance;
@@ -506,9 +511,9 @@ p,li{text-wrap:pretty}
 .wip__inner{max-width:1100px;margin:0 auto}
 .wip__title{
   font-family:var(--sans);font-weight:700;
-  font-size:clamp(2.6rem,1.2rem + 5.6vw,7.2rem);
-  letter-spacing:-.045em;line-height:.95;
-  margin:0 0 clamp(1.5rem,3vw,2.5rem);
+  font-size:var(--h2);
+  letter-spacing:-.035em;line-height:1.05;
+  margin:0 0 clamp(1.25rem,2.5vw,2rem);
   color:var(--ink);
 }
 .wip__title .it{
@@ -526,7 +531,7 @@ p,li{text-wrap:pretty}
 .wip__copy em{font-family:var(--serif-2);font-style:italic;font-size:1.1em;color:var(--ink)}
 @media (max-width:760px){
   .wip{min-height:auto;padding:clamp(4rem,14vh,6rem) var(--pad)}
-  .wip__title{font-size:clamp(2.6rem,1.4rem + 7vw,4rem)}
+  .wip__title{font-size:var(--h2)}
 }
 
 /* ========================================================= marquee */
@@ -878,6 +883,171 @@ p,li{text-wrap:pretty}
   }
 }
 
+/* ============================================================ deck */
+/* A trial alternative to the work rail: the case studies as a stack of
+   overlapping cards. The front card is the active one; the next two peek
+   out behind it, up and to the right, and the two already seen peek out up
+   and to the left. Drag the front card and it follows the pointer, tilting
+   as it goes, while its neighbour slides in to take its place — let go past
+   the threshold and the dragged card settles into the fan on the far side,
+   otherwise it springs back. Arrows, bars and arrow keys do the same; a
+   short press on the front card opens it. Each card wears its case study's
+   accent (--c) with text in --on. JS sets --o on every card (its offset
+   from the front card) and the stack's --shift while dragging (pointer
+   travel in card widths); every card sits in the fan at --o + --shift,
+   except the front one, which rides with the pointer. */
+.deck{
+  position:relative;z-index:2;
+  padding:clamp(4rem,8vw,7rem) 0 clamp(4rem,8vw,6rem);
+  overflow:hidden;
+}
+.deck__head{padding:0 var(--pad) clamp(4rem,8vw,6.5rem);text-align:center}
+/* the nav's Work link lands here now: cancel the section's own top padding
+   so the title sits --anchor-gap below the fixed nav (same idea as #about) */
+.deck#work{scroll-margin-top:calc(var(--nav-h) + var(--anchor-gap) - clamp(4rem,8vw,7rem))}
+.deck__title{
+  font-family:var(--sans);font-weight:700;
+  font-size:var(--h2);
+  letter-spacing:-.035em;line-height:1.05;
+  margin:0 auto;color:var(--ink);
+  text-wrap:balance;
+}
+.deck__title .it{
+  display:block;
+  font-family:var(--serif-2);font-style:italic;font-weight:400;
+  letter-spacing:-.015em;
+}
+.deck__cards{
+  position:relative;
+  height:clamp(400px,37vw,520px);
+  transform:rotate(-2.5deg);
+  touch-action:pan-y;
+  user-select:none;-webkit-user-select:none;
+  cursor:grab;
+}
+.deck__cards.is-dragging{cursor:grabbing}
+.deck__card{
+  position:absolute;inset:0;margin:auto;
+  width:min(90vw,860px);height:100%;
+  display:grid;grid-template-columns:1fr 1.08fr;
+  gap:16px;padding:16px;
+  border-radius:24px;
+  background:var(--c);color:var(--on,#fff);
+  box-shadow:0 1px 2px rgba(0,0,0,.06);
+  text-decoration:none;
+  overflow:hidden;
+  --o:0;
+  --oe:calc(var(--o) + var(--shift,0));
+  --a:max(var(--oe),-1 * var(--oe)); /* distance from the front, either side */
+  transform:
+    translate(calc(var(--oe) * 3.5%),calc(var(--a) * -5.5%))
+    rotate(calc(var(--oe) * 3deg))
+    scale(calc(1 - var(--a) * .03));
+  opacity:clamp(0,3 - var(--a),1); /* two peek out each side; the third fades in as it's dealt */
+  transition:transform .32s ease,opacity .32s ease;
+  will-change:transform;
+  -webkit-user-drag:none;
+}
+.deck__card *{-webkit-user-drag:none}
+.deck__cards.is-dragging .deck__card{transition:none}
+/* the front card rides with the pointer, a full card width per card width
+   of travel, tilting as it goes */
+.deck__card.is-active{
+  transform:translate(calc(var(--shift,0) * 100%),0) rotate(calc(var(--shift,0) * 12deg));
+  opacity:1;
+}
+.deck__card:not(.is-active){cursor:pointer}
+.deck__body{
+  display:flex;flex-direction:column;
+  padding:16px 16px 12px;
+  min-width:0;
+}
+.deck__brand{
+  display:flex;align-items:center;gap:.6em;
+  font-weight:800;font-size:1rem;letter-spacing:-.02em;
+}
+.deck__brand small{font-weight:500;font-size:.78rem;opacity:.75;letter-spacing:0}
+.deck__mark{
+  display:inline-grid;place-items:center;
+  width:2em;height:2em;border-radius:.55em;
+  background:var(--mark-bg,rgba(255,255,255,.92));color:var(--mark-ink,#0a0a0a);
+  font-size:.9rem;font-weight:800;letter-spacing:-.04em;
+  flex:none;
+}
+.deck__name{
+  font-family:var(--sans);font-weight:300;
+  font-size:clamp(1.3rem,.9rem + 1.7vw,2.35rem);
+  line-height:1.1;letter-spacing:-.025em;
+  margin:clamp(1.5rem,3.2vw,2.4rem) 0 auto;
+  text-wrap:pretty;
+}
+.deck__cta{
+  margin-top:1.25rem;
+  display:inline-flex;align-items:center;gap:.5em;
+  font-size:.92rem;font-weight:600;
+}
+.deck__cta span{transition:transform .3s var(--ease)}
+.deck__card.is-active:hover .deck__cta span{transform:translateX(3px)}
+.deck__media{
+  position:relative;min-height:0;
+  border-radius:16px;overflow:hidden;
+  background:#111;
+}
+.deck__media img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+}
+.deck__stats{
+  position:absolute;left:0;right:0;bottom:0;
+  display:flex;gap:clamp(1rem,2.5vw,1.75rem);
+  padding:clamp(1rem,2.5vw,1.5rem);
+  color:#fff;
+  background:linear-gradient(to top,rgba(0,0,0,.7),rgba(0,0,0,0));
+}
+.deck__stat{min-width:0}
+.deck__stat b{
+  display:block;white-space:nowrap;
+  font-family:var(--serif-2);font-weight:400;
+  font-size:clamp(1.5rem,1rem + 1.8vw,3rem);line-height:.95;
+  letter-spacing:-.01em;
+}
+.deck__stat span{display:block;margin-top:.45em;font-size:.76rem;line-height:1.25;opacity:.88;max-width:14ch}
+/* pagination: a bar per card, the active one in that card's colour, with
+   quiet arrows either side */
+.deck__controls{
+  display:flex;align-items:center;justify-content:center;gap:clamp(1rem,2.5vw,2rem);
+  margin-top:clamp(2.75rem,5.5vw,4.75rem);padding:0 var(--pad);
+}
+.deck__dots{display:flex;gap:clamp(8px,1vw,14px);align-items:center}
+.deck__bar{
+  width:clamp(34px,6vw,76px);height:4px;border-radius:999px;
+  background:var(--line);border:0;padding:0;cursor:pointer;
+  transition:background .4s var(--ease),transform .3s var(--ease);
+}
+.deck__bar:hover{background:var(--dot)}
+.deck__bar.is-active{background:var(--active-c,var(--ink))}
+.deck__arrow{width:36px;height:36px;border-color:transparent;color:var(--muted)}
+.deck__arrow svg{width:16px;height:16px}
+.deck__arrow:hover{background:transparent;color:var(--ink);border-color:var(--line)}
+@media (max-width:760px){
+  .deck__cards{height:clamp(500px,130vw,620px)}
+  .deck__card{
+    grid-template-columns:1fr;grid-template-rows:minmax(0,1.05fr) auto;
+    width:88vw;border-radius:20px;gap:12px;padding:12px;
+    transform:
+      translate(calc(var(--oe) * 3%),calc(var(--a) * -4%))
+      rotate(calc(var(--oe) * 3.5deg))
+      scale(calc(1 - var(--a) * .03));
+  }
+  .deck__media{order:-1;border-radius:14px}
+  .deck__body{padding:.5rem .35rem .3rem}
+  .deck__name{font-size:clamp(1.25rem,1rem + 2.2vw,1.6rem);margin:.6rem 0 .9rem}
+  .deck__cta{margin-top:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .deck__card{transition:none}
+}
+
 /* ========================================================== about */
 .about{
   position:relative;z-index:2;
@@ -961,14 +1131,14 @@ p,li{text-wrap:pretty}
 }
 .about__title{
   font-family:var(--sans);font-weight:700;
-  font-size:clamp(2.85rem,1.3rem + 6.05vw,8.4rem);
-  letter-spacing:-.045em;line-height:.9;
-  margin:0 0 clamp(5rem,11vw,9rem);
+  font-size:var(--h2);
+  letter-spacing:-.035em;line-height:1.05;
+  margin:0 0 clamp(3rem,6vw,5rem);
   color:var(--ink);
 }
 @media (max-width:760px){
   .about__title{
-    font-size:clamp(3.3rem,1.65rem + 6.6vw,5rem);
+    font-size:var(--h2);
     margin-bottom:clamp(1.5rem,4vw,2.25rem);
   }
   /* lead sits closer to the title and is bigger so it breaks up the body */
@@ -1432,9 +1602,9 @@ p,li{text-wrap:pretty}
   box-shadow:0 16px 32px -10px rgba(0,0,0,.6);
 }
 .testimonials__title{
-  font-family:var(--sans);font-weight:800;
-  font-size:clamp(2.4rem,4vw,5rem);
-  letter-spacing:-.04em;line-height:.95;
+  font-family:var(--sans);font-weight:700;
+  font-size:var(--h2);
+  letter-spacing:-.035em;line-height:1.05;
   margin:0;color:#fff;
   text-wrap:balance;
 }
@@ -1457,7 +1627,7 @@ p,li{text-wrap:pretty}
 }
 @media (max-width:680px){
   .testimonials__list{column-count:1}
-  .testimonials__title{font-size:clamp(3.2rem,9.5vw,4.2rem);letter-spacing:-.045em}
+  .testimonials__title{font-size:var(--h2)}
   .testimonials__sub{font-size:1.1rem;color:#bdbdbd;line-height:1.5}
   .testimonial__stars{font-size:18.5px;gap:4px;margin-bottom:18px}
   .testimonial__quote{font-size:1.12rem;line-height:1.6;color:#e2e2e2;margin:0 0 1.5rem}
@@ -1839,8 +2009,8 @@ p,li{text-wrap:pretty}
     </div>
   </section>
 
-  <!-- BRAND MARQUEE -->
-  <section class="marquee" aria-label="Selected clients">
+  <!-- BRAND MARQUEE — parked while the deck is on trial; remove `hidden` to bring it back -->
+  <section class="marquee" aria-label="Selected clients" hidden>
     <div class="marquee__track">
       <ul class="marquee__list">
         <li>Jaguar Land Rover</li><li>—</li><li>Google</li><li>—</li><li>Netflix</li><li>—</li><li>BBC</li><li>—</li><li>MTV</li><li>—</li><li>MasterCard</li><li>—</li><li>Bentley</li><li>—</li><li>Canon</li><li>—</li><li>Nestlé</li><li>—</li><li>Yoppie</li><li>—</li><li>Lifecake</li><li>—</li><li>The Collective</li><li>—</li>
@@ -1851,8 +2021,9 @@ p,li{text-wrap:pretty}
     </div>
   </section>
 
-  <!-- FEATURED WORK -->
-  <section class="work" id="work" data-reveal>
+  <!-- FEATURED WORK — the old rail, parked while the deck below is on trial.
+       Remove `hidden` (and give it back id="work") to bring it back. -->
+  <section class="work" id="work-rail" data-reveal hidden>
     <header class="work__head">
       <h2 class="work__title reveal-h"><span class="rw"><span>Featured</span></span> <span class="rw"><span>work</span></span></h2>
       <span class="work__hint reveal-up">(scroll to explore)</span>
@@ -2034,6 +2205,115 @@ p,li{text-wrap:pretty}
       </button>
     </div>
     <div class="work__dots" aria-hidden="true"></div>
+  </section>
+
+  <!-- CASE STUDY DECK (trial alternative to the rail above) -->
+  <section class="deck" id="work" aria-label="Case studies">
+    <header class="deck__head">
+      <h2 class="deck__title">See what shipped, <span class="it">and what it did.</span></h2>
+    </header>
+    <div class="deck__cards" tabindex="0" aria-roledescription="carousel" aria-label="Case study cards — drag, use the arrows, or the arrow keys">
+
+      <a class="proj deck__card" href="reps.html" style="--c:#a7c1b1;--on:#0a0a0a;--mark-bg:#0d0d0d;--mark-ink:#a7c1b1">
+        <div class="deck__body">
+          <span class="deck__brand"><span class="deck__mark" aria-hidden="true">R</span>Reps <small>Side project</small></span>
+          <h3 class="deck__name">How I replaced four years of PDF plans with an app I use every day</h3>
+          <span class="deck__cta">Read case study <span>›</span></span>
+        </div>
+        <div class="deck__media">
+          <img src="assets/reps-thumb.webp" alt="Reps app and brand mockup" loading="lazy" />
+          <div class="deck__stats">
+            <div class="deck__stat"><b>PDF → App</b><span>a coach's plan, trained off the same day</span></div>
+            <div class="deck__stat"><b>Daily</b><span>use since day one</span></div>
+          </div>
+        </div>
+      </a>
+
+      <a class="proj deck__card" href="riverfox.html" style="--c:#b9846a;--on:#0a0a0a;--mark-bg:#0a0a0a;--mark-ink:#f3e6dc">
+        <div class="deck__body">
+          <span class="deck__brand"><span class="deck__mark" aria-hidden="true">RF</span>River Fox Events <small>Side project</small></span>
+          <h3 class="deck__name">How a brand and site went from nothing to live in a week, with AI</h3>
+          <span class="deck__cta">Read case study <span>›</span></span>
+        </div>
+        <div class="deck__media">
+          <img src="assets/river-fox-events/river-fox-events-thumb.webp" alt="River Fox Events brand mark" loading="lazy" />
+          <div class="deck__stats">
+            <div class="deck__stat"><b>1 week</b><span>after hours, start to ship</span></div>
+            <div class="deck__stat"><b>1 person</b><span>AI throughout</span></div>
+          </div>
+        </div>
+      </a>
+
+      <a class="proj deck__card" href="jlr.html" style="--c:#2563eb;--on:#fff">
+        <div class="deck__body">
+          <span class="deck__brand"><span class="deck__mark" aria-hidden="true">JLR</span>Jaguar Land Rover <small>Lead designer</small></span>
+          <h3 class="deck__name">How a ground-up component library cut authoring time by 35% across 27 markets</h3>
+          <span class="deck__cta">Read case study <span>›</span></span>
+        </div>
+        <div class="deck__media">
+          <img src="assets/jlr/hero.jpg" alt="Jaguar Land Rover global website refresh" loading="lazy" />
+          <div class="deck__stats">
+            <div class="deck__stat"><b>↓ 35%</b><span>site authoring time, end-to-end</span></div>
+            <div class="deck__stat"><b>27</b><span>markets the rebuild rolled out to</span></div>
+          </div>
+        </div>
+      </a>
+
+      <a class="proj deck__card" href="skatefarm.html" style="--c:#0f4d3a;--on:#fff">
+        <div class="deck__body">
+          <span class="deck__brand"><span class="deck__mark" aria-hidden="true">SF</span>The Skate Farm <small>Side project</small></span>
+          <h3 class="deck__name">How three pages became a hundred-plus, and 22k organic clicks</h3>
+          <span class="deck__cta">Read case study <span>›</span></span>
+        </div>
+        <div class="deck__media">
+          <img src="assets/skatefarm/hero.jpg" alt="The Skate Farm website" loading="lazy" />
+          <div class="deck__stats">
+            <div class="deck__stat"><b>22k</b><span>Google clicks since launch</span></div>
+            <div class="deck__stat"><b>100+</b><span>pages, every one earning its place</span></div>
+          </div>
+        </div>
+      </a>
+
+      <a class="proj deck__card" href="collective.html" style="--c:#1e293b;--on:#fff">
+        <div class="deck__body">
+          <span class="deck__brand"><span class="deck__mark" aria-hidden="true">TC</span>The Collective <small>Lead product designer</small></span>
+          <h3 class="deck__name">How a rebuilt booking flow lifted enquiries 500% in month one</h3>
+          <span class="deck__cta">Read case study <span>›</span></span>
+        </div>
+        <div class="deck__media">
+          <img src="assets/collective/hero.jpg" alt="The Collective booking flow redesign" loading="lazy" />
+          <div class="deck__stats">
+            <div class="deck__stat"><b>↑ 500%</b><span>booking enquiries in the first month</span></div>
+            <div class="deck__stat"><b>2</b><span>native apps shipped, iOS and Android</span></div>
+          </div>
+        </div>
+      </a>
+
+      <a class="proj deck__card" href="lifecake.html" style="--c:#dc2626;--on:#fff">
+        <div class="deck__body">
+          <span class="deck__brand"><span class="deck__mark" aria-hidden="true">L</span>Lifecake <small>Lead product designer</small></span>
+          <h3 class="deck__name">How a brand and product overhaul earned Apple's Best of 2019</h3>
+          <span class="deck__cta">Read case study <span>›</span></span>
+        </div>
+        <div class="deck__media">
+          <img src="assets/lifecake/hero.jpg" alt="Lifecake app, Apple Best of 2019" loading="lazy" />
+          <div class="deck__stats">
+            <div class="deck__stat"><b>3.4M</b><span>active users worldwide</span></div>
+            <div class="deck__stat"><b>★ 2019</b><span>Apple Best of, The Storyteller Within</span></div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+    <div class="deck__controls">
+      <button class="work__arrow deck__arrow deck__arrow--prev" type="button" aria-label="Previous case study">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      </button>
+      <div class="deck__dots" aria-hidden="true"></div>
+      <button class="work__arrow deck__arrow deck__arrow--next" type="button" aria-label="Next case study">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </div>
   </section>
 
   <!-- ABOUT -->
@@ -2902,6 +3182,112 @@ p,li{text-wrap:pretty}
         }).observe(beyond);
       } else start();
     }
+  }
+
+  // Case study deck: the fan of overlapping cards. One card is "active" (in
+  // front); every card carries --o, its offset from the active one, which
+  // the CSS transform turns into position, depth and tilt. Dragging sets the
+  // stack's --shift so the whole fan follows the pointer; past the threshold
+  // it moves on, otherwise it springs back. A short press opens the card.
+  const deck = document.querySelector(".deck");
+  if (deck) {
+    const stack = deck.querySelector(".deck__cards");
+    const cards = [...stack.querySelectorAll(".deck__card")];
+    const prevBtn = deck.querySelector(".deck__arrow--prev");
+    const nextBtn = deck.querySelector(".deck__arrow--next");
+    const dotsWrap = deck.querySelector(".deck__dots");
+    const n = cards.length;
+    let active = 0;
+    const dots = cards.map((c, i) => {
+      const d = document.createElement("button");
+      d.type = "button";
+      d.className = "deck__bar";
+      d.setAttribute("aria-label", "Show " + c.querySelector(".deck__brand").childNodes[1].textContent.trim());
+      d.addEventListener("click", () => go(i));
+      dotsWrap.appendChild(d);
+      return d;
+    });
+    const render = () => {
+      cards.forEach((c, i) => {
+        const o = i - active;
+        c.style.setProperty("--o", o);
+        c.style.zIndex = 10 - Math.abs(o);
+        c.classList.toggle("is-active", o === 0);
+        c.setAttribute("aria-hidden", o === 0 ? "false" : "true");
+        c.tabIndex = o === 0 ? 0 : -1;
+      });
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === active));
+      dotsWrap.style.setProperty("--active-c", cards[active].style.getPropertyValue("--c") || "");
+      prevBtn.disabled = active === 0;
+      nextBtn.disabled = active === n - 1;
+    };
+    const go = (i) => { active = Math.max(0, Math.min(n - 1, i)); render(); };
+    prevBtn.addEventListener("click", () => go(active - 1));
+    nextBtn.addEventListener("click", () => go(active + 1));
+    stack.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { go(active + 1); e.preventDefault(); }
+      if (e.key === "ArrowLeft") { go(active - 1); e.preventDefault(); }
+    });
+
+    // drag: horizontal movement past a few px becomes a drag (vertical stays
+    // a page scroll, see touch-action). The front card follows the pointer
+    // and, past the crossover, dips behind the neighbour sliding in to
+    // replace it. The ends are held back a little.
+    let down = null, dragged = false;
+    const width = () => cards[active].offsetWidth || 1;
+    stack.addEventListener("pointerdown", (e) => {
+      if (e.button) return;
+      down = { x: e.clientX, y: e.clientY };
+      dragged = false;
+    });
+    stack.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      const dx = e.clientX - down.x, dy = e.clientY - down.y;
+      if (!dragged) {
+        if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return;
+        dragged = true;
+        stack.classList.add("is-dragging");
+        stack.setPointerCapture(e.pointerId);
+      }
+      let shift = dx / width();
+      const atEnd = (shift < 0 && active === n - 1) || (shift > 0 && active === 0);
+      if (atEnd) shift *= 0.25;
+      shift = Math.max(-1, Math.min(1, shift));
+      stack.style.setProperty("--shift", shift);
+      // the card coming in rides above the rest of the fan; past the
+      // crossover the card on its way out slips behind it
+      cards.forEach((c, i) => { c.style.zIndex = 10 - Math.abs(i - active); });
+      const incoming = cards[active + (shift < 0 ? 1 : -1)];
+      if (incoming) incoming.style.zIndex = 11;
+      cards[active].style.zIndex = incoming && Math.abs(shift) > 0.4 ? 9 : 12;
+    });
+    const release = (e) => {
+      if (!down) return;
+      const dx = e.clientX - down.x;
+      down = null;
+      if (!dragged) return;
+      // transitions back on first, so the fan eases from where it was left
+      stack.classList.remove("is-dragging");
+      stack.style.removeProperty("--shift");
+      if (dx < -width() * 0.2) go(active + 1);
+      else if (dx > width() * 0.2) go(active - 1);
+      else render();
+      // the click that follows a drag must not open the card
+      setTimeout(() => { dragged = false; }, 0);
+    };
+    stack.addEventListener("pointerup", release);
+    stack.addEventListener("pointercancel", release);
+    stack.addEventListener("click", (e) => {
+      const card = e.target.closest(".deck__card");
+      if (!card) return;
+      if (dragged) { e.preventDefault(); e.stopPropagation(); return; }
+      // a card behind comes to the front instead of opening
+      if (!card.classList.contains("is-active")) {
+        e.preventDefault(); e.stopPropagation();
+        go(cards.indexOf(card));
+      }
+    }, true);
+    render();
   }
 
   // secret footer reveal: trigger when within 40vh of document end
