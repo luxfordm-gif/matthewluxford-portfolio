@@ -20,6 +20,7 @@ navLinkBase: ""
   --ink:#0a0a0a;
   --ink-2:#27272a;
   --muted:#9a958d;
+  --muted-strong:#736e66; /* --muted darkened enough for small text on white (5:1) */
   --line:#eae6dd;
   --dot:#c9c4b9;
   --dark:#0a0a0a;
@@ -295,7 +296,7 @@ p,li{text-wrap:pretty}
   background-color:#0a0a0a;
   background-image:
     linear-gradient(180deg, rgba(10,10,10,0) 38%, rgba(10,10,10,.55) 65%, rgba(10,10,10,.95) 100%),
-    url("assets/masterclass-hero.jpg");
+    url("assets/masterclass-hero.webp");
   background-size:100% 100%, auto 122%;
   background-position:0 0, center 28%;
   background-repeat:no-repeat;
@@ -351,11 +352,11 @@ p,li{text-wrap:pretty}
 }
 .fcard--4 .ttl{font-weight:700;font-size:1.07rem;margin-bottom:1px;letter-spacing:-.01em}
 .fcard--4 .ttl em{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.12rem}
-.fcard--4 .phon{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.83rem;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
+.fcard--4 .phon{font-family:var(--serif);font-style:italic;color:var(--muted-strong);font-size:.83rem;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
 .fcard--4 ol{display:flex;flex-direction:column;gap:3px;font-size:.88rem;color:var(--ink-2);counter-reset:fc}
 .fcard--4 ol li{counter-increment:fc;line-height:1.35;white-space:nowrap}
-.fcard--4 ol li::before{content:"(" counter(fc) ") ";color:var(--muted)}
-.fcard--4 ol li em{font-family:var(--serif);font-style:italic;color:var(--muted)}
+.fcard--4 ol li::before{content:"(" counter(fc) ") ";color:var(--muted-strong)}
+.fcard--4 ol li em{font-family:var(--serif);font-style:italic;color:var(--muted-strong)}
 
 /* music card — album artwork fills the card, vinyl spins in the middle */
 .fcard--5{
@@ -428,7 +429,7 @@ p,li{text-wrap:pretty}
 }
 .fcard--5 .mu-disc::before{
   content:"";position:absolute;inset:24%;border-radius:50%;
-  background:#0a0a0a url("assets/vinyl-label.jpg") center/cover no-repeat;
+  background:#0a0a0a url("assets/vinyl-label.webp") center/cover no-repeat;
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.05);
 }
 @keyframes spinDisc{to{transform:rotate(360deg)}}
@@ -1954,12 +1955,12 @@ p,li{text-wrap:pretty}
     <div class="hero__prev" hidden style="display:none">
       Currently at
       <span class="logo">
-        <img src="assets/kraken-logo.webp" alt="Kraken" width="36" height="36" loading="eager" />
+        <img src="assets/kraken-logo-sm.webp" alt="Kraken" width="36" height="36" loading="eager" />
       </span>
     </div>
 
     <!-- FANNED CARDS (inside hero so they share the centered viewport) -->
-    <div class="fan" aria-hidden="true">
+    <div class="fan">
       <div class="fan__inner">
       <article class="fcard fcard--1">
         <span class="ttl">6 things about me</span>
@@ -1972,7 +1973,7 @@ p,li{text-wrap:pretty}
           <li><b>6.</b> Father of two</li>
         </ul>
       </article>
-      <a class="fcard fcard--2" href="https://www.masterclass.com/classes/revolutionize-your-workflows-with-ai" target="_blank" rel="noopener" aria-label="Currently watching: Revolutionize Your Workflows with AI on MasterClass">
+      <a class="fcard fcard--2" href="https://www.masterclass.com/classes/revolutionize-your-workflows-with-ai" target="_blank" rel="noopener">
         <span class="mc-eyebrow">
           <img src="assets/masterclass-logo.webp" alt="MasterClass logo" width="22" height="14" loading="eager" />
         </span>
@@ -1980,11 +1981,11 @@ p,li{text-wrap:pretty}
           <span class="mc-watching">currently watching</span>
           <span class="mc-title">Revolutionize Your Workflows with AI</span>
           <span class="mc-by">MasterClass series</span>
-          <span class="pill">Watch &nbsp;↗</span>
+          <span class="pill">Watch &nbsp;<span aria-hidden="true">↗</span></span>
         </div>
       </a>
-      <a class="fcard fcard--5" href="https://www.youtube.com/watch?v=pAgnJDJN4VA" target="_blank" rel="noopener" aria-label="Favourite song: Back in Black by AC/DC, plays on YouTube">
-        <span class="mu-eyebrow"><span class="heart">♥</span> Favourite song</span>
+      <a class="fcard fcard--5" href="https://www.youtube.com/watch?v=pAgnJDJN4VA" target="_blank" rel="noopener">
+        <span class="mu-eyebrow"><span class="heart" aria-hidden="true">♥</span> Favourite song</span>
         <span class="mu-band-art" aria-hidden="true">AC<span class="bolt">⚡</span>DC</span>
         <span class="mu-album-art" aria-hidden="true">BACK IN BLACK</span>
         <div class="mu-disc-wrap">
@@ -1998,7 +1999,7 @@ p,li{text-wrap:pretty}
         </div>
       </a>
 
-      <article class="fcard fcard--3"><div class="ph"></div></article>
+      <article class="fcard fcard--3" aria-hidden="true"><div class="ph"></div></article>
       <article class="fcard fcard--4">
         <span class="ttl">senior <em>designer</em></span>
         <span class="phon">/ˈsiː.njə dɪˈzaɪ.nə/ <em>[noun]</em></span>
@@ -2047,7 +2048,7 @@ p,li{text-wrap:pretty}
       <a class="proj is-soon" href="reps.html">
         <div class="proj__media proj__media--07" style="background:#f6f5f0">
           <span class="proj__badge proj__badge--side">Side project</span>
-          <img src="assets/reps-thumb.webp" alt="Reps app & brand mockup" loading="eager"
+          <img src="assets/reps-thumb.webp" srcset="assets/reps-thumb-sm.webp 800w, assets/reps-thumb.webp 1402w" sizes="(max-width:760px) 74vw, 440px" alt="Reps app & brand mockup" loading="eager"
                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
         </div>
         <div class="proj__caption reveal-up">
@@ -2065,7 +2066,7 @@ p,li{text-wrap:pretty}
       <a class="proj" href="riverfox.html">
         <div class="proj__media" style="background:#f6f5f0">
           <span class="proj__badge proj__badge--side">Side project</span>
-          <img src="assets/river-fox-events/river-fox-events-thumb.webp" alt="River Fox Events brand mark" loading="eager"
+          <img src="assets/river-fox-events/river-fox-events-thumb.webp" srcset="assets/river-fox-events/river-fox-events-thumb-sm.webp 800w, assets/river-fox-events/river-fox-events-thumb.webp 1600w" sizes="(max-width:760px) 74vw, 440px" alt="River Fox Events brand mark" loading="eager"
                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
         </div>
         <div class="proj__caption reveal-up">
@@ -2084,8 +2085,8 @@ p,li{text-wrap:pretty}
         <div class="proj__media proj__media--01 proj__media--video">
           <span class="proj__badge">Coming soon</span>
           <span class="proj__logo">JLR</span>
-          <video class="proj__video" autoplay muted loop playsinline preload="metadata"
-                 poster="assets/jlr/defender-bg-poster.webp" aria-hidden="true">
+          <video class="proj__video" muted loop playsinline preload="none"
+                 data-poster="assets/jlr/defender-bg-poster.webp" aria-hidden="true">
             <source src="assets/jlr/defender-bg.mp4" type="video/mp4">
           </video>
         </div>
@@ -2234,7 +2235,7 @@ p,li{text-wrap:pretty}
           <span class="deck__cta">Read case study <span>›</span></span>
         </div>
         <div class="deck__media">
-          <img src="assets/reps-thumb.webp" alt="Reps app and brand mockup" loading="lazy" />
+          <img src="assets/reps-thumb.webp" srcset="assets/reps-thumb-sm.webp 800w, assets/reps-thumb.webp 1402w" sizes="(max-width:760px) 74vw, 440px" alt="Reps app and brand mockup" loading="lazy" />
           <div class="deck__stats">
             <div class="deck__stat"><b>PDF → App</b><span>a coach's plan, trained off the same day</span></div>
             <div class="deck__stat"><b>Daily</b><span>use since day one</span></div>
@@ -2249,7 +2250,7 @@ p,li{text-wrap:pretty}
           <span class="deck__cta">Read case study <span>›</span></span>
         </div>
         <div class="deck__media">
-          <img src="assets/river-fox-events/river-fox-events-thumb.webp" alt="River Fox Events brand mark" loading="lazy" />
+          <img src="assets/river-fox-events/river-fox-events-thumb.webp" srcset="assets/river-fox-events/river-fox-events-thumb-sm.webp 800w, assets/river-fox-events/river-fox-events-thumb.webp 1600w" sizes="(max-width:760px) 74vw, 440px" alt="River Fox Events brand mark" loading="lazy" />
           <div class="deck__stats">
             <div class="deck__stat"><b>1 week</b><span>after hours, start to ship</span></div>
             <div class="deck__stat"><b>1 person</b><span>AI throughout</span></div>
@@ -2264,7 +2265,7 @@ p,li{text-wrap:pretty}
           <span class="deck__cta">Read case study <span>›</span></span>
         </div>
         <div class="deck__media">
-          <img src="assets/jlr/hero.jpg" alt="Jaguar Land Rover global website refresh" loading="lazy" />
+          <img src="assets/jlr/hero.webp" srcset="assets/jlr/hero-sm.webp 800w, assets/jlr/hero.webp 1600w" sizes="(max-width:760px) 74vw, 440px" alt="Jaguar Land Rover global website refresh" loading="lazy" />
           <div class="deck__stats">
             <div class="deck__stat"><b>↓ 35%</b><span>site authoring time, end-to-end</span></div>
             <div class="deck__stat"><b>27</b><span>markets the rebuild rolled out to</span></div>
@@ -2279,7 +2280,7 @@ p,li{text-wrap:pretty}
           <span class="deck__cta">Read case study <span>›</span></span>
         </div>
         <div class="deck__media">
-          <img src="assets/skatefarm/hero.jpg" alt="The Skate Farm website" loading="lazy" />
+          <img src="assets/skatefarm/hero.webp" srcset="assets/skatefarm/hero-sm.webp 800w, assets/skatefarm/hero.webp 1600w" sizes="(max-width:760px) 74vw, 440px" alt="The Skate Farm website" loading="lazy" />
           <div class="deck__stats">
             <div class="deck__stat"><b>22k</b><span>Google clicks since launch</span></div>
             <div class="deck__stat"><b>100+</b><span>pages, every one earning its place</span></div>
@@ -2294,7 +2295,7 @@ p,li{text-wrap:pretty}
           <span class="deck__cta">Read case study <span>›</span></span>
         </div>
         <div class="deck__media">
-          <img src="assets/collective/hero.jpg" alt="The Collective booking flow redesign" loading="lazy" />
+          <img src="assets/collective/hero.webp" srcset="assets/collective/hero-sm.webp 800w, assets/collective/hero.webp 1600w" sizes="(max-width:760px) 74vw, 440px" alt="The Collective booking flow redesign" loading="lazy" />
           <div class="deck__stats">
             <div class="deck__stat"><b>↑ 500%</b><span>booking enquiries in the first month</span></div>
             <div class="deck__stat"><b>2</b><span>native apps shipped, iOS and Android</span></div>
@@ -2309,7 +2310,7 @@ p,li{text-wrap:pretty}
           <span class="deck__cta">Read case study <span>›</span></span>
         </div>
         <div class="deck__media">
-          <img src="assets/lifecake/hero.jpg" alt="Lifecake app, Apple Best of 2019" loading="lazy" />
+          <img src="assets/lifecake/hero.webp" srcset="assets/lifecake/hero-sm.webp 800w, assets/lifecake/hero.webp 1600w" sizes="(max-width:760px) 74vw, 440px" alt="Lifecake app, Apple Best of 2019" loading="lazy" />
           <div class="deck__stats">
             <div class="deck__stat"><b>3.4M</b><span>active users worldwide</span></div>
             <div class="deck__stat"><b>★ 2019</b><span>Apple Best of, The Storyteller Within</span></div>
@@ -2322,7 +2323,7 @@ p,li{text-wrap:pretty}
       <button class="work__arrow deck__arrow deck__arrow--prev" type="button" aria-label="Previous case study">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
       </button>
-      <div class="deck__dots" aria-hidden="true"></div>
+      <div class="deck__dots"></div>
       <button class="work__arrow deck__arrow deck__arrow--next" type="button" aria-label="Next case study">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
       </button>
@@ -2353,31 +2354,31 @@ p,li{text-wrap:pretty}
       <div class="about__exp__desc">Sole designer for consumer web — crypto, equities and tokenised stocks. Work under NDA.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/yoppie.jpg" data-rot="-8deg" data-h="200px">
+    <div class="about__exp" data-img="assets/yoppie.webp" data-rot="-8deg" data-h="200px">
       <div class="about__exp__when">2021 – 2022</div>
       <div class="about__exp__role"><span class="about__exp__place">Yoppie</span><span class="sep">, </span><span class="about__exp__job">Head of Design &amp; Creative (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Sole creative in a nine-person company. Hired for a week, stayed a year.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/landrover-s44.jpg" data-rot="11deg" data-h="245px" data-w="363px">
+    <div class="about__exp" data-img="assets/landrover-s44.webp" data-rot="11deg" data-h="245px" data-w="363px">
       <div class="about__exp__when">2020 – 2021</div>
       <div class="about__exp__role"><span class="about__exp__place">Spark44 (Jaguar Land Rover)</span><span class="sep">, </span><span class="about__exp__job">Lead Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London · Automotive</span></div>
       <div class="about__exp__desc">Ground-up rebuild of the component library — one of two senior leads, six months, 27 markets.</div>
     </div>
 
-    <div class="about__exp about__exp--continued" data-img="assets/collective.jpg" data-rot="-7deg" data-h="210px">
+    <div class="about__exp about__exp--continued" data-img="assets/collective.webp" data-rot="-7deg" data-h="210px">
       <div class="about__exp__when">2020 – 2021</div>
       <div class="about__exp__role"><span class="about__exp__place">The Collective</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Rebuilt the booking flow — <strong>500% more enquiries</strong> in month one. Plus brand refresh and the iOS/Android app.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/lifecake.jpg" data-rot="-11deg" data-h="215px">
+    <div class="about__exp" data-img="assets/lifecake.webp" data-rot="-11deg" data-h="215px">
       <div class="about__exp__when">2018 – 2020</div>
       <div class="about__exp__role"><span class="about__exp__place">Lifecake</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Reimagined across iOS, Android and web. Apple's Best Storytelling App 2019, 3.4M users.</div>
     </div>
 
-    <div class="about__exp" data-img="assets/rr-s44.jpg" data-rot="9deg" data-h="235px" data-w="363px">
+    <div class="about__exp" data-img="assets/rr-s44.webp" data-rot="9deg" data-h="235px" data-w="363px">
       <div class="about__exp__when">2016 – 2018</div>
       <div class="about__exp__role"><span class="about__exp__place">Spark44 (Jaguar Land Rover)</span><span class="sep">, </span><span class="about__exp__job">Senior Designer</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
       <div class="about__exp__desc">Help Me Choose, comparison and customer portal tools — 27 markets, both brands.</div>
@@ -2528,7 +2529,7 @@ p,li{text-wrap:pretty}
 
       </div>
 
-      <button class="testimonials__more" type="button" aria-label="Read all testimonials">Read them all →</button>
+      <button class="testimonials__more" type="button">Read them all <span aria-hidden="true">→</span></button>
 
     </div>
    </div>
@@ -3254,7 +3255,10 @@ p,li{text-wrap:pretty}
         c.setAttribute("aria-hidden", o === 0 ? "false" : "true");
         c.tabIndex = o === 0 ? 0 : -1;
       });
-      dots.forEach((d, i) => d.classList.toggle("is-active", i === active));
+      dots.forEach((d, i) => {
+        d.classList.toggle("is-active", i === active);
+        d.setAttribute("aria-current", i === active ? "true" : "false");
+      });
       dotsWrap.style.setProperty("--active-c", cards[active].style.getPropertyValue("--c") || "");
     };
     // move one card along: d is 1 (next) or -1 (back)
@@ -3346,6 +3350,16 @@ p,li{text-wrap:pretty}
     }, true);
     render();
   }
+
+  // work-card videos: no autoplay or poster in the markup, since either makes
+  // the browser download them even inside the parked (hidden) rail. Start
+  // them here only when they're actually on the page.
+  document.querySelectorAll(".proj__video").forEach((v) => {
+    if (v.closest("[hidden]")) return;
+    v.poster = v.dataset.poster || "";
+    v.preload = "auto";
+    v.play().catch(() => {});
+  });
 
   // secret footer reveal: trigger when within 40vh of document end
   const secretEl = document.querySelector(".secret-footer");
