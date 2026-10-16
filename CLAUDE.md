@@ -35,6 +35,27 @@ Case studies are still raw HTML — they get migrated to use layouts/partials in
 
 Pages set per-page CSS via `{% block pageStyles %}<style>...</style>{% endblock %}`. Page body lives in `{% block content %}...{% endblock %}`.
 
+## Preference panel (review tool)
+
+A draggable pill with Layout and Viewport toggles for reviewing pages at Mobile / Small laptop / 15-inch / HD and flicking between design variants. Full spec, setup and source: `docs/preference-panel.md`.
+
+- Script: `src/assets/pref-panel.js`. Gate + config: `src/_includes/partials/pref-panel.njk`, included from `layouts/base.njk` so every page has it.
+- Loads only on localhost / LAN / `*.netlify.app`, or on the live site after visiting with `?panel` (`?panel=off` forgets). Visitors never download it, so there's nothing to strip before going live.
+- Layout groups write `data-pref-<group>` on `<html>`; add CSS against that. The homepage opts into the **Accent serif** group with `prefSerif: true` in its front matter (`html[data-pref-serif="fraunces"]` hook in `src/index.njk`). Delete the group once the serif is chosen.
+- Close with × or ⌥⇧P; same shortcut brings it back.
+
+## Type scale on laptops
+
+The site is designed at 1920. Between 761px and 1599px wide every page drops the rem base to 93.75% (`html{font-size}` in `layouts/base.njk`) so copy, gaps and paddings come in ~6% together. On the homepage section titles use `--h2`, a step below the hero's `--h1`; `--h1` is in px so the rem nudge can't touch it. The case-study title token `--fs-h1` (also in `base.njk`) has a lighter rem share so it actually comes down on laptops (~101px at 1280, 144px at 1920). Check changes at 1280×800 with the panel's Small laptop preset.
+
+## CV layout
+
+Leave the CV's hero (four-up proof strip) and pill section headers as they are. A serif-ledger rework was tried and reverted in PR #71 — Matthew wants it classier but not that way. Any new direction gets mocked and approved before it's built.
+
+## Wrap-up
+
+Say "wrap up" at the end of a session. The skill in `.claude/skills/wrap-up/` sorts learnings into memory / rules / reference docs / project notes, updates `.claude/open-threads.md` and writes a dated log to `.claude/wrap-ups/`. In the cloud those land in the repo; a local run syncs them into `~/.claude`.
+
 ## Image pipeline
 
 Whenever a new image is added to `src/assets/` (or a sub-folder), do all of this before wiring it into HTML — don't ask, just do it and include it in the same commit:

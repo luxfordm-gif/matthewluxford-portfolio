@@ -1,0 +1,37 @@
+{#- Preference panel (layout + viewport toggles) — a review tool, not part of
+    the site. Loads only on localhost / LAN / *.netlify.app previews, or on
+    the live site once you've visited with ?panel (?panel=off forgets it).
+    Visitors download nothing. Docs: docs/preference-panel.md -#}
+<script>
+(function(){
+  var on=false,q=new URLSearchParams(location.search).get("panel");
+  try{
+    if(q==="off")localStorage.removeItem("pref-panel:on");
+    else if(q!==null)localStorage.setItem("pref-panel:on","1");
+    on=localStorage.getItem("pref-panel:on")==="1";
+  }catch(e){}
+  var h=location.hostname;
+  on=on||/^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\]|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)$/.test(h)||/\.netlify\.app$/.test(h);
+  if(!on||q==="off")return;
+  window.PREF_PANEL={
+    groups:[
+{%- if prefSerif %}
+      {id:"serif",label:"Accent serif",options:[
+        {value:"garamond",title:"EB Garamond",sub:"The trial — italic lines + stats"},
+        {value:"fraunces",title:"Fraunces",sub:"The original italic"}
+      ]}
+{%- endif %}
+    ]
+  };
+  // apply saved layout choices before first paint, so there's no flash
+  try{
+    var s=JSON.parse(localStorage.getItem("pref-panel"))||{},p=s.prefs||{};
+    window.PREF_PANEL.groups.forEach(function(g){
+      document.documentElement.setAttribute("data-pref-"+g.id,p[g.id]||g.options[0].value);
+    });
+  }catch(e){}
+  var el=document.createElement("script");
+  el.src="assets/pref-panel.js";el.defer=true;
+  document.head.appendChild(el);
+})();
+</script>
