@@ -56,6 +56,8 @@ Leave the CV's hero (four-up proof strip) and pill section headers as they are. 
 
 Say "wrap up" at the end of a session. The skill in `.claude/skills/wrap-up/` sorts learnings into memory / rules / reference docs / project notes, updates `.claude/open-threads.md` and writes a dated log to `.claude/wrap-ups/`. In the cloud those land in the repo; a local run syncs them into `~/.claude`.
 
+**First time on a new machine, or if Matthew says "do the wrap-up sync" / "search the repo for wrap-up":** just run the `wrap-up` skill. It installs itself to `~/.claude/skills/` and pulls `.claude/preferences-inbox.md`, `.claude/rules/`, `.claude/open-threads.md`, `.claude/wrap-ups/` and `docs/preference-panel.md` into `~/.claude/`. No terminal steps, no pasting. What's been done so far is in `.claude/wrap-ups/` (one dated file per session) and what's still open is in `.claude/open-threads.md`.
+
 ## Image pipeline
 
 Whenever a new image is added to `src/assets/` (or a sub-folder), do all of this before wiring it into HTML — don't ask, just do it and include it in the same commit:
