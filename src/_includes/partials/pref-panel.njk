@@ -19,7 +19,15 @@
       {id:"serif",label:"Accent serif",options:[
         {value:"garamond",title:"EB Garamond",sub:"The trial — italic lines + stats"},
         {value:"fraunces",title:"Fraunces",sub:"The original italic"}
-      ]}
+      ]},
+{%- endif %}
+{%- if prefDeckTitle %}
+      {id:"cardtitle",label:"Card title",options:[
+        {value:"medium",title:"Inter Medium",sub:"Firmer, a step smaller"},
+        {value:"serif",title:"Accent serif",sub:"Matches the stats + italic line"},
+        {value:"bold",title:"Inter Bold",sub:"Punchy, smaller again"},
+        {value:"light",title:"Inter Light",sub:"The current one"}
+      ]},
 {%- endif %}
     ]
   };
