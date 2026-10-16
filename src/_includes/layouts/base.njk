@@ -24,7 +24,10 @@
   --w-narrow:48ch;
 
   /* typography scale */
-  --fs-h1:clamp(3rem,2rem + 7vw,9rem);
+  /* case-study title. The vw term dominates on laptops, so the rem nudge
+     alone barely moved it (122px at 1280). Lighter rem share brings it to
+     ~101px at 1280 and ~111px at 1440; still 144px (the cap) at 1920. */
+  --fs-h1:clamp(3rem,1rem + 6.7vw,9rem);
   --fs-h2:clamp(1.6rem,1.2rem + 1.5vw,2.4rem);
   --fs-h3:clamp(1.4rem,1.2rem + .8vw,1.8rem);
   --fs-h4:clamp(1.1rem,1rem + .4vw,1.28rem);
@@ -32,6 +35,14 @@
   --fs-body:clamp(.95rem,.9rem + .25vw,1.05rem);
   --fs-body-sm:14px;
   --fs-caption:12px;
+}
+
+/* 13-15" laptops (761-1599px wide): nudge the rem base down so copy, gaps
+   and paddings on every page come in ~6% without retuning each clamp().
+   HD (1600+) and phones keep the 16px base. Anything that must not move
+   (the homepage hero H1) is sized in px. */
+@media (min-width:761px) and (max-width:1599px){
+  html{font-size:93.75%}
 }
 
 /* Mobile tap highlight — kill the grey/blue box iOS and Android flash over

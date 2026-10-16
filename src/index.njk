@@ -58,12 +58,6 @@ html[data-pref-serif="fraunces"]{--serif-2:var(--serif)}
 @media (max-width:760px){
   :root{--h1:clamp(2.15rem,1.3rem + 4.6vw,3rem);--h2:clamp(2.15rem,1.3rem + 4.6vw,3rem)}
 }
-/* 13-15" laptops (1280-1512 wide): nudge the rem base down so copy, gaps
-   and paddings all come in ~6% without retuning every clamp(). HD (1600+)
-   and phones keep the 16px base. */
-@media (min-width:761px) and (max-width:1599px){
-  html{font-size:93.75%}
-}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;overflow-x:clip}
 html,body{margin:0;padding:0;max-width:100%}

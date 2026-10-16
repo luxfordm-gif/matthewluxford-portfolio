@@ -46,7 +46,7 @@ A draggable pill with Layout and Viewport toggles for reviewing pages at Mobile 
 
 ## Type scale on laptops
 
-The site is designed at 1920. Between 761px and 1599px wide the homepage drops the rem base to 93.75% (`html{font-size}` in `src/index.njk`) so copy, gaps and paddings come in ~6% together. Section titles use `--h2`, a step below the hero's `--h1`; `--h1` is in px so the rem nudge can't touch it. Check changes at 1280×800 with the panel's Small laptop preset. CV and case studies don't have the nudge yet.
+The site is designed at 1920. Between 761px and 1599px wide every page drops the rem base to 93.75% (`html{font-size}` in `layouts/base.njk`) so copy, gaps and paddings come in ~6% together. On the homepage section titles use `--h2`, a step below the hero's `--h1`; `--h1` is in px so the rem nudge can't touch it. The case-study title token `--fs-h1` (also in `base.njk`) has a lighter rem share so it actually comes down on laptops (~101px at 1280, 144px at 1920). Check changes at 1280×800 with the panel's Small laptop preset.
 
 ## Wrap-up
 
