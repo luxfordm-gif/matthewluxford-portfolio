@@ -48,6 +48,10 @@ A draggable pill with Layout and Viewport toggles for reviewing pages at Mobile 
 
 The site is designed at 1920. Between 761px and 1599px wide every page drops the rem base to 93.75% (`html{font-size}` in `layouts/base.njk`) so copy, gaps and paddings come in ~6% together. On the homepage section titles use `--h2`, a step below the hero's `--h1`; `--h1` is in px so the rem nudge can't touch it. The case-study title token `--fs-h1` (also in `base.njk`) has a lighter rem share so it actually comes down on laptops (~101px at 1280, 144px at 1920). Check changes at 1280×800 with the panel's Small laptop preset.
 
+## CV layout
+
+Leave the CV's hero (four-up proof strip) and pill section headers as they are. A serif-ledger rework was tried and reverted in PR #71 — Matthew wants it classier but not that way. Any new direction gets mocked and approved before it's built.
+
 ## Wrap-up
 
 Say "wrap up" at the end of a session. The skill in `.claude/skills/wrap-up/` sorts learnings into memory / rules / reference docs / project notes, updates `.claude/open-threads.md` and writes a dated log to `.claude/wrap-ups/`. In the cloud those land in the repo; a local run syncs them into `~/.claude`.
