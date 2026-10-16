@@ -9,6 +9,7 @@ ogImageAlt: "Hire me already! — Matthew Luxford"
 fonts: "Caveat:wght@500;600&family=EB+Garamond:ital,wght@0,400..600;1,400..600&family=Fraunces:ital,wght@1,300..500&family=Inter:wght@300;400;500;600;700;800;900&family=Caveat+Brush"
 navBrandHref: "#top"
 navLinkBase: ""
+prefSerif: true
 ---
 {% extends "layouts/base.njk" %}
 
@@ -40,16 +41,28 @@ navLinkBase: ""
      on. The section paddings below are tokens rather than literals because the
      scroll-margin rules subtract them; keeping one copy stops the two drifting
      apart. */
-  /* one scale for every section title, taken from the hero */
-  --h2:clamp(2rem,1.25rem + 4.05vw,4.9rem);
+  /* the hero H1 keeps its size; every other section title sits a step
+     below it, so on a 13-15" laptop the sections stop shouting. Both land
+     within a few px of each other on a 1920 screen. */
+  --h1:clamp(32px,20px + 4.05vw,78.4px); /* px: immune to the laptop rem nudge below */
+  --h2:clamp(2rem,.9rem + 3.1vw,4.9rem);
   --nav-h:95px;
   --anchor-gap:1.5rem;
   --work-pad-top:clamp(5rem,9vw,8rem);
   --work-head-pad-top:clamp(2rem,5vw,4rem);
   --about-pad-top:clamp(5rem,10vw,8rem);
 }
+/* preference panel: Layout → Accent serif (only loads in review, see
+   partials/pref-panel.njk) */
+html[data-pref-serif="fraunces"]{--serif-2:var(--serif)}
 @media (max-width:760px){
-  :root{--h2:clamp(2.15rem,1.3rem + 4.6vw,3rem)}
+  :root{--h1:clamp(2.15rem,1.3rem + 4.6vw,3rem);--h2:clamp(2.15rem,1.3rem + 4.6vw,3rem)}
+}
+/* 13-15" laptops (1280-1512 wide): nudge the rem base down so copy, gaps
+   and paddings all come in ~6% without retuning every clamp(). HD (1600+)
+   and phones keep the 16px base. */
+@media (min-width:761px) and (max-width:1599px){
+  html{font-size:93.75%}
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;overflow-x:clip}
@@ -182,7 +195,7 @@ p,li{text-wrap:pretty}
 }
 .hero__title{
   font-family:var(--sans);font-weight:700;
-  font-size:var(--h2);
+  font-size:var(--h1);
   line-height:1.05;letter-spacing:-.035em;
   margin:0 auto;max-width:22ch;color:var(--ink);
   text-wrap:balance;
@@ -190,7 +203,7 @@ p,li{text-wrap:pretty}
 .hero__title .ln{display:block;overflow:visible;padding:.05em 0 .12em;text-wrap:balance}
 @media (max-width:760px){
   .hero__title{
-    font-size:var(--h2);
+    font-size:var(--h1);
     max-width:14ch;
     text-wrap:balance;
     -webkit-text-wrap:balance;
@@ -902,7 +915,7 @@ p,li{text-wrap:pretty}
   padding:clamp(4rem,8vw,7rem) 0 clamp(4rem,8vw,6rem);
   overflow:hidden;
 }
-.deck__head{padding:0 var(--pad) clamp(4rem,8vw,6.5rem);text-align:center}
+.deck__head{padding:0 var(--pad) clamp(3.5rem,6.5vw,6.5rem);text-align:center}
 /* the nav's Work link lands here now: cancel the section's own top padding
    so the title sits --anchor-gap below the fixed nav (same idea as #about) */
 .deck#work{scroll-margin-top:calc(var(--nav-h) + var(--anchor-gap) - clamp(4rem,8vw,7rem))}
@@ -920,7 +933,10 @@ p,li{text-wrap:pretty}
 }
 .deck__cards{
   position:relative;
-  height:clamp(400px,37vw,520px);
+  /* capped by the screen's height too, so title + card fit a 13" laptop
+     (1280x800) in one view; a 1920x1080 screen still gets the full 520 */
+  --deck-h:clamp(380px,min(34vw,55vh),520px);
+  height:var(--deck-h);
   transform:rotate(-2.5deg);
   touch-action:pan-y;
   user-select:none;-webkit-user-select:none;
@@ -929,7 +945,7 @@ p,li{text-wrap:pretty}
 .deck__cards.is-dragging{cursor:grabbing}
 .deck__card{
   position:absolute;inset:0;margin:auto;
-  width:min(90vw,860px);height:100%;
+  width:min(90vw,860px,calc(var(--deck-h) * 1.66));height:100%;
   display:grid;grid-template-columns:1fr 1.08fr;
   gap:16px;padding:16px;
   border-radius:24px;
@@ -940,9 +956,11 @@ p,li{text-wrap:pretty}
   --o:0;
   --oe:calc(var(--o) + var(--shift,0));
   --a:max(var(--oe),-1 * var(--oe)); /* distance from the front, either side */
+  --sp:1; /* fan spread: 1 at rest, opened up on hover */
   transform:
-    translate(calc(var(--oe) * 3.5%),calc(var(--a) * -5.5%))
-    rotate(calc(var(--oe) * 3deg))
+    /* the spread is mostly sideways, so the back cards never climb into the title */
+    translate(calc(var(--oe) * 3.5% * var(--sp)),calc(var(--a) * -5.5% * (1 + (var(--sp) - 1) * .2)))
+    rotate(calc(var(--oe) * 3deg * (1 + (var(--sp) - 1) * .4)))
     scale(calc(1 - var(--a) * .03));
   opacity:clamp(0,3 - var(--a),1); /* two peek out each side; the third fades in as it's dealt */
   transition:transform .32s ease,opacity .32s ease;
@@ -958,6 +976,21 @@ p,li{text-wrap:pretty}
   opacity:1;
 }
 .deck__card:not(.is-active){cursor:pointer}
+/* hover: the fan breathes out — the cards behind spread further apart, the
+   front one lifts toward you, and a peeking card you point at slides out a
+   little more. Springy overshoot on the way out so it feels alive; the
+   plain .32s ease still drives drag-release and card changes. */
+@media (hover:hover) and (min-width:761px){
+  .deck__cards:not(.is-dragging):hover .deck__card{
+    --sp:1.5;
+    transition:transform .55s cubic-bezier(.3,1.45,.5,1),opacity .32s ease,box-shadow .45s var(--ease);
+  }
+  .deck__cards:not(.is-dragging):hover .deck__card:not(.is-active):hover{--sp:1.85}
+  .deck__cards:not(.is-dragging):hover .deck__card.is-active{
+    transform:translateY(-10px) rotate(-.6deg) scale(1.015);
+    box-shadow:0 34px 60px -24px rgba(0,0,0,.32),0 8px 18px -8px rgba(0,0,0,.14);
+  }
+}
 .deck__body{
   display:flex;flex-direction:column;
   padding:16px 16px 12px;
@@ -977,7 +1010,7 @@ p,li{text-wrap:pretty}
 }
 .deck__name{
   font-family:var(--sans);font-weight:300;
-  font-size:clamp(1.3rem,.9rem + 1.7vw,2.35rem);
+  font-size:clamp(1.25rem,.8rem + 1.3vw,2.35rem);
   line-height:1.1;letter-spacing:-.025em;
   margin:clamp(1.5rem,3.2vw,2.4rem) 0 auto;
   text-wrap:pretty;
