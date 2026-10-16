@@ -26,6 +26,11 @@ Run `echo "$CLAUDE_CODE_REMOTE"`. If it prints `true`, `~` is a throwaway contai
 
 ## Steps
 
+0. **Local runs only: install yourself, then sync.** If `$CLAUDE_CODE_REMOTE` is not `true`:
+   - If `~/.claude/skills/wrap-up/SKILL.md` is missing or older than this file, `mkdir -p ~/.claude/skills && cp -R <repo>/.claude/skills/wrap-up ~/.claude/skills/`. That's what makes "wrap up" work in every other project; no terminal step needed from Matthew.
+   - Then do step 6 (sync the repo's cloud-written files into `~/.claude`) **before** anything else, so this session's learnings land on top of the merged ones.
+   - If this is a fresh session with no work to log (Matthew just opened the repo to do the sync), steps 1–5 are a no-op: skip the session log, say so in the receipt.
+
 1. **Gather.** Re-read the conversation from the top; don't trust memory of the start. `git log --oneline` for this session's commits, `git status` for anything uncommitted. Note PR, deploy and artifact links.
 
 2. **Sort each learning into one home.** For every thing learned, ask in order:
@@ -64,7 +69,13 @@ Run `echo "$CLAUDE_CODE_REMOTE"`. If it prints `true`, `~` is a throwaway contai
 
    No secrets, tokens, client-confidential or NDA detail. In the cloud this lands in git.
 
-6. **Local runs only: sync from the repo.** If the repo has `.claude/preferences-inbox.md`, `.claude/open-threads.md`, `.claude/rules/` or `.claude/wrap-ups/` written by a cloud session, merge them into the global homes (deduped), copy wrap-up files to `~/.claude/wrap-ups/<project>/`, then empty the inbox and open-threads files in the repo and mention they need committing.
+6. **Local runs only: sync from the repo.** `mkdir -p ~/.claude/rules ~/.claude/reference ~/.claude/wrap-ups/<project>` first, then:
+   - `.claude/preferences-inbox.md` → merge its bullets into `~/.claude/CLAUDE.md` under `## Working preferences` (create the file and section if missing; keep the sub-heads). Dedupe against existing lines. Then reduce the inbox to its header paragraph only.
+   - `.claude/rules/always-follow-rules.md` → merge into `~/.claude/rules/always-follow-rules.md`, deduped. Leave the repo copy in place (the project still wants it).
+   - `.claude/open-threads.md` → merge its `## <project>` section into `~/.claude/open-threads.md`. Then reduce the repo copy to its header paragraph plus an empty `## <project>` heading.
+   - `.claude/wrap-ups/*.md` → copy to `~/.claude/wrap-ups/<project>/` if not already there. Leave the repo copies.
+   - `docs/preference-panel.md` (or any doc a rule points at as a reference) → copy to `~/.claude/reference/<name>.md` if missing or older.
+   Commit the emptied inbox and open-threads files with a message like `Wrap-up: synced cloud notes into ~/.claude` and push; say so in the receipt.
 
 7. **Receipt.** Three to six lines in chat, not the whole file:
    - where the session log went (full path)
@@ -74,13 +85,6 @@ Run `echo "$CLAUDE_CODE_REMOTE"`. If it prints `true`, `~` is a throwaway contai
 
 ---
 
-### Installing on a new machine (one-off)
+### First run on a new machine
 
-The skill lives in this repo, so it only loads here. To have it in every project on this computer:
-
-```bash
-mkdir -p ~/.claude/skills ~/.claude/rules ~/.claude/reference ~/.claude/wrap-ups
-cp -R .claude/skills/wrap-up ~/.claude/skills/
-```
-
-Then run `wrap-up` once in this repo so the cloud-written files sync into `~/.claude`.
+Nothing to install by hand. Open Claude Code in this repo's folder (Claude Desktop → Code, or `claude` in Terminal) and say **wrap up**. Project skills in `.claude/skills/` load automatically for this repo, so step 0 runs: the skill copies itself to `~/.claude/skills/` for every other project, and syncs the cloud-written files into `~/.claude`.
