@@ -10,6 +10,7 @@ fonts: "Caveat:wght@500;600&family=EB+Garamond:ital,wght@0,400..600;1,400..600&f
 navBrandHref: "#top"
 navLinkBase: ""
 prefSerif: true
+prefDeckTitle: true
 ---
 {% extends "layouts/base.njk" %}
 
@@ -509,11 +510,11 @@ p,li{text-wrap:pretty}
 }
 
 /* ================================================ work in progress */
+/* a short note, so it takes the room its words need rather than a full
+   screen: centred in 100svh it left half a screen empty above and below */
 .wip{
   position:relative;z-index:2;
-  min-height:100vh;min-height:100svh;
-  display:grid;place-items:center;
-  padding:clamp(4rem,10vh,7rem) var(--pad);
+  padding:clamp(4rem,8vw,7rem) var(--pad);
   text-align:center;
 }
 .wip__inner{max-width:1100px;margin:0 auto}
@@ -538,7 +539,7 @@ p,li{text-wrap:pretty}
 .wip__copy strong{color:var(--ink);font-weight:600}
 .wip__copy em{font-family:var(--serif-2);font-style:italic;font-size:1.1em;color:var(--ink)}
 @media (max-width:760px){
-  .wip{min-height:auto;padding:clamp(4rem,14vh,6rem) var(--pad)}
+  .wip{padding:clamp(4rem,14vh,6rem) var(--pad)}
   .wip__title{font-size:var(--h2)}
 }
 
@@ -909,14 +910,15 @@ p,li{text-wrap:pretty}
   padding:clamp(4rem,8vw,7rem) 0 clamp(4rem,8vw,6rem);
   overflow:hidden;
 }
-.deck__head{padding:0 var(--pad) clamp(3.5rem,6.5vw,6.5rem);text-align:center}
+.deck__head{padding:0 var(--pad) clamp(4.5rem,8.5vw,8.5rem);text-align:center}
 /* the nav's Work link lands here now: cancel the section's own top padding
    so the title sits --anchor-gap below the fixed nav (same idea as #about) */
 .deck#work{scroll-margin-top:calc(var(--nav-h) + var(--anchor-gap) - clamp(4rem,8vw,7rem))}
 .deck__title{
-  font-family:var(--sans);font-weight:700;
-  font-size:var(--h2);
-  letter-spacing:-.035em;line-height:1.05;
+  /* lighter and a step down from --h2: the cards are the headline here */
+  font-family:var(--sans);font-weight:500;
+  font-size:calc(var(--h2) * .78);
+  letter-spacing:-.03em;line-height:1.08;
   margin:0 auto;color:var(--ink);
   text-wrap:balance;
 }
@@ -970,17 +972,24 @@ p,li{text-wrap:pretty}
   opacity:1;
 }
 .deck__card:not(.is-active){cursor:pointer}
+/* the drag hint (see the deck script): a short pull left, a swing over to
+   the right, then a spring back to the middle */
+.deck__cards.is-nudging-left .deck__card{transition:transform .42s cubic-bezier(.25,.8,.35,1),opacity .32s ease}
+.deck__cards.is-nudging-right .deck__card{transition:transform .42s cubic-bezier(.45,0,.35,1),opacity .32s ease}
+.deck__cards.is-nudging-back .deck__card{transition:transform .85s cubic-bezier(.3,1.6,.45,1),opacity .32s ease}
 /* hover: the fan breathes out — the cards behind spread further apart, the
    front one lifts toward you, and a peeking card you point at slides out a
-   little more. Springy overshoot on the way out so it feels alive; the
+   little more. Keyed to a card being hovered, not the stack: the stack is
+   the full width of the page, so :hover on it fanned the cards while the
+   pointer was still well out to the side. Springy overshoot on the way out so it feels alive; the
    plain .32s ease still drives drag-release and card changes. */
 @media (hover:hover) and (min-width:761px){
-  .deck__cards:not(.is-dragging):hover .deck__card{
+  .deck__cards:not(.is-dragging):has(.deck__card:hover) .deck__card{
     --sp:1.5;
     transition:transform .55s cubic-bezier(.3,1.45,.5,1),opacity .32s ease,box-shadow .45s var(--ease);
   }
-  .deck__cards:not(.is-dragging):hover .deck__card:not(.is-active):hover{--sp:1.85}
-  .deck__cards:not(.is-dragging):hover .deck__card.is-active{
+  .deck__cards:not(.is-dragging) .deck__card:not(.is-active):hover{--sp:1.85}
+  .deck__cards:not(.is-dragging):has(.deck__card:hover) .deck__card.is-active{
     transform:translateY(-10px) rotate(-.6deg) scale(1.015);
     box-shadow:0 34px 60px -24px rgba(0,0,0,.32),0 8px 18px -8px rgba(0,0,0,.14);
   }
@@ -1003,12 +1012,20 @@ p,li{text-wrap:pretty}
   flex:none;
 }
 .deck__name{
-  font-family:var(--sans);font-weight:300;
-  font-size:clamp(1.25rem,.8rem + 1.3vw,2.35rem);
-  line-height:1.1;letter-spacing:-.025em;
+  /* Inter Medium, a step down from the old Light: the thin strokes went soft
+     on the rotated cards. --dn-scale lets the panel's Card title trial
+     resize per face without touching the phone size below. */
+  font-family:var(--sans);font-weight:500;
+  --dn-scale:.85;
+  font-size:calc(clamp(1.25rem,.8rem + 1.3vw,2.35rem) * var(--dn-scale));
+  line-height:1.12;letter-spacing:-.03em;
   margin:clamp(1.5rem,3.2vw,2.4rem) 0 auto;
   text-wrap:pretty;
 }
+/* Card title trial (preference panel) — delete once a face is picked */
+html[data-pref-cardtitle="serif"] .deck__name{font-family:var(--serif-2);font-weight:400;letter-spacing:-.01em;line-height:1.04;--dn-scale:1.1}
+html[data-pref-cardtitle="bold"] .deck__name{font-weight:700;letter-spacing:-.035em;line-height:1.08;--dn-scale:.8}
+html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.025em;line-height:1.1;--dn-scale:1}
 .deck__cta{
   margin-top:1.25rem;
   display:inline-flex;align-items:center;gap:.5em;
@@ -1040,23 +1057,38 @@ p,li{text-wrap:pretty}
   letter-spacing:-.01em;
 }
 .deck__stat span{display:block;margin-top:.45em;font-size:.76rem;line-height:1.25;opacity:.88;max-width:14ch}
-/* pagination: a bar per card, the active one in that card's colour, with
-   quiet arrows either side */
+/* big, thin-stroked arrows pinned to the page edges either side of the
+   fan, level with its middle. The stage isn't rotated like the stack, so
+   they sit straight. Desktop only: below 1100px the fan needs the width. */
+.deck__stage{position:relative}
+.deck__arrow{
+  position:absolute;top:50%;z-index:20;
+  display:none;place-items:center;
+  width:112px;height:112px;margin-top:-56px;
+  background:none;border:0;padding:0;cursor:pointer;
+  color:var(--ink);opacity:.75;
+  transition:opacity .3s var(--ease),transform .35s var(--ease);
+}
+.deck__arrow svg{width:84px;height:42px;overflow:visible}
+.deck__arrow--prev{left:60px}
+.deck__arrow--next{right:60px}
+.deck__arrow:hover,.deck__arrow:focus-visible{opacity:1}
+.deck__arrow--prev:hover{transform:translateX(-6px)}
+.deck__arrow--next:hover{transform:translateX(6px)}
+@media (min-width:1100px){.deck__arrow{display:grid}}
+/* pagination: a bar per card, the active one in that card's colour */
 .deck__controls{
-  display:flex;align-items:center;justify-content:center;gap:clamp(1rem,2.5vw,2rem);
+  display:flex;align-items:center;justify-content:center;
   margin-top:clamp(2.75rem,5.5vw,4.75rem);padding:0 var(--pad);
 }
-.deck__dots{display:flex;gap:clamp(8px,1vw,14px);align-items:center}
+.deck__dots{display:flex;gap:clamp(5px,.6vw,8px);align-items:center}
 .deck__bar{
-  width:clamp(34px,6vw,76px);height:4px;border-radius:999px;
+  width:clamp(18px,2.4vw,30px);height:4px;border-radius:999px;
   background:var(--line);border:0;padding:0;cursor:pointer;
   transition:background .4s var(--ease),transform .3s var(--ease);
 }
 .deck__bar:hover{background:var(--dot)}
 .deck__bar.is-active{background:var(--active-c,var(--ink))}
-.deck__arrow{width:36px;height:36px;border-color:transparent;color:var(--muted)}
-.deck__arrow svg{width:16px;height:16px}
-.deck__arrow:hover{background:transparent;color:var(--ink);border-color:var(--line)}
 /* phone: a compact portrait card, about three-quarters of the screen wide,
    so the fan reads as a stack of cards with room around it rather than one
    card filling the viewport */
@@ -1077,16 +1109,14 @@ p,li{text-wrap:pretty}
   .deck__body{padding:.3rem .3rem .2rem}
   .deck__brand{font-size:.85rem;flex-wrap:wrap;row-gap:.2em}
   .deck__brand small{font-size:.7rem}
-  .deck__name{font-size:clamp(1.05rem,.85rem + 1.2vw,1.25rem);line-height:1.15;margin:.55rem 0 .7rem}
+  .deck__name{font-size:calc(clamp(1.05rem,.85rem + 1.2vw,1.25rem) * var(--dn-scale) / .85);line-height:1.15;margin:.55rem 0 .7rem}
   .deck__cta{margin-top:0;font-size:.82rem}
   .deck__stats{gap:.9rem;padding:.85rem}
   .deck__stat b{font-size:clamp(1.3rem,1rem + 1.4vw,1.6rem)}
   .deck__stat span{font-size:.68rem}
-  /* drag and the bars are enough on a phone */
-  .deck__arrow{display:none}
 }
 @media (prefers-reduced-motion:reduce){
-  .deck__card{transition:none}
+  .deck__card,.deck__cards[class*="is-nudging"] .deck__card{transition:none}
 }
 
 /* ========================================================== about */
@@ -2253,6 +2283,7 @@ p,li{text-wrap:pretty}
     <header class="deck__head">
       <h2 class="deck__title">See what shipped, <span class="it">and what it did.</span></h2>
     </header>
+    <div class="deck__stage">
     <div class="deck__cards" tabindex="0" aria-roledescription="carousel" aria-label="Case study cards — drag, use the arrows, or the arrow keys">
 
       <a class="proj deck__card" href="reps.html" style="--c:#a7c1b1;--on:#0a0a0a;--mark-bg:#0d0d0d;--mark-ink:#a7c1b1">
@@ -2346,14 +2377,15 @@ p,li{text-wrap:pretty}
       </a>
 
     </div>
+    <button class="deck__arrow deck__arrow--prev" type="button" aria-label="Previous case study">
+      <svg viewBox="0 0 64 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="62" y1="16" x2="2" y2="16"></line><polyline points="14 4 2 16 14 28"></polyline></svg>
+    </button>
+    <button class="deck__arrow deck__arrow--next" type="button" aria-label="Next case study">
+      <svg viewBox="0 0 64 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2" y1="16" x2="62" y2="16"></line><polyline points="50 4 62 16 50 28"></polyline></svg>
+    </button>
+    </div>
     <div class="deck__controls">
-      <button class="work__arrow deck__arrow deck__arrow--prev" type="button" aria-label="Previous case study">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      </button>
       <div class="deck__dots"></div>
-      <button class="work__arrow deck__arrow deck__arrow--next" type="button" aria-label="Next case study">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-      </button>
     </div>
   </section>
 
@@ -2422,7 +2454,7 @@ p,li{text-wrap:pretty}
   <!-- BEYOND THE SCREEN -->
   <section class="beyond" id="beyond" aria-label="Beyond the screen">
    <!-- the copy, once: the snake on screen is generated from this -->
-   <p class="beyond__sr">Beyond the screen. <b>The gym</b> — early, heavy, and the quietest hour of my day. <b>Mario Kart</b> — Super Nintendo then, Switch now. Still losing to my kids. <b>Family</b> — dad of two, plus Bella the Cavapoo. The best reason to log off on time. <b>Road bike</b> — too fast, too far. Apologies in advance. <b>Barbecue</b> — one of many. Ask the neighbours. <a href="cv.html">Now read my CV</a></p>
+   <p class="beyond__sr">Beyond the screen. <b>The gym</b> — early starts, heavy lifts, a bit of zen for the brain. <b>Family</b> — dad of two, plus Bella the Cavapoo. The best reason to log off on time. <b>Road bike</b> — my newest hobby. Apologies to anyone stuck behind me. <b>Barbecues</b> — I had five, I'm down to three, and they all get used. <a href="cv.html">Now read my CV</a></p>
    <div class="beyond__frame">
     <div class="beyond__stage" aria-hidden="true">
       <!-- Polaroids sit inside the snake's bends and move with it; --r = tilt,
@@ -2433,8 +2465,7 @@ p,li{text-wrap:pretty}
       <div class="beyond__pols">
         <figure class="beyond__pol" style="--r:-7deg"><span class="beyond__pol__ph"></span><figcaption>6am</figcaption></figure>
         <figure class="beyond__pol" data-depth="far" style="--r:5deg"><span class="beyond__pol__ph"></span><figcaption>the gym</figcaption></figure>
-        <figure class="beyond__pol" data-depth="near" style="--r:4deg"><span class="beyond__pol__ph"></span><figcaption>Rainbow Road</figcaption></figure>
-        <figure class="beyond__pol" style="--r:-6deg"><span class="beyond__pol__ph"></span><figcaption>Bella</figcaption></figure>
+        <figure class="beyond__pol" data-depth="near" style="--r:-6deg"><span class="beyond__pol__ph"></span><figcaption>Bella</figcaption></figure>
         <figure class="beyond__pol" data-depth="far" style="--r:6deg"><span class="beyond__pol__ph"></span><figcaption>the kids</figcaption></figure>
         <figure class="beyond__pol" style="--r:-5deg"><span class="beyond__pol__ph"></span><figcaption>Sunday, 6am</figcaption></figure>
         <figure class="beyond__pol" data-depth="near" style="--r:7deg"><span class="beyond__pol__ph"></span><figcaption>Box Hill</figcaption></figure>
@@ -3234,9 +3265,9 @@ p,li{text-wrap:pretty}
   const deck = document.querySelector(".deck");
   if (deck) {
     const stack = deck.querySelector(".deck__cards");
-    const cards = [...stack.querySelectorAll(".deck__card")];
     const prevBtn = deck.querySelector(".deck__arrow--prev");
     const nextBtn = deck.querySelector(".deck__arrow--next");
+    const cards = [...stack.querySelectorAll(".deck__card")];
     const dotsWrap = deck.querySelector(".deck__dots");
     const n = cards.length;
     let active = 0;
@@ -3290,6 +3321,9 @@ p,li{text-wrap:pretty}
     };
     // move one card along: d is 1 (next) or -1 (back)
     const step = (d) => {
+      learned = true;
+      clearTimeout(idle);
+      stopNudge();
       settle(d);
       active = (active + d + n) % n;
       render(d);
@@ -3327,6 +3361,7 @@ p,li{text-wrap:pretty}
     stack.addEventListener("pointerdown", (e) => {
       if (e.button) return;
       clearTimeout(riffle);
+      stopNudge();
       down = { x: e.clientX, y: e.clientY };
       dragged = false;
     });
@@ -3375,6 +3410,56 @@ p,li{text-wrap:pretty}
         go(cards.indexOf(card));
       }
     }, true);
+
+    // the hint that the cards can be dragged: once the deck is all but fully
+    // on screen, the front card is pulled a little to the left, swings over
+    // to the right, and springs back to the middle. It goes again after
+    // every 5s left alone, until the deck has actually been moved on (drag,
+    // arrows, bars or keys). Never while a card is under the pointer, never
+    // with reduced motion; any press on the stack cancels it.
+    let nudgeTimers = [], idle, inView = false, learned = false;
+    const NUDGE = ["is-nudging-left", "is-nudging-right", "is-nudging-back"];
+    // [--shift, class, ms until the next move]
+    const SWING = [[-0.05, NUDGE[0], 420], [0.05, NUDGE[1], 480], [0, NUDGE[2], 850]];
+    const later = (fn, ms) => nudgeTimers.push(setTimeout(fn, ms));
+    function stopNudge() {
+      nudgeTimers.forEach(clearTimeout);
+      nudgeTimers = [];
+      if (!stack.className.includes("is-nudging")) return;
+      stack.classList.remove(...NUDGE);
+      if (!down) stack.style.removeProperty("--shift");
+    }
+    const queue = (ms = 5000) => {
+      clearTimeout(idle);
+      if (!learned) idle = setTimeout(nudge, ms);
+    };
+    function nudge() {
+      if (learned || !inView) return;
+      if (down || document.hidden || stack.matches(":has(.deck__card:hover)")) return queue();
+      let t = 0;
+      SWING.forEach(([shift, cls, ms]) => {
+        later(() => {
+          stack.classList.remove(...NUDGE);
+          stack.classList.add(cls);
+          if (shift) { settle(shift < 0 ? 1 : -1); stack.style.setProperty("--shift", shift); }
+          else stack.style.removeProperty("--shift");
+        }, t);
+        t += ms;
+      });
+      later(() => { stopNudge(); queue(); }, t);
+    }
+    // a press or a key restarts the 5s
+    stack.addEventListener("pointerdown", () => queue());
+    stack.addEventListener("keydown", () => queue());
+    if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
+      new IntersectionObserver((entries) => {
+        const was = inView;
+        inView = entries[0].intersectionRatio >= 0.9;
+        if (inView && !was) queue(350);
+        if (!inView) clearTimeout(idle);
+      }, { threshold: [0, 0.9, 1] }).observe(stack);
+    }
+
     render();
   }
 
