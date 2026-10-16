@@ -5,6 +5,7 @@
 - PR #71 merged by me via the API after two "merged it" reports that never reached GitHub. Squash, title matching the repo's `… (#N)` history. Site live; Matthew confirmed the panel works with `?panel`.
 - PR #72: wrap-up skill made self-installing — step 0 copies itself to `~/.claude/skills/` and syncs the repo's cloud-written files; step 6 names each file's merge target; `CLAUDE.md` tells a fresh session the same. Merged.
 - Queued a one-click desktop task ("Run first local wrap-up sync into ~/.claude", task_03d9be4b) with the full sync procedure baked in, because Matthew was on his phone and couldn't paste terminal commands.
+- That task ran on the Mac: it installed the skill, merged everything into `~/.claude`, and (unable to push to `main`) opened PR #73 with the emptied inbox and open threads. #74 carries the same emptying plus this session's notes, so #73 is superseded.
 - Diagnosed "panel not working on live": closed-state and the `?panel` switch are per-browser `localStorage`; fix is `?panel` once per browser, or ⌥⇧P if hidden.
 
 ## Decided
@@ -19,7 +20,7 @@
 - `spawn_task` for anything that must run on the Mac; self-contained prompts → memory (Tooling)
 
 ## Open
-- [ ] carried into `.claude/open-threads.md` — local sync not yet seen on `main`; 13" check; serif pick; CV direction
+- [ ] carried into `.claude/open-threads.md` — 13" check; serif pick; CV direction
 
 ## Files touched
 - `.claude/skills/wrap-up/SKILL.md` — step 0 self-install, step 6 merge targets (#72)
