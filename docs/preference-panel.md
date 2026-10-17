@@ -1,8 +1,9 @@
 # Preference panel
 
-A small black pill that floats over the page while you review it. Drag it anywhere, close it, and use its two toggles:
+A small black pill that floats over the page while you review it. Drag it anywhere, close it, and use its three toggles:
 
 - **Layout** (sliders icon) — switch between design variants the project defines (feature layouts, a serif trial, whatever's being compared).
+- **Sections** (stacked-rows icon) — switch any section of the page off, or drag sections into a new order. Only shows on pages that mark sections up.
 - **Viewport** (laptop + phone icon) — preview the page at a real device size: Mobile, Small laptop, 15-inch, HD. Media queries fire for real, so it's an honest preview, not a zoomed screenshot.
 
 It's a review tool, not part of the site. Visitors never download it.
@@ -35,7 +36,7 @@ Build to this if you ever rebuild it from scratch.
 
 **Pill**
 - Fixed, vertical, `52px` wide, fully rounded, near-black (`#0b0b0c`), soft shadow.
-- Top to bottom: drag handle (2×3 dots), Layout button (sliders), Viewport button (laptop + phone), Close (×, dimmer).
+- Top to bottom: drag handle (2×3 dots), Layout button (sliders), Sections button (stacked rows), Viewport button (laptop + phone), Close (×, dimmer).
 - Starts on the right edge, vertically centred. Drag by the handle or any non-button part of the pill. Clamped 8px inside the window, re-clamped on resize.
 - The button whose popover is open gets a thin white ring.
 
@@ -65,6 +66,13 @@ Build to this if you ever rebuild it from scratch.
 - Each group writes `data-pref-<group>="<value>"` on `<html>`. The site's CSS does the rest. The first option is the default.
 - A small inline snippet applies saved choices before first paint, so there's no flash on reload.
 - Changes are pushed into the preview frame too, so you can compare a layout at phone size without leaving it.
+
+**Sections**
+- Mark any element `data-pref-section="Label"`; the label is what the popover shows. Sections can sit anywhere, but keep them siblings (in this repo, the children of `<main>`).
+- The popover lists them in their current order. Each row: a grip to drag (or focus it and use ↑/↓), the label (click to scroll to that section), and a green switch. Hidden rows go grey and struck through. **Reset order & visibility** puts the page back the way the HTML has it.
+- Hiding uses `display:none !important`, so a section's own `display` rule can't win. A section server-rendered with `hidden` (parked) starts switched off; switching it on removes `hidden`.
+- Reordering moves the real DOM nodes into each other's original slots (a comment marks each slot). Only out-of-place nodes move, since a move resets scroll positions inside them. A `resize` event fires afterwards so scroll-driven code re-measures.
+- Saved per page path in the same `localStorage` entry, applied on load and pushed into the viewport preview too. Visitors never get any of this, so the HTML stays the source of truth: nothing is deleted.
 
 **Known limits**
 - The iframe is a desktop browser at a narrow width. `(hover: hover)` still matches, there's no touch, and device pixel ratio is your screen's. Check real touch behaviour on a real phone.
@@ -148,6 +156,7 @@ window.PREF_PANEL = {
 
 - Script: `src/assets/pref-panel.js` (the canonical copy; re-paste it below when it changes)
 - Gate + config: `src/_includes/partials/pref-panel.njk`, included from `layouts/base.njk`, so every page has it
+- Sections: the homepage tags every child of `<main>` with `data-pref-section` (Hero, FYI note, Photo card intro, Brand marquee, Featured work rail, Case study deck, Work life timeline, About list, Beyond the screen, Testimonials).
 - Layout groups so far: **Accent serif** (EB Garamond trial vs Fraunces), on the homepage only (`prefSerif: true` in its front matter). CSS hook: `html[data-pref-serif="fraunces"]` in `src/index.njk`.
 
 ---
@@ -155,14 +164,16 @@ window.PREF_PANEL = {
 ## Full source: `pref-panel.js`
 
 <details>
-<summary>Show the script (no dependencies, ~300 lines)</summary>
+<summary>Show the script (no dependencies, ~450 lines)</summary>
 
 ```js
 /* Preference panel — a draggable, closable dev pill for reviewing a page.
 
-   Two toggles:
+   Three toggles:
    - Layout: site-defined option groups. Picking one sets
      <html data-pref-<group>="<value>">, and the site's own CSS reacts.
+   - Sections: every element marked data-pref-section="Label" on the page
+     can be switched off or dragged into a new order. Saved per page path.
    - Viewport: previews the page at a fixed device size (phone, 13" laptop,
      15" laptop, HD) in a same-origin iframe, scaled down to fit when the
      size is bigger than your window. Media queries fire for real because
@@ -202,8 +213,8 @@ window.PREF_PANEL = {
       try { localStorage.setItem(cfg.key, JSON.stringify(s)); } catch (e) {}
     },
   };
-  const state = Object.assign({ vp: "live", prefs: {}, pos: null, closed: false }, store.get());
-  const save = () => store.set({ vp: state.vp, prefs: state.prefs, pos: state.pos, closed: state.closed });
+  const state = Object.assign({ vp: "live", prefs: {}, pos: null, closed: false, sections: {} }, store.get());
+  const save = () => store.set({ vp: state.vp, prefs: state.prefs, pos: state.pos, closed: state.closed, sections: state.sections });
 
   const applyPrefs = (doc) => {
     if (!doc) return;
@@ -214,6 +225,56 @@ window.PREF_PANEL = {
   };
   applyPrefs(document);
 
+  // ------------------------------------------------------------ sections
+  // Each [data-pref-section] gets a comment marker in its original spot the
+  // first time round, so a new order is just "put the nth section at the nth
+  // marker". Parked sections (server-rendered with `hidden`) stay off until
+  // switched on; hiding uses display:none !important so a section's own
+  // display rule can't win.
+  const pageKey = location.pathname.replace(/\/index\.html$/, "/");
+  const secId = (el) => el.getAttribute("data-pref-section").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const secPrefs = () => state.sections[pageKey] || { order: [], vis: {} };
+  const secList = (doc) => {
+    if (!doc.__prefSecs) {
+      const els = [...doc.querySelectorAll("[data-pref-section]")];
+      doc.__prefSecs = els.map((el) => {
+        const mark = doc.createComment(" pref-section ");
+        el.parentNode.insertBefore(mark, el);
+        return { id: secId(el), label: el.getAttribute("data-pref-section"), el, mark, parked: el.hidden };
+      });
+    }
+    return doc.__prefSecs;
+  };
+  const secOrdered = (doc) => {
+    const list = secList(doc), saved = secPrefs().order.filter((id) => list.some((x) => x.id === id));
+    const out = saved.map((id) => list.find((x) => x.id === id));
+    // sections the saved order doesn't know about keep their original slot
+    list.forEach((x, i) => { if (!saved.includes(x.id)) out.splice(Math.min(i, out.length), 0, x); });
+    return out;
+  };
+  const secVisible = (x) => { const v = secPrefs().vis; return x.id in v ? v[x.id] : !x.parked; };
+  const applySections = (doc) => {
+    if (!doc || !doc.querySelector("[data-pref-section]")) return;
+    const list = secList(doc);
+    // only move what's out of place: a move resets scroll positions inside it
+    secOrdered(doc).forEach((x, i) => {
+      if (list[i].mark.nextSibling !== x.el) list[i].mark.parentNode.insertBefore(x.el, list[i].mark.nextSibling);
+    });
+    list.forEach((x) => {
+      if (secVisible(x)) {
+        x.el.hidden = false;
+        x.el.style.removeProperty("display");
+      } else x.el.style.setProperty("display", "none", "important");
+    });
+    // scroll-driven bits (deck, snake, reveals) re-measure on resize
+    doc.defaultView.dispatchEvent(new Event("resize"));
+  };
+  const setSections = (patch) => {
+    state.sections[pageKey] = Object.assign(secPrefs(), patch);
+    save();
+  };
+  applySections(document);
+
   // inside the preview frame: layout choices only
   if (window.self !== window.top) return;
 
@@ -221,6 +282,7 @@ window.PREF_PANEL = {
     grip: '<svg viewBox="0 0 12 18" width="12" height="18" aria-hidden="true"><g fill="currentColor"><circle cx="3" cy="3" r="1.6"/><circle cx="9" cy="3" r="1.6"/><circle cx="3" cy="9" r="1.6"/><circle cx="9" cy="9" r="1.6"/><circle cx="3" cy="15" r="1.6"/><circle cx="9" cy="15" r="1.6"/></g></svg>',
     layout: '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M8 3v6M8 15v6M16 3v2M16 11v10"/><circle cx="8" cy="12" r="2.6"/><circle cx="16" cy="8" r="2.6"/></svg>',
     viewport: '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="4.5" width="14" height="10" rx="1.6"/><path d="M1 18h17"/><rect x="18.5" y="8.5" width="4.5" height="10" rx="1.2"/></svg>',
+    sections: '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="5" rx="1.4"/><rect x="3.5" y="10.5" width="17" height="4" rx="1.2"/><rect x="3.5" y="16.5" width="17" height="4" rx="1.2"/></svg>',
     close: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   };
 
@@ -242,13 +304,31 @@ window.PREF_PANEL = {
 .btn:hover{background:rgba(255,255,255,.08)}
 .btn:active{transform:scale(.92)}
 .btn[aria-expanded="true"]{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55)}
-.btn:focus-visible,.opt:focus-visible{outline:2px solid #60a5fa;outline-offset:2px}
+.btn:focus-visible,.opt:focus-visible,.sec button:focus-visible,.reset:focus-visible{outline:2px solid #60a5fa;outline-offset:2px}
 .btn--close{color:#a1a1aa}
 .pop{position:fixed;z-index:2147483601;width:272px;padding:16px 10px 10px;border-radius:20px;background:var(--pop);
   box-shadow:0 24px 60px -12px rgba(0,0,0,.55),0 0 0 1px var(--line);
   opacity:0;transform:scale(.96);transform-origin:var(--origin,left center);pointer-events:none;
   transition:opacity .16s ease,transform .22s cubic-bezier(.2,.9,.3,1.2)}
 .pop.is-open{opacity:1;transform:none;pointer-events:auto}
+.pop{max-height:calc(100vh - 16px);overflow:auto;scrollbar-width:thin}
+.note{margin:-4px 10px 10px;font-size:12.5px;color:var(--sub)}
+.secs{list-style:none;margin:0;padding:0}
+.sec{display:flex;align-items:center;gap:6px;padding:4px 6px 4px 2px;border-radius:12px;background:var(--pop);transition:background .15s}
+.sec:hover{background:rgba(255,255,255,.05)}
+.sec.is-dragging{position:relative;z-index:1;background:#2a2a2f;box-shadow:0 10px 24px -8px rgba(0,0,0,.6)}
+.sec.is-off .sec__name{color:#71717a;text-decoration:line-through;text-decoration-color:rgba(255,255,255,.25)}
+.sec button{margin:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
+.sec__grip{display:grid;place-items:center;flex:none;width:28px;height:32px;padding:0;border-radius:8px;color:#6b6b72;cursor:grab;touch-action:none}
+.sec__grip:hover{color:#d4d4d8}
+.sec.is-dragging .sec__grip{cursor:grabbing}
+.sec__name{flex:1;min-width:0;padding:7px 4px;text-align:left;font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:8px}
+.sw{position:relative;flex:none;width:34px;height:20px;padding:0;border-radius:999px;background:#3f3f46 !important;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fafafa;transition:transform .2s}
+.sw[aria-checked="true"]{background:#22c55e !important}
+.sw[aria-checked="true"]::after{transform:translateX(14px)}
+.reset{display:block;margin:8px 10px 2px auto;padding:4px 6px;border:0;border-radius:8px;background:none;color:var(--sub);font:inherit;font-size:12.5px;cursor:pointer}
+.reset:hover{color:var(--txt)}
 .grp+.grp{margin-top:12px;padding-top:14px;border-top:1px solid var(--line)}
 .lbl{margin:0 10px 8px;font-size:11.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:#d4d4d8}
 .opt{display:block;width:100%;margin:0;padding:10px 12px;border:0;border-radius:13px;background:none;
@@ -282,16 +362,18 @@ kbd{font:inherit;padding:1px 6px;border-radius:6px;background:rgba(255,255,255,.
     <div class="pill" role="toolbar" aria-label="Preference panel" aria-orientation="vertical">
       <div class="grip" title="Drag">${ICON.grip}</div>
       ${cfg.groups.length ? `<button class="btn" data-pop="layout" aria-label="Layout options" aria-expanded="false" title="Layout">${ICON.layout}</button>` : ""}
+      ${document.querySelector("[data-pref-section]") ? `<button class="btn" data-pop="sections" aria-label="Sections" aria-expanded="false" title="Sections">${ICON.sections}</button>` : ""}
       <button class="btn" data-pop="viewport" aria-label="Viewport size" aria-expanded="false" title="Viewport">${ICON.viewport}</button>
       <button class="btn btn--close" aria-label="Close panel" title="Close (Alt+Shift+P brings it back)">${ICON.close}</button>
     </div>
     <div class="pop" data-for="layout" role="dialog" aria-label="Layout options"></div>
+    <div class="pop" data-for="sections" role="dialog" aria-label="Sections"></div>
     <div class="pop" data-for="viewport" role="dialog" aria-label="Viewport size"></div>
     <div class="toast" role="status"></div>
   </div>`;
   const $ = (s) => root.querySelector(s);
   const pill = $(".pill"), stage = $(".stage"), box = $(".box"), frame = $("iframe"), meta = $(".meta"), toast = $(".toast");
-  const pops = { layout: $('.pop[data-for="layout"]'), viewport: $('.pop[data-for="viewport"]') };
+  const pops = { layout: $('.pop[data-for="layout"]'), sections: $('.pop[data-for="sections"]'), viewport: $('.pop[data-for="viewport"]') };
   let openPop = null;
 
   const optionHTML = (group, o, checked) =>
@@ -304,6 +386,14 @@ kbd{font:inherit;padding:1px 6px;border-radius:6px;background:rgba(255,255,255,.
         return `<div class="grp" role="radiogroup" aria-label="${g.label}"><p class="lbl">${g.label}</p>${g.options.map((o) => optionHTML(g.id, o, o.value === cur)).join("")}</div>`;
       })
       .join("");
+    if (document.__prefSecs) {
+      pops.sections.innerHTML = `<div class="grp"><p class="lbl">Sections</p><p class="note">Drag to reorder · switch to hide</p><ul class="secs">${secOrdered(document)
+        .map((x) => {
+          const on = secVisible(x);
+          return `<li class="sec${on ? "" : " is-off"}" data-id="${x.id}"><button class="sec__grip" aria-label="Move ${x.label} (arrow keys)" title="Drag">${ICON.grip}</button><button class="sec__name" title="Scroll to ${x.label}">${x.label}</button><button class="sw" role="switch" aria-checked="${on}" aria-label="Show ${x.label}"></button></li>`;
+        })
+        .join("")}</ul><button class="reset">Reset order &amp; visibility</button></div>`;
+    }
     pops.viewport.innerHTML = `<div class="grp" role="radiogroup" aria-label="Viewport"><p class="lbl">Viewport</p>${cfg.viewports
       .map((v) => optionHTML("__vp", { value: v.id, title: v.title, sub: v.w ? `${v.w} × ${v.h} · ${v.sub}` : `${v.sub} · ${innerWidth} × ${innerHeight}` }, v.id === state.vp))
       .join("")}</div>`;
@@ -373,6 +463,7 @@ kbd{font:inherit;padding:1px 6px;border-radius:6px;background:rgba(255,255,255,.
     const b = e.target.closest("[data-pop]");
     if (b) return setPop(b.dataset.pop);
     if (e.target.closest(".btn--close")) return close();
+    if (sectionClick(e)) return;
     const o = e.target.closest(".opt");
     if (!o) return;
     if (o.dataset.group === "__vp") setViewport(o.dataset.value);
@@ -389,7 +480,75 @@ kbd{font:inherit;padding:1px 6px;border-radius:6px;background:rgba(255,255,255,.
   });
   // a click anywhere outside the panel (page or preview stage) closes the popover
   document.addEventListener("pointerdown", (e) => {
-    if (openPop && !e.composedPath().some((n) => n === pill || n === pops.layout || n === pops.viewport)) setPop(openPop);
+    if (openPop && !e.composedPath().some((n) => n === pill || Object.values(pops).includes(n))) setPop(openPop);
+  });
+
+  // ------------------------------------------------------------ sections popover
+  const applyEverywhere = () => {
+    applySections(document);
+    try { applySections(frame.contentDocument); } catch (err) {}
+  };
+  const commitOrder = () => {
+    setSections({ order: [...pops.sections.querySelectorAll(".sec")].map((li) => li.dataset.id) });
+    applyEverywhere();
+  };
+  const sectionClick = (e) => {
+    const li = e.target.closest(".sec");
+    if (e.target.closest(".reset")) {
+      delete state.sections[pageKey];
+      save();
+      applyEverywhere();
+      renderPops();
+      return true;
+    }
+    if (!li) return false;
+    const x = secList(document).find((s) => s.id === li.dataset.id);
+    if (e.target.closest(".sw")) {
+      setSections({ vis: Object.assign(secPrefs().vis, { [x.id]: !secVisible(x) }) });
+      applyEverywhere();
+      renderPops();
+      const again = pops.sections.querySelector(`.sec[data-id="${x.id}"] .sw`);
+      if (again && e.detail === 0) again.focus();
+    } else if (e.target.closest(".sec__name") && secVisible(x)) {
+      x.el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    return true;
+  };
+  // drag a row by its grip; rows swap as you pass their midpoints
+  let secDrag = null;
+  pops.sections.addEventListener("pointerdown", (e) => {
+    const grip = e.target.closest(".sec__grip");
+    if (!grip || e.button) return;
+    secDrag = grip.closest(".sec");
+    secDrag.classList.add("is-dragging");
+    grip.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  pops.sections.addEventListener("pointermove", (e) => {
+    if (!secDrag) return;
+    const rows = [...pops.sections.querySelectorAll(".sec")].filter((r) => r !== secDrag);
+    const before = rows.find((r) => { const b = r.getBoundingClientRect(); return e.clientY < b.top + b.height / 2; });
+    if (before) { if (secDrag.nextElementSibling !== before) before.before(secDrag); }
+    else if (rows.length && rows[rows.length - 1].nextElementSibling) rows[rows.length - 1].after(secDrag);
+  });
+  const endSecDrag = () => {
+    if (!secDrag) return;
+    secDrag.classList.remove("is-dragging");
+    secDrag = null;
+    commitOrder();
+  };
+  pops.sections.addEventListener("pointerup", endSecDrag);
+  pops.sections.addEventListener("pointercancel", endSecDrag);
+  pops.sections.addEventListener("keydown", (e) => {
+    const grip = e.target.closest(".sec__grip");
+    if (!grip || (e.key !== "ArrowUp" && e.key !== "ArrowDown")) return;
+    e.preventDefault();
+    const li = grip.closest(".sec");
+    const to = e.key === "ArrowUp" ? li.previousElementSibling : li.nextElementSibling;
+    if (!to) return;
+    e.key === "ArrowUp" ? to.before(li) : to.after(li);
+    commitOrder();
+    grip.focus();
   });
   stage.addEventListener("pointerdown", (e) => {
     if (openPop && e.target === stage) setPop(openPop);

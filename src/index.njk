@@ -543,6 +543,230 @@ p,li{text-wrap:pretty}
   .wip__title{font-size:var(--h2)}
 }
 
+/* ============================================================ hello */
+/* the photo card + short intro under the WIP note — the seed of the new
+   about section. Card leans left and straightens on hover. */
+.hello{
+  position:relative;z-index:2;
+  padding:clamp(2rem,4vw,4rem) var(--pad) clamp(5rem,9vw,8rem);
+}
+.hello__inner{
+  max-width:1180px;margin:0 auto;
+  display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);
+  gap:clamp(3rem,7vw,7rem);align-items:center;
+}
+.hello__card{
+  margin:0;padding:12px 12px 14px;
+  background:var(--paper);border-radius:34px;
+  box-shadow:0 1px 2px rgba(10,10,10,.06),0 24px 60px -18px rgba(10,10,10,.22),0 60px 120px -40px rgba(10,10,10,.18);
+  transform:rotate(-4deg);
+  transition:transform .6s var(--ease),box-shadow .6s var(--ease);
+}
+.hello__card.reveal-up{transform:rotate(-4deg) translateY(20px)}
+.is-revealed .hello__card.reveal-up{transform:rotate(-4deg)}
+.is-revealed .hello__card.reveal-up:hover{transform:rotate(-1.5deg) translateY(-6px);transition-delay:0s}
+.hello__photo{
+  position:relative;overflow:hidden;
+  aspect-ratio:4/5;border-radius:24px;background:#000;
+}
+.hello__photo img{display:block;width:100%;height:100%;object-fit:cover}
+.hello__photo-name{
+  position:absolute;top:1.4rem;left:0;right:0;
+  text-align:center;color:#fff;
+  font-weight:500;font-size:clamp(1.15rem,1rem + .5vw,1.5rem);letter-spacing:-.02em;
+}
+.hello__card-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  padding:14px 6px 0 8px;
+}
+.hello__who{display:flex;align-items:center;gap:.6rem;min-width:0}
+.hello__avatar{width:38px;height:38px;border-radius:50%;flex:none;background:#000}
+.hello__handle,.hello__site{display:block;line-height:1.25}
+.hello__handle{font-size:.9rem;font-weight:500;color:var(--ink)}
+.hello__site{font-size:.8rem;color:var(--muted-strong)}
+.hello__connect{
+  flex:none;display:inline-flex;align-items:center;gap:.4rem;
+  padding:.7rem 1.15rem;border-radius:999px;
+  background:var(--ink);color:#fff;text-decoration:none;
+  font-size:.9rem;font-weight:500;
+  transition:transform .3s var(--ease),background .3s var(--ease);
+}
+.hello__connect:hover{background:var(--ink-2);transform:translateY(-1px)}
+.hello__connect:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+.hello__name{
+  display:flex;align-items:center;gap:.9rem;
+  margin:0 0 clamp(1.25rem,2vw,1.75rem);
+  font-weight:600;font-size:clamp(1.3rem,1.1rem + .7vw,1.9rem);letter-spacing:-.025em;
+}
+.hello__sig{
+  font-family:var(--hand);font-weight:500;font-size:1.25em;line-height:1;
+  color:#3f5bd8;transform:rotate(-6deg) translateY(-.05em);
+}
+.hello__lead{
+  margin:0 0 clamp(1.5rem,2.5vw,2.25rem);
+  font-weight:500;font-size:clamp(1.5rem,1rem + 1.7vw,2.7rem);
+  line-height:1.2;letter-spacing:-.03em;color:var(--ink);
+  max-width:24ch;
+}
+.hello__body,.hello__aside{
+  margin:0;max-width:52ch;color:var(--muted-strong);
+  font-size:clamp(1rem,.95rem + .25vw,1.15rem);letter-spacing:-.01em;
+}
+.hello__body{line-height:1.7;margin-bottom:1.5rem}
+.hello__aside{line-height:1.6}
+.hello__aside b{font-weight:500;color:var(--ink-2)}
+.hello__body strong{font-weight:500;color:var(--ink)}
+.hello__body a{
+  color:var(--ink);text-decoration:underline;text-decoration-color:var(--dot);
+  text-underline-offset:.25em;text-decoration-thickness:1px;
+  transition:text-decoration-color .25s;
+}
+.hello__body a:hover{text-decoration-color:var(--ink)}
+@media (max-width:760px){
+  .hello__inner{grid-template-columns:1fr;gap:3.5rem}
+  .hello__card{width:min(100%,340px);margin:0 auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .hello__card,.hello__card.reveal-up,.is-revealed .hello__card.reveal-up:hover{transform:rotate(-4deg);transition:none}
+}
+
+/* ========================================================= work life */
+/* horizontal scrubber timeline: one bar per role on a year axis. --s/--e
+   are start/end years as decimals; bars before --from are clipped to the
+   left edge and fade in. Hatched bars are life, not work. Hover (or tap /
+   focus) a bar and three cards slide up from behind it and fan out, like
+   pulling photos out of a folder: the bar's face is a frosted ::before
+   sitting above the cards, with the label above both. */
+.tl{
+  position:relative;z-index:2;
+  --yr:150px;--from:2014;--to:2027;
+  padding:clamp(4rem,8vw,7rem) 0 clamp(3rem,6vw,5rem);
+}
+.tl__head{
+  max-width:1400px;margin:0 auto;padding:0 var(--pad);
+  display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+}
+.tl__title{margin:0;font-weight:600;font-size:clamp(1.1rem,1rem + .4vw,1.4rem);letter-spacing:-.02em}
+.tl__hint{margin:0;font-size:.85rem;color:var(--muted-strong)}
+.tl__scroller{
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
+  cursor:grab;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
+}
+.tl__scroller::-webkit-scrollbar{display:none}
+.tl__scroller.is-dragging{cursor:grabbing;user-select:none}
+.tl__scroller:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+.tl__track{
+  position:relative;
+  width:calc((var(--to) - var(--from)) * var(--yr));
+  padding:0 max(var(--pad),calc((100vw - 1400px) / 2 + var(--pad))) 0 max(var(--pad),calc((100vw - 1400px) / 2 + var(--pad)));
+  box-sizing:content-box;
+}
+.tl__axis{
+  list-style:none;margin:clamp(1.5rem,3vw,2.5rem) 0 0;padding:0;
+  position:relative;height:2.6rem;border-bottom:1px solid var(--line);
+}
+.tl__axis li{
+  position:absolute;bottom:0;left:calc((var(--y) - var(--from)) * var(--yr));
+  transform:translateX(-50%);padding-bottom:.9rem;
+  font-size:.9rem;color:var(--muted-strong);font-variant-numeric:tabular-nums;
+}
+.tl__axis li::after{content:"";position:absolute;left:50%;bottom:0;width:1px;height:.4rem;background:var(--line)}
+.tl__rows{
+  list-style:none;margin:0;padding:170px 0 1rem;
+  display:flex;flex-direction:column;gap:10px;
+}
+.tl__row{position:relative;height:46px}
+.tl__bar{
+  position:absolute;top:0;bottom:0;
+  left:calc((max(var(--s),var(--from)) - var(--from)) * var(--yr));
+  width:calc((min(var(--e),var(--to)) - max(var(--s),var(--from))) * var(--yr));
+  min-width:max-content;
+  display:flex;align-items:center;gap:.6rem;
+  padding:0 1rem;border-radius:10px;
+  font-size:.95rem;white-space:nowrap;
+  outline:none;cursor:default;isolation:isolate;
+}
+.tl__bar::before{
+  content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;
+  background:rgba(241,239,234,.86);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+  transition:background .25s var(--ease),box-shadow .25s var(--ease);
+}
+.tl__bar>:not(.tl__fan){position:relative;z-index:2}
+.tl__bar:hover,.tl__bar:focus-within{z-index:5}
+.tl__bar:hover::before,.tl__bar:focus-within::before{background:rgba(233,230,223,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 18px 30px -18px rgba(10,10,10,.35)}
+.tl__bar:focus-visible::before{box-shadow:0 0 0 2px var(--ink)}
+.tl__bar--now::before{
+  -webkit-mask-image:linear-gradient(90deg,#000 70%,transparent);
+          mask-image:linear-gradient(90deg,#000 70%,transparent);
+}
+.tl__bar--past::before{
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8rem);
+          mask-image:linear-gradient(90deg,transparent,#000 8rem);
+}
+.tl__bar--past{padding-left:3rem}
+.tl__bar--life::before{
+  background:repeating-linear-gradient(-45deg,rgba(243,241,236,.9) 0 7px,rgba(233,230,223,.9) 7px 14px);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+.tl__logo,.tl__mono{flex:none;width:20px;height:20px;border-radius:5px}
+.tl__mono{
+  display:grid;place-items:center;
+  background:var(--ink);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:-.02em;
+}
+.tl__dot{flex:none;width:6px;height:6px;border-radius:50%;background:#f59e0b}
+.tl__role{font-weight:500;color:var(--ink)}
+.tl__org{color:var(--muted-strong)}
+.tl__bar>.tl__when{
+  position:absolute;left:calc(100% + 1rem);top:50%;transform:translateY(-50%);
+  color:var(--muted-strong);font-variant-numeric:tabular-nums;
+}
+.tl__bar--now .tl__when{display:none}
+.tl__now{color:var(--muted-strong);font-variant-numeric:tabular-nums}
+
+/* the fan: cards wait tucked inside the bar, behind its frosted face, then
+   slide up and spread. Springy overshoot on the way out, quick on the way in. */
+.tl__fan{position:absolute;z-index:0;left:min(50%,170px);top:50%;width:0;height:0;pointer-events:none}
+.tl__card{
+  position:absolute;left:-75px;bottom:-40px;
+  width:150px;aspect-ratio:4/3;padding:3px;
+  background:var(--paper);border-radius:13px;
+  box-shadow:0 1px 2px rgba(10,10,10,.08),0 16px 34px -12px rgba(10,10,10,.35);
+  opacity:0;transform:translateY(0) scale(.9);transform-origin:50% 100%;
+  transition:transform .3s var(--ease),opacity .2s .1s;
+}
+.tl__bar:hover .tl__card,.tl__bar:focus-within .tl__card{
+  opacity:1;transition:transform .55s cubic-bezier(.3,1.45,.5,1),opacity .12s;
+}
+.tl__card img{display:block;width:100%;height:100%;object-fit:cover;border-radius:10px}
+.tl__card--txt{
+  display:grid;place-items:center;padding:.7rem;text-align:center;white-space:normal;text-wrap:balance;
+  font-size:.8rem;font-weight:600;line-height:1.2;letter-spacing:-.01em;color:var(--ink);
+  background:var(--paper) radial-gradient(circle,var(--line) 1px,transparent 1.4px) 0 0/10px 10px;
+}
+.tl__card--ph{background:repeating-linear-gradient(-45deg,#f6f4ef 0 6px,#eeebe4 6px 12px);color:var(--muted-strong);font-weight:500}
+.tl__bar:hover .tl__card:nth-child(1),.tl__bar:focus-within .tl__card:nth-child(1){transform:translate(-118px,-92px) rotate(-12deg)}
+.tl__bar:hover .tl__card:nth-child(2),.tl__bar:focus-within .tl__card:nth-child(2){transform:translate(0,-120px) rotate(0deg);transition-delay:.05s}
+.tl__bar:hover .tl__card:nth-child(3),.tl__bar:focus-within .tl__card:nth-child(3){transform:translate(118px,-90px) rotate(11deg);transition-delay:.1s}
+/* the middle card sits on top of its neighbours */
+.tl__card:nth-child(2){z-index:1}
+@media (max-width:760px){
+  .tl{--yr:105px}
+  .tl__hint{display:none}
+  .tl__card{width:112px;left:-56px;bottom:-30px}
+  .tl__bar:hover .tl__card:nth-child(1),.tl__bar:focus-within .tl__card:nth-child(1){transform:translate(-88px,-80px) rotate(-12deg)}
+  .tl__bar:hover .tl__card:nth-child(2),.tl__bar:focus-within .tl__card:nth-child(2){transform:translate(0,-100px) rotate(0deg)}
+  .tl__bar:hover .tl__card:nth-child(3),.tl__bar:focus-within .tl__card:nth-child(3){transform:translate(88px,-78px) rotate(11deg)}
+  .tl__rows{padding-top:150px}
+}
+@media (prefers-reduced-motion:reduce){
+  .tl__card{transition:opacity .2s}
+}
+
 /* ========================================================= marquee */
 .marquee{
   position:relative;z-index:2;
@@ -2004,7 +2228,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 <main>
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" data-pref-section="Hero">
     <h1 class="hero__title">
       <span class="ln"><span>Good web design isn't magic.</span></span>
       <span class="ln"><span class="it">It's just the work, done right.</span></span>
@@ -2073,15 +2297,41 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   </section>
 
   <!-- WORK IN PROGRESS -->
-  <section class="wip" aria-label="Work in progress">
+  <section class="wip" aria-label="Work in progress" data-pref-section="FYI note">
     <div class="wip__inner">
       <h2 class="wip__title">FYI, this site isn't finished. <span class="it">Not even close.</span></h2>
       <p class="wip__copy">Nothing here is complete. If you've come expecting my latest work, you'll be a bit disappointed — <em>it isn't up yet.</em> This stays until it is, mostly so it nags me to finish the thing in my spare time.</p>
     </div>
   </section>
 
+  <!-- HELLO — photo card + short intro; the start of the new about section -->
+  <section class="hello" id="hello" aria-labelledby="hello-name" data-reveal data-pref-section="Photo card intro">
+    <div class="hello__inner">
+      <figure class="hello__card reveal-up">
+        <div class="hello__photo">
+          <img src="assets/hello/matthew-card.webp" width="720" height="900" alt="Matthew grinning at the camera in a black cap and black T-shirt, lit against a black background." loading="lazy" />
+          <span class="hello__photo-name" aria-hidden="true">Matthew Luxford</span>
+        </div>
+        <figcaption class="hello__card-foot">
+          <span class="hello__who">
+            <img class="hello__avatar" src="assets/hello/matthew-avatar.webp" width="96" height="96" alt="" loading="lazy" />
+            <span><span class="hello__handle">@matthewluxford</span><span class="hello__site">LinkedIn</span></span>
+          </span>
+          <a class="hello__connect" href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener" aria-label="Connect on LinkedIn"><span aria-hidden="true">+</span> Connect</a>
+        </figcaption>
+      </figure>
+
+      <div class="hello__copy">
+        <h2 class="hello__name reveal-up" id="hello-name"><span class="hello__sig" aria-hidden="true">Matthew</span> Matthew Luxford</h2>
+        <p class="hello__lead reveal-up" style="--i:1">I'm a senior web designer. I make websites and products people actually use, from the first scrappy sketch to the version that goes live.</p>
+        <p class="hello__body reveal-up" style="--i:2">Right now I'm the only designer on consumer web at <strong>Kraken</strong>, across crypto, equities and tokenised stocks. On my own time I build small things like <a href="reps.html">Reps</a> and <a href="riverfox.html">River Fox</a>, mostly to see how far one designer and an AI can get.</p>
+        <p class="hello__aside reveal-up" style="--i:3"><b>Before that:</b> Spark44 for Jaguar Land Rover, Lifecake, The Collective, Yoppie.<br><b>Off-screen:</b> the gym, two kids, a Cavapoo called Bella, and three barbecues. All used.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- BRAND MARQUEE — parked while the deck is on trial; remove `hidden` to bring it back -->
-  <section class="marquee" aria-label="Selected clients" hidden>
+  <section class="marquee" aria-label="Selected clients" hidden data-pref-section="Brand marquee">
     <div class="marquee__track">
       <ul class="marquee__list">
         <li>Jaguar Land Rover</li><li>—</li><li>Google</li><li>—</li><li>Netflix</li><li>—</li><li>BBC</li><li>—</li><li>MTV</li><li>—</li><li>MasterCard</li><li>—</li><li>Bentley</li><li>—</li><li>Canon</li><li>—</li><li>Nestlé</li><li>—</li><li>Yoppie</li><li>—</li><li>Lifecake</li><li>—</li><li>The Collective</li><li>—</li>
@@ -2094,7 +2344,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 
   <!-- FEATURED WORK — the old rail, parked while the deck below is on trial.
        Remove `hidden` (and give it back id="work") to bring it back. -->
-  <section class="work" id="work-rail" data-reveal hidden>
+  <section class="work" id="work-rail" data-reveal hidden data-pref-section="Featured work rail">
     <header class="work__head">
       <h2 class="work__title reveal-h"><span class="rw"><span>Featured</span></span> <span class="rw"><span>work</span></span></h2>
       <span class="work__hint reveal-up">(scroll to explore)</span>
@@ -2279,7 +2529,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   </section>
 
   <!-- CASE STUDY DECK (trial alternative to the rail above) -->
-  <section class="deck" id="work" aria-label="Case studies">
+  <section class="deck" id="work" aria-label="Case studies" data-pref-section="Case study deck">
     <header class="deck__head">
       <h2 class="deck__title">See what shipped, <span class="it">and what it did.</span></h2>
     </header>
@@ -2389,8 +2639,62 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     </div>
   </section>
 
+  <!-- WORK LIFE — horizontal scrubber take on the About list below. Each bar's
+       --s/--e are start/end years (decimals for months). Hatched bars are
+       life, not work: the holidays are placeholders until real ones (and
+       photos for their fan cards) land. Fan images: assets/timeline/, 320×240. -->
+  <section class="tl" id="timeline" aria-labelledby="tl-title" data-reveal data-pref-section="Work life timeline">
+    <div class="tl__head">
+      <h2 class="tl__title" id="tl-title">Work life</h2>
+      <p class="tl__hint">Drag to scrub · hover a role</p>
+    </div>
+    <div class="tl__scroller" tabindex="0" aria-label="Work history, 2007 to now. Scrolls sideways.">
+      <div class="tl__track">
+        <ol class="tl__axis" aria-hidden="true"><li style="--y:2015">2015</li><li style="--y:2016">2016</li><li style="--y:2017">2017</li><li style="--y:2018">2018</li><li style="--y:2019">2019</li><li style="--y:2020">2020</li><li style="--y:2021">2021</li><li style="--y:2022">2022</li><li style="--y:2023">2023</li><li style="--y:2024">2024</li><li style="--y:2025">2025</li><li style="--y:2026">2026</li></ol>
+        <ol class="tl__rows">
+        <li class="tl__row"><div class="tl__bar tl__bar--now" style="--s:2022;--e:2027" tabindex="0">
+          <img class="tl__logo" src="assets/kraken-logo-sm.webp" alt="" width="20" height="20" loading="lazy" /><span class="tl__role">Senior Web Designer</span> <span class="tl__org">Kraken</span><span class="tl__now">2022 – now</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/kraken-logo.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">Consumer web, under NDA</span><span class="tl__card tl__card--txt">Crypto · equities · tokenised stocks</span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2024.55;--e:2024.6" tabindex="0">
+          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Holiday</span> <span class="tl__org">Placeholder</span><span class="tl__when">Summer 2024</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar" style="--s:2021.4;--e:2022" tabindex="0">
+          <span class="tl__mono" aria-hidden="true">Y</span><span class="tl__role">Head of Design &amp; Creative</span> <span class="tl__org">Yoppie</span><span class="tl__when">2021 – 2022</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt">Sole creative, nine-person team</span><span class="tl__card"><img src="assets/timeline/yoppie.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">Hired for a week. Stayed a year.</span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar" style="--s:2020.5;--e:2021.4" tabindex="0">
+          <span class="tl__mono" aria-hidden="true">44</span><span class="tl__role">Lead Designer</span> <span class="tl__org">Spark44 · JLR</span><span class="tl__when">2020 – 2021</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/jlr-defender.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/jlr-components.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">27 markets, one component library</span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar" style="--s:2020;--e:2020.9" tabindex="0">
+          <span class="tl__mono" aria-hidden="true">C</span><span class="tl__role">Lead Product Designer</span> <span class="tl__org">The Collective</span><span class="tl__when">2020 – 2021</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt">New booking flow</span><span class="tl__card"><img src="assets/timeline/collective.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">500% more enquiries in month one</span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2019.55;--e:2019.6" tabindex="0">
+          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Holiday</span> <span class="tl__org">Placeholder</span><span class="tl__when">Summer 2019</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar" style="--s:2018;--e:2020" tabindex="0">
+          <span class="tl__mono" aria-hidden="true">L</span><span class="tl__role">Lead Product Designer</span> <span class="tl__org">Lifecake</span><span class="tl__when">2018 – 2020</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/lifecake.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/lifecake-award.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/lifecake-web.webp" alt="" width="320" height="240" loading="lazy" /></span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar" style="--s:2016;--e:2018" tabindex="0">
+          <span class="tl__mono" aria-hidden="true">44</span><span class="tl__role">Senior Designer</span> <span class="tl__org">Spark44 · JLR</span><span class="tl__when">2016 – 2018</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/jlr-rangerover.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/jlr-help-me-choose.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/jlr-portal.webp" alt="" width="320" height="240" loading="lazy" /></span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar tl__bar--past" style="--s:2007;--e:2016" tabindex="0">
+          <span class="tl__mono" aria-hidden="true">✦</span><span class="tl__role">Agency &amp; in-house</span> <span class="tl__org">Ten London studios</span><span class="tl__when">2007 – 2016</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt">LONO</span><span class="tl__card tl__card--txt">OLIVER</span><span class="tl__card tl__card--txt">EY-Seren</span></span>
+        </div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <!-- ABOUT -->
-  <section class="about" id="about" data-reveal>
+  <section class="about" id="about" data-reveal data-pref-section="About list">
    <div class="about__inner">
     <div class="about__hover-img" aria-hidden="true">
       <img loading="lazy" alt="" />
@@ -2452,7 +2756,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   </section>
 
   <!-- BEYOND THE SCREEN -->
-  <section class="beyond" id="beyond" aria-label="Beyond the screen">
+  <section class="beyond" id="beyond" aria-label="Beyond the screen" data-pref-section="Beyond the screen">
    <!-- the copy, once: the snake on screen is generated from this -->
    <p class="beyond__sr">Beyond the screen. <b>The gym</b> — early starts, heavy lifts, a bit of zen for the brain. <b>Family</b> — dad of two, plus Bella the Cavapoo. The best reason to log off on time. <b>Road bike</b> — my newest hobby. Apologies to anyone stuck behind me. <b>Barbecues</b> — I had five, I'm down to three, and they all get used. <a href="cv.html">Now read my CV</a></p>
    <div class="beyond__frame">
@@ -2487,7 +2791,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   </section>
 
   <!-- TESTIMONIALS -->
-  <section class="testimonials" aria-label="Testimonials">
+  <section class="testimonials" aria-label="Testimonials" data-pref-section="Testimonials">
    <div class="testimonials__shell" data-nav-dark>
     <div class="testimonials__card">
 
@@ -3533,6 +3837,80 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         reset();
       });
     }
+  }
+
+  // Work life timeline: start at the recent end, and let a mouse drag scrub
+  // it sideways (touch and trackpads already scroll natively).
+  const tlScroller = document.querySelector(".tl__scroller");
+  if (tlScroller) {
+    // again once the DOM's settled: moving a section (the review panel can)
+    // resets its scroll
+    const toNow = () => { tlScroller.scrollLeft = tlScroller.scrollWidth; };
+    toNow();
+    addEventListener("DOMContentLoaded", toNow);
+    let tlDrag = null;
+    tlScroller.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse" || e.button) return;
+      tlDrag = { x: e.clientX, left: tlScroller.scrollLeft, moved: false };
+    });
+    addEventListener("pointermove", (e) => {
+      if (!tlDrag) return;
+      const dx = e.clientX - tlDrag.x;
+      if (!tlDrag.moved && Math.abs(dx) < 4) return;
+      tlDrag.moved = true;
+      tlScroller.classList.add("is-dragging");
+      tlScroller.scrollLeft = tlDrag.left - dx;
+    });
+    addEventListener("pointerup", () => {
+      tlDrag = null;
+      tlScroller.classList.remove("is-dragging");
+    });
+  }
+
+  // Work life fan: a short paper rustle as the cards come out. Synthesised
+  // (filtered noise bursts, one per card), so there's no file to load.
+  // Browsers only allow sound after the visitor has clicked or pressed a key
+  // somewhere, so it stays silent until then.
+  const tlBars = document.querySelectorAll(".tl__bar");
+  if (tlBars.length && (window.AudioContext || window.webkitAudioContext)) {
+    let actx = null;
+    const unlock = () => {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+    };
+    addEventListener("pointerdown", unlock, { passive: true });
+    addEventListener("keydown", unlock);
+    const rustle = () => {
+      if (!actx || actx.state !== "running") return;
+      const now = actx.currentTime;
+      [0, 0.05, 0.1].forEach((at, i) => {
+        const len = 0.13 + Math.random() * 0.05;
+        const n = Math.floor(actx.sampleRate * len);
+        const buf = actx.createBuffer(1, n, actx.sampleRate);
+        const d = buf.getChannelData(0);
+        // crackly noise: mostly soft hiss with sparse louder grains
+        for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * (Math.random() < 0.18 ? 1 : 0.3);
+        const src = actx.createBufferSource();
+        src.buffer = buf;
+        const hp = actx.createBiquadFilter();
+        hp.type = "highpass";
+        hp.frequency.value = 1400;
+        const bp = actx.createBiquadFilter();
+        bp.type = "bandpass";
+        bp.frequency.value = 3200 + i * 700 + Math.random() * 600;
+        bp.Q.value = 0.7;
+        const g = actx.createGain();
+        g.gain.setValueAtTime(0.0001, now + at);
+        g.gain.exponentialRampToValueAtTime(0.06, now + at + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + at + len);
+        src.connect(hp).connect(bp).connect(g).connect(actx.destination);
+        src.start(now + at);
+      });
+    };
+    tlBars.forEach((bar) => {
+      bar.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") rustle(); });
+      bar.addEventListener("focus", rustle);
+    });
   }
 
   // GA4: case study card clicks

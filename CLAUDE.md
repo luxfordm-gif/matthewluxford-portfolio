@@ -13,7 +13,7 @@ npm run check       # run the shared-CSS drift check (also runs in CI)
 
 ## Site map (source files)
 
-- `src/index.njk` — homepage (hero, work rail, about, testimonials, contact, lux-large-footer)
+- `src/index.njk` — homepage (hero, FYI note, photo-card intro `.hello`, work deck, "Work life" scrubber timeline `.tl`, about list, beyond, testimonials, lux-large-footer)
 - `src/cv.njk` — full CV / résumé (nav-cv variant, secret-footer)
 - `src/jlr.html` — Jaguar Land Rover case study
 - `src/lifecake.html` — Lifecake case study
@@ -42,6 +42,7 @@ A draggable pill with Layout and Viewport toggles for reviewing pages at Mobile 
 - Script: `src/assets/pref-panel.js`. Gate + config: `src/_includes/partials/pref-panel.njk`, included from `layouts/base.njk` so every page has it.
 - Loads only on localhost / LAN / `*.netlify.app`, or on the live site after visiting with `?panel` (`?panel=off` forgets). Visitors never download it, so there's nothing to strip before going live.
 - Layout groups write `data-pref-<group>` on `<html>`; add CSS against that. The homepage opts into the **Accent serif** group with `prefSerif: true` in its front matter (`html[data-pref-serif="fraunces"]` hook in `src/index.njk`). Delete the group once the serif is chosen.
+- **Sections** button: every homepage section carries `data-pref-section="Label"`, so it can be switched off or dragged into a new order from the panel (saved per page, review-only). Don't delete or hide sections in the HTML to try a layout; use the panel. Tag new top-level sections the same way.
 - Close with × or ⌥⇧P; same shortcut brings it back.
 
 ## Type scale on laptops
