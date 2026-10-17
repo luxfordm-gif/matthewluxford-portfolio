@@ -298,8 +298,10 @@ p,li{text-wrap:pretty}
   transform:translateY(-18px) rotate(0deg)!important;
   box-shadow:0 50px 80px -25px rgba(0,0,0,.35);z-index:10;
 }
+/* desktop: the fan stacks left to right, each card over the one to its
+   left (1, 2, profile, AC/DC, definition). Phones restack below. */
 .fcard--1{
-  left:50%;margin-left:-458px;top:54px;
+  left:50%;margin-left:-458px;top:54px;z-index:1;
   --r:-8deg;--stack-tx:349px;--stack-ty:-54px;--stack-r:-2deg;
   background:#fde68a;
   font-family:var(--hand);font-size:1.12rem;line-height:1.3;color:#3a2e0d;
@@ -310,7 +312,7 @@ p,li{text-wrap:pretty}
 .fcard--1 ul li{display:flex;gap:5px;font-family:var(--hand);font-size:18px;line-height:1.2;text-wrap:balance}
 .fcard--1 ul li b{font-weight:700;margin-right:2px}
 .fcard--2{
-  left:50%;margin-left:-270px;top:18px;
+  left:50%;margin-left:-270px;top:18px;z-index:2;
   --r:-3deg;--stack-tx:161px;--stack-ty:-18px;--stack-r:3deg;
   color:var(--paper);
   padding:0;overflow:hidden;
@@ -373,7 +375,7 @@ p,li{text-wrap:pretty}
 }
 .me__connect:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .fcard--4{
-  left:50%;margin-left:215px;top:42px;
+  left:50%;margin-left:215px;top:42px;z-index:7; /* over AC/DC */
   --r:7deg;--stack-tx:-362px;--stack-ty:-42px;--stack-r:4deg;
   background:var(--paper);
   padding:16px 16px 18px;
@@ -507,6 +509,7 @@ p,li{text-wrap:pretty}
     margin:0 auto;
   }
   .fcard{left:50%}
+  .fcard--1,.fcard--2,.fcard--4{z-index:auto}
   .fcard--1{
     margin-left:-129px;top:0;
     --r:-7deg;--stack-tx:20px;--stack-ty:170px;--stack-r:-2deg;
@@ -697,9 +700,11 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
 .tl__scroller{position:relative;z-index:2}
 /* the needle: where you are along the years. A hairline behind the bars
    with a dark pill on the axis reading the month and year under it. */
-.tl__needle{position:absolute;z-index:1;top:0;left:0;width:0;height:0;pointer-events:none}
+/* no z-index of its own, so the hairline can sit behind the bars while the
+   pill rides over the year labels on the axis */
+.tl__needle{position:absolute;top:0;left:0;width:0;height:0;pointer-events:none}
 .tl__needle::before{
-  content:"";position:absolute;left:-.75px;top:1.4rem;bottom:0;width:1.5px;border-radius:2px;
+  content:"";position:absolute;z-index:1;left:-.75px;top:1.4rem;bottom:0;width:1.5px;border-radius:2px;
   background:linear-gradient(var(--ink),rgba(10,10,10,0));
 }
 .tl__needle-label{
@@ -746,7 +751,11 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   padding:0 1rem;border-radius:10px;
   font-size:.95rem;white-space:nowrap;
   outline:none;cursor:default;isolation:isolate;
+  /* the open bar comes to the top at once; closing, it stays there until its
+     cards have vanished so they never drop behind (or across) a neighbour */
+  z-index:0;transition:z-index 0s .12s;
 }
+.tl__bar.is-open,.tl__bar:focus-within{z-index:6;transition-delay:0s}
 .tl__bar::before{
   content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;
   background:rgba(241,239,234,.86);
@@ -755,7 +764,6 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   transition:background .25s var(--ease),box-shadow .25s var(--ease);
 }
 .tl__bar>:not(.tl__fan){position:relative;z-index:2}
-.tl__bar.is-open,.tl__bar:focus-within{z-index:5}
 .tl__bar.is-open::before,.tl__bar:focus-within::before{background:rgba(233,230,223,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 18px 30px -18px rgba(10,10,10,.35)}
 .tl__bar:focus-visible::before{box-shadow:0 0 0 2px var(--ink)}
 .tl__bar--now::before{
@@ -778,8 +786,6 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
 }
 .tl__bar--life>.tl__dot{position:absolute;left:3px;top:50%;translate:0 -50%;z-index:2}
 .tl__bar--life>.tl__role{margin-left:calc(max(12px,100%) + .7rem);white-space:nowrap}
-.tl__bar--life>.tl__org{white-space:nowrap}
-.tl__bar.tl__bar--life>.tl__when{left:auto;position:static;transform:none;margin-left:.3rem;white-space:nowrap}
 .tl__logo,.tl__mono{flex:none;width:20px;height:20px;border-radius:5px}
 .tl__mono{
   display:grid;place-items:center;
@@ -788,6 +794,9 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
 .tl__dot{flex:none;width:6px;height:6px;border-radius:50%;background:#f59e0b}
 .tl__role{font-weight:500;color:var(--ink)}
 .tl__org{color:var(--muted-strong)}
+/* a job leads with the company, the role after it in grey */
+.tl__bar:not(.tl__bar--life)>.tl__org{font-weight:500;color:var(--ink)}
+.tl__bar:not(.tl__bar--life)>.tl__role{font-weight:400;color:var(--muted-strong)}
 .tl__bar>.tl__when{
   position:absolute;left:calc(100% + 1rem);top:50%;transform:translateY(-50%);
   color:var(--muted-strong);font-variant-numeric:tabular-nums;
@@ -796,18 +805,19 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
 .tl__now{color:var(--muted-strong);font-variant-numeric:tabular-nums}
 
 /* the fan: cards wait tucked inside the bar, behind its frosted face, then
-   slide up and spread. Springy overshoot on the way out, quick on the way in. */
+   pop up over everything with a springy overshoot, and on the way back
+   shrink and vanish at once rather than lingering over other rows. */
 .tl__fan{position:absolute;z-index:0;left:min(50%,170px);top:50%;width:0;height:0;pointer-events:none}
 .tl__card{
   position:absolute;left:-75px;bottom:-40px;
   width:150px;aspect-ratio:4/3;padding:3px;
   background:var(--paper);border-radius:13px;
   box-shadow:0 1px 2px rgba(10,10,10,.08),0 16px 34px -12px rgba(10,10,10,.35);
-  opacity:0;transform:translateY(0) scale(.9);transform-origin:50% 100%;
-  transition:transform .3s var(--ease),opacity .2s .1s;
+  opacity:0;transform:scale(.7);transform-origin:50% 100%;
+  transition:transform .18s cubic-bezier(.4,0,1,1),opacity .1s linear;
 }
 .tl__bar.is-open .tl__card,.tl__bar:focus-within .tl__card{
-  opacity:1;transition:transform .55s cubic-bezier(.3,1.45,.5,1),opacity .12s;
+  opacity:1;transition:transform .5s cubic-bezier(.3,1.5,.5,1),opacity .08s;
 }
 .tl__card img{display:block;width:100%;height:100%;object-fit:cover;border-radius:10px}
 .tl__card--txt{
@@ -1644,6 +1654,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 }
 .beyond__pol[data-depth="near"]{--s:1.15;--b:1px;z-index:2}
 .beyond__pol[data-depth="far"]{--s:.78;--b:.5px;opacity:.94}
+/* desktop: the plain and far cards a touch (8%) bigger; the near ones are
+   big enough already */
+@media (min-width:881px){
+  .beyond__pol{--s:1.08}
+  .beyond__pol[data-depth="far"]{--s:.84}
+}
 .beyond__pol img,
 .beyond__pol__ph{
   /* height:auto so the img's height attribute doesn't beat aspect-ratio */
@@ -2533,43 +2549,43 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         <ol class="tl__axis" aria-hidden="true"><li style="--y:2015">2015</li><li style="--y:2016">2016</li><li style="--y:2017">2017</li><li style="--y:2018">2018</li><li style="--y:2019">2019</li><li style="--y:2020">2020</li><li style="--y:2021">2021</li><li style="--y:2022">2022</li><li style="--y:2023">2023</li><li style="--y:2024">2024</li><li style="--y:2025">2025</li><li style="--y:2026">2026</li></ol>
         <ol class="tl__rows">
         <li class="tl__row"><div class="tl__bar tl__bar--now" style="--s:2022;--e:2027" tabindex="0">
-          <img class="tl__logo" src="assets/kraken-logo-sm.webp" alt="" width="20" height="20" loading="lazy" /><span class="tl__role">Senior Web Designer</span> <span class="tl__org">Kraken</span><span class="tl__now">2022 – now</span>
+          <img class="tl__logo" src="assets/kraken-logo-sm.webp" alt="" width="20" height="20" loading="lazy" /><span class="tl__org">Kraken</span> <span class="tl__role">Senior Web Designer</span><span class="tl__now">2022 – now</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/kraken-logo.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">Consumer web, under NDA</span><span class="tl__card tl__card--txt">Crypto · equities · tokenised stocks</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2026.17;--e:2026.2" tabindex="0">
-          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Skiing</span> <span class="tl__org">with the family</span><span class="tl__when">March 2026</span>
+          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Skiing</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2024.55;--e:2024.6" tabindex="0">
-          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Holiday</span> <span class="tl__org">Placeholder</span><span class="tl__when">Summer 2024</span>
+          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Family holiday</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar" style="--s:2021.4;--e:2022" tabindex="0">
-          <span class="tl__mono" aria-hidden="true">Y</span><span class="tl__role">Head of Design &amp; Creative</span> <span class="tl__org">Yoppie</span><span class="tl__when">2021 – 2022</span>
+          <span class="tl__mono" aria-hidden="true">Y</span><span class="tl__org">Yoppie</span> <span class="tl__role">Head of Design &amp; Creative</span><span class="tl__when">2021 – 2022</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt">Sole creative, nine-person team</span><span class="tl__card"><img src="assets/timeline/yoppie.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">Hired for a week. Stayed a year.</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar" style="--s:2020.5;--e:2021.4" tabindex="0">
-          <span class="tl__mono" aria-hidden="true">44</span><span class="tl__role">Lead Designer</span> <span class="tl__org">Spark44 · JLR</span><span class="tl__when">2020 – 2021</span>
+          <span class="tl__mono" aria-hidden="true">44</span><span class="tl__org">Spark44 · JLR</span> <span class="tl__role">Lead Designer</span><span class="tl__when">2020 – 2021</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/jlr-defender.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/jlr-components.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">27 markets, one component library</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar" style="--s:2020;--e:2020.9" tabindex="0">
-          <span class="tl__mono" aria-hidden="true">C</span><span class="tl__role">Lead Product Designer</span> <span class="tl__org">The Collective</span><span class="tl__when">2020 – 2021</span>
+          <span class="tl__mono" aria-hidden="true">C</span><span class="tl__org">The Collective</span> <span class="tl__role">Lead Product Designer</span><span class="tl__when">2020 – 2021</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt">New booking flow</span><span class="tl__card"><img src="assets/timeline/collective.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">500% more enquiries in month one</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2019.55;--e:2019.6" tabindex="0">
-          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Holiday</span> <span class="tl__org">Placeholder</span><span class="tl__when">Summer 2019</span>
+          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Family holiday</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span><span class="tl__card tl__card--txt tl__card--ph">Holiday photo</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar" style="--s:2018;--e:2020" tabindex="0">
-          <span class="tl__mono" aria-hidden="true">L</span><span class="tl__role">Lead Product Designer</span> <span class="tl__org">Lifecake</span><span class="tl__when">2018 – 2020</span>
+          <span class="tl__mono" aria-hidden="true">L</span><span class="tl__org">Lifecake</span> <span class="tl__role">Lead Product Designer</span><span class="tl__when">2018 – 2020</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/lifecake.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/lifecake-award.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/lifecake-web.webp" alt="" width="320" height="240" loading="lazy" /></span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar" style="--s:2016;--e:2018" tabindex="0">
-          <span class="tl__mono" aria-hidden="true">44</span><span class="tl__role">Senior Designer</span> <span class="tl__org">Spark44 · JLR</span><span class="tl__when">2016 – 2018</span>
+          <span class="tl__mono" aria-hidden="true">44</span><span class="tl__org">Spark44 · JLR</span> <span class="tl__role">Senior Designer</span><span class="tl__when">2016 – 2018</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/jlr-rangerover.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/jlr-help-me-choose.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card"><img src="assets/timeline/jlr-portal.webp" alt="" width="320" height="240" loading="lazy" /></span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar tl__bar--past" style="--s:2007;--e:2016" tabindex="0">
-          <span class="tl__mono" aria-hidden="true">✦</span><span class="tl__role">Agency &amp; in-house</span> <span class="tl__org">Ten London studios</span><span class="tl__when">2007 – 2016</span>
+          <span class="tl__mono" aria-hidden="true">✦</span><span class="tl__org">Ten London studios</span> <span class="tl__role">Agency &amp; in-house</span><span class="tl__when">2007 – 2016</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt">LONO</span><span class="tl__card tl__card--txt">OLIVER</span><span class="tl__card tl__card--txt">EY-Seren</span></span>
         </div></li>
         </ol>
@@ -2592,14 +2608,14 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
            image pipeline in CLAUDE.md) and swap the .beyond__pol__ph span for
            <img src="assets/beyond/lifting.webp" alt="" loading="lazy" />. -->
       <div class="beyond__pols">
-        <figure class="beyond__pol" style="--r:-7deg"><img src="assets/beyond/family-golden-hour.webp" width="640" height="640" alt="The family on a hotel balcony at golden hour: Matthew perched on the rail with his wife and two kids in sage green, palm tree and sea behind." loading="lazy" /><figcaption>golden hour</figcaption></figure>
-        <figure class="beyond__pol" data-depth="far" style="--r:5deg"><img src="assets/beyond/leg-press-gym.webp" width="640" height="640" alt="Matthew on a loaded leg press in an empty gym, shot low from the rubber floor, plates stacked on the rack." loading="lazy" /><figcaption>the gym</figcaption></figure>
+        <figure class="beyond__pol" style="--r:-7deg"><img src="assets/beyond/family-golden-hour.webp" width="640" height="640" alt="The family on a hotel balcony at golden hour: Matthew perched on the rail with his wife and two kids in sage green, palm tree and sea behind." loading="lazy" /><figcaption>Family holiday</figcaption></figure>
+        <figure class="beyond__pol" data-depth="far" style="--r:5deg"><img src="assets/beyond/leg-press-gym.webp" width="640" height="640" alt="Matthew on a loaded leg press in an empty gym, shot low from the rubber floor, plates stacked on the rack." loading="lazy" /><figcaption>The gym</figcaption></figure>
         <figure class="beyond__pol" data-depth="near" style="--r:-6deg"><img src="assets/beyond/bella-cavapoo-woods.webp" width="640" height="640" alt="Bella the Cavapoo in a purple fleece, looking up from a muddy woodland path, surrounded by the family's wellies." loading="lazy" /><figcaption>Bella</figcaption></figure>
-        <figure class="beyond__pol" data-depth="far" style="--r:6deg"><img src="assets/beyond/family-ice-rink.webp" width="640" height="640" alt="Family selfie at an outdoor ice rink: Matthew grinning with his two kids and wife, a big Christmas tree and carousel behind." loading="lazy" /><figcaption>the kids</figcaption></figure>
+        <figure class="beyond__pol" data-depth="far" style="--r:6deg"><img src="assets/beyond/family-ice-rink.webp" width="640" height="640" alt="Family selfie at an outdoor ice rink: Matthew grinning with his two kids and wife, a big Christmas tree and carousel behind." loading="lazy" /><figcaption>The kids</figcaption></figure>
         <figure class="beyond__pol" style="--r:-5deg"><img src="assets/beyond/fremont-street-vegas.webp" width="640" height="640" alt="Fremont Street in Las Vegas at night: the Fremont and 4 Queens casino signs blazing under the LED canopy, crowds below." loading="lazy" /><figcaption>Vegas, baby</figcaption></figure>
-        <figure class="beyond__pol" data-depth="near" style="--r:7deg"><img src="assets/beyond/road-bike-box-hill.webp" width="640" height="640" alt="A grey road bike with deep-section carbon wheels leaning against an ivy-covered brick wall in evening sun." loading="lazy" /><figcaption>my bike</figcaption></figure>
-        <figure class="beyond__pol" style="--r:-4deg"><img src="assets/beyond/kamado-and-traeger.webp" width="640" height="640" alt="A red ceramic kamado and a black Traeger pellet grill side by side on a brick driveway outside the garage." loading="lazy" /><figcaption>low and slow</figcaption></figure>
-        <figure class="beyond__pol" data-depth="near" style="--r:-5deg"><img src="assets/beyond/family-ski-trip.webp" width="640" height="640" alt="Family selfie on the slopes: Matthew in a black ski jacket with his wife and two kids in helmets and goggles, snowy chalets and mountains behind." loading="lazy" /><figcaption>ski trip</figcaption></figure>
+        <figure class="beyond__pol" data-depth="near" style="--r:7deg"><img src="assets/beyond/road-bike-box-hill.webp" width="640" height="640" alt="A grey road bike with deep-section carbon wheels leaning against an ivy-covered brick wall in evening sun." loading="lazy" /><figcaption>My bike</figcaption></figure>
+        <figure class="beyond__pol" style="--r:-4deg"><img src="assets/beyond/kamado-and-traeger.webp" width="640" height="640" alt="A red ceramic kamado and a black Traeger pellet grill side by side on a brick driveway outside the garage." loading="lazy" /><figcaption>Low and slow</figcaption></figure>
+        <figure class="beyond__pol" data-depth="near" style="--r:-5deg"><img src="assets/beyond/family-ski-trip.webp" width="640" height="640" alt="Family selfie on the slopes: Matthew in a black ski jacket with his wife and two kids in helmets and goggles, snowy chalets and mountains behind." loading="lazy" /><figcaption>Ski trip</figcaption></figure>
       </div>
       <!-- the snake: path shape and text are filled in by JS -->
       <svg class="beyond__svg" focusable="false">
@@ -3062,7 +3078,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   // Sound effects, synthesised from filtered noise so there are no files to
   // load. Browsers only allow sound after the visitor has clicked or pressed
   // a key somewhere, so until then every call is silent.
-  //  - rustle: three quick crackly bursts, photos pulled from a pile
+  //  - pop: a soft, short paper puff, a timeline row's photos popping up
   //  - folder: a low card-stock slide with a soft tap as it lands
   //  - lift: a light, airy flick, a card picked up off the table
   //  - tick: a lens focus-ring detent, tiny and dry
@@ -3072,7 +3088,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   //  - shutter: a camera shutter, two quick clicks (open, close)
   const sfx = (() => {
     const AC = window.AudioContext || window.webkitAudioContext;
-    const quiet = { rustle() {}, folder() {}, lift() {}, tick() {}, detent() {}, shutter() {}, pluck() {}, thud() {} };
+    const quiet = { pop() {}, folder() {}, lift() {}, tick() {}, detent() {}, shutter() {}, pluck() {}, thud() {} };
     if (!AC) return quiet;
     let ctx = null;
     const unlock = () => {
@@ -3108,12 +3124,14 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       src.start(t);
     };
     return {
-      rustle() {
+      pop() {
         if (!ready()) return;
-        [0, 0.05, 0.1].forEach((at, i) => burst({
-          at, len: 0.13 + Math.random() * 0.05, grain: 0.18, attack: 0.012, peak: 0.06,
-          filters: [["highpass", 1400], ["bandpass", 3200 + i * 700 + Math.random() * 600]],
-        }));
+        // a soft paper puff, low and short: filtered noise like the others,
+        // under a tenth of a second so hovering down the rows doesn't drone
+        burst({
+          len: 0.05, attack: 0.005, peak: 0.045,
+          filters: [["bandpass", 950 + Math.random() * 200, 1.2, 520], ["lowpass", 2200]],
+        });
       },
       folder() {
         if (!ready()) return;
@@ -3275,7 +3293,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       // text but inside the soft edges
       const polH = pols[0] ? pols[0].offsetHeight : 180;
       const gap = w * 0.5;
-      const lift = Math.min(A * 1.25 + polH / 2 - 30, h / 2 - polH / 2 - 70);
+      // desktop keeps them further in from the top and bottom edges
+      const edge = w > 880 ? 95 : 70;
+      const lift = Math.min(A * 1.25 + polH / 2 - 30, h / 2 - polH / 2 - edge);
       pols.forEach((pol, i) => {
         const j1 = ((i * 7919) % 100) / 100 - 0.5, j2 = ((i * 104729) % 100) / 100 - 0.5;
         pol.style.setProperty("--x", i * gap + j1 * gap * 0.35 + "px");
@@ -3893,9 +3913,14 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     const still = matchMedia("(prefers-reduced-motion:reduce)");
     const RATIO = 1.15; // px of page scroll per px of travel along the years
 
-    // the needle: placed over the scroller, reading the month and year at
-    // NEEDLE of the way across. Only touches the DOM when the month changes.
-    const NEEDLE = 0.7;
+    // the needle: placed over the scroller, reading the month and year
+    // where it stands. Only touches the DOM when the month changes. On
+    // phones it stands 70% of the way across; on desktop it sits over to the
+    // right, just inside the scroller's faded right edge.
+    const needleX = () => {
+      const cw = tlScroller.clientWidth;
+      return phone.matches ? cw * 0.7 : Math.max(cw * 0.7, cw - 130);
+    };
     const needle = tlSection.querySelector(".tl__needle");
     const needleLabel = needle.querySelector(".tl__needle-label");
     const axisEl = track.querySelector(".tl__axis");
@@ -3914,8 +3939,8 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       const yr = parseFloat(cs.getPropertyValue("--yr")) || 150, from = parseFloat(cs.getPropertyValue("--from")) || 2014;
       const to = parseFloat(cs.getPropertyValue("--to")) || 2027;
       const gutter = parseFloat(getComputedStyle(tlSection.querySelector(".tl__head")).paddingLeft) || 20;
-      track.style.paddingLeft = Math.max(gutter, cw * NEEDLE - (FIRST - from) * yr) + "px";
-      track.style.paddingRight = Math.max(gutter, cw * (1 - NEEDLE) - (to - NOW) * yr) + "px";
+      track.style.paddingLeft = Math.max(gutter, needleX() - (FIRST - from) * yr) + "px";
+      track.style.paddingRight = Math.max(gutter, cw - needleX() - (to - NOW) * yr) + "px";
     };
     const placeNeedle = () => {
       pad();
@@ -3923,7 +3948,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       yrPx = parseFloat(cs.getPropertyValue("--yr")) || 150;
       fromYr = parseFloat(cs.getPropertyValue("--from")) || 2014;
       padL = parseFloat(getComputedStyle(track).paddingLeft) || 0;
-      needle.style.left = tlScroller.clientWidth * NEEDLE + "px";
+      needle.style.left = needleX() + "px";
       // from where the axis actually sits (its top margin collapses into the
       // track, so offsetTop can't be trusted); the wrapper moves with the
       // scroller, so this holds when the pinned header grows for the nav
@@ -3932,13 +3957,13 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       needle.style.top = ax.top - base.top + "px";
       needle.style.height = sc.bottom - ax.top + "px";
     };
-    const posAt = (year) => padL + (year - fromYr) * yrPx - tlScroller.clientWidth * NEEDLE;
+    const posAt = (year) => padL + (year - fromYr) * yrPx - needleX();
     // the needle clicks like a dial as it passes each month, a firmer double
     // notch on a new year; month clicks are capped so a fast scrub doesn't
     // buzz. Silent on the paints that come from load or resize.
     let lastDetent = 0;
     const setNeedle = (pos, silent) => {
-      const yr = Math.min(NOW, Math.max(fromYr, fromYr + (pos + tlScroller.clientWidth * NEEDLE - padL) / yrPx));
+      const yr = Math.min(NOW, Math.max(fromYr, fromYr + (pos + needleX() - padL) / yrPx));
       const m = Math.min(11, Math.floor((yr % 1) * 12 + 0.5));
       const text = MONTHS[m] + " " + Math.floor(yr);
       if (text === shown) return;
@@ -4014,7 +4039,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       lastT = t;
       const p = runway ? Math.min(1, Math.max(0, -tlSection.getBoundingClientRect().top / runway)) : 0;
       const x = posAt(FIRST) + range * (1 - p); // today at the top, FIRST at the end
-      const y = depthAt(x + tlScroller.clientWidth * NEEDLE);
+      const y = depthAt(x + needleX());
       if (!cur || still.matches) cur = { x, y };
       else {
         const k = 1 - Math.exp(-dt / 110); // ~110ms spring, frame-rate independent
@@ -4088,15 +4113,15 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     remeasure();
   }
 
-  // Work life fan: a short paper rustle as the cards come out.
+  // Work life fan: a short pop as the cards come out.
   const tlBars = document.querySelectorAll(".tl__bar");
   // .is-open shows a bar's fan: mouse hover (in and out), keyboard focus,
   // and on touch a tap toggles it, a tap elsewhere closes it. Each opening
-  // plays the rustle.
+  // plays the pop.
   const openBar = (bar) => {
     if (bar.classList.contains("is-open")) return;
     tlBars.forEach((b) => b.classList.toggle("is-open", b === bar));
-    sfx.rustle();
+    sfx.pop();
   };
   const closeBars = () => tlBars.forEach((b) => b.classList.remove("is-open"));
   tlBars.forEach((bar) => {
