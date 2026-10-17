@@ -338,8 +338,8 @@ p,li{text-wrap:pretty}
   background:#fff;color:#000;padding:6px 11px;border-radius:999px;
   font-weight:600;font-size:.8rem;
 }
-/* profile card — a mini of the photo card, centre of the fan and on top of
-   its neighbours. On scroll it travels down into the About intro (JS sets
+/* profile card — a mini of the photo card, centre of the fan, over the
+   cards to its left and under AC/DC. On scroll it travels down into the About intro (JS sets
    translate / rotate / scale, which stack with the deal + hover transforms). */
 .fcard--3{
   left:50%;margin-left:-110px;top:-2px;padding:7px;gap:0;z-index:5;
@@ -349,10 +349,6 @@ p,li{text-wrap:pretty}
 }
 .me__photo{position:relative;flex:1;min-height:0;border-radius:14px;overflow:hidden;background:#000}
 .me__photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 15%}
-.me__name{
-  position:absolute;top:10px;left:0;right:0;text-align:center;
-  color:#fff;font-size:.82rem;font-weight:500;letter-spacing:-.01em;
-}
 .me__foot{display:flex;align-items:center;gap:6px;padding:7px 1px 0 3px}
 .me__avatar{flex:none;width:22px;height:22px;border-radius:50%;background:#000}
 .me__who{display:flex;flex-direction:column;min-width:0;line-height:1.2}
@@ -380,7 +376,7 @@ p,li{text-wrap:pretty}
 
 /* music card — album artwork fills the card, vinyl spins in the middle */
 .fcard--5{
-  left:50%;margin-left:50px;top:-8px;
+  left:50%;margin-left:50px;top:-8px;z-index:6; /* over the profile card */
   --r:5deg;--stack-tx:-159px;--stack-ty:8px;--stack-r:-3deg;
   background:#000;color:#fff;
   padding:0;
@@ -584,11 +580,6 @@ p,li{text-wrap:pretty}
   aspect-ratio:4/5;border-radius:24px;background:#000;
 }
 .hello__photo img{display:block;width:100%;height:100%;object-fit:cover}
-.hello__photo-name{
-  position:absolute;top:1.4rem;left:0;right:0;
-  text-align:center;color:#fff;
-  font-weight:500;font-size:clamp(1.15rem,1rem + .5vw,1.5rem);letter-spacing:-.02em;
-}
 .hello__card-foot{
   display:flex;align-items:center;justify-content:space-between;gap:.75rem;
   padding:14px 6px 0 8px;
@@ -613,8 +604,9 @@ p,li{text-wrap:pretty}
   margin:0 0 clamp(1.25rem,2vw,1.75rem);
   font-weight:600;font-size:clamp(1.3rem,1.1rem + .7vw,1.9rem);letter-spacing:-.025em;
 }
+.hello__vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .hello__sig{
-  font-family:var(--hand);font-weight:500;font-size:1.25em;line-height:1;
+  font-family:var(--hand);font-weight:500;font-size:1.6em;line-height:1;
   color:#3f5bd8;transform:rotate(-6deg) translateY(-.05em);
 }
 .hello__lead{
@@ -645,12 +637,8 @@ p,li{text-wrap:pretty}
   .hello__card,.hello__card.reveal-up,.is-revealed .hello__card.reveal-up:hover{transform:rotate(-4deg);transition:none}
 }
 html:not([data-pref-intro="beside"]) .hello{padding-top:var(--land,clamp(2rem,4vw,4rem))}
-html:not([data-pref-intro="beside"]) .hello__inner{display:block;max-width:860px;text-align:center}
+html:not([data-pref-intro="beside"]) .hello__inner{display:block;max-width:860px}
 html:not([data-pref-intro="beside"]) .hello__card{display:none}
-html:not([data-pref-intro="beside"]) .hello__name{justify-content:center}
-html:not([data-pref-intro="beside"]) .hello__lead{max-width:26ch;margin-inline:auto}
-html:not([data-pref-intro="beside"]) .hello__body,
-html:not([data-pref-intro="beside"]) .hello__aside{margin-inline:auto}
 
 /* ========================================================= work life */
 /* horizontal scrubber timeline: one bar per role on a year axis. --s/--e
@@ -2304,7 +2292,6 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       <article class="fcard fcard--3 fcard--me">
         <div class="me__photo">
           <img src="assets/hello/matthew-card.webp" width="720" height="900" alt="Matthew Luxford smiling at the camera in a black cap and black T-shirt." loading="eager" />
-          <span class="me__name" aria-hidden="true">Matthew Luxford</span>
         </div>
         <div class="me__foot">
           <img class="me__avatar" src="assets/hello/matthew-avatar.webp" width="96" height="96" alt="" loading="eager" />
@@ -2334,7 +2321,6 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       <figure class="hello__card reveal-up">
         <div class="hello__photo">
           <img src="assets/hello/matthew-card.webp" width="720" height="900" alt="Matthew grinning at the camera in a black cap and black T-shirt, lit against a black background." loading="lazy" />
-          <span class="hello__photo-name" aria-hidden="true">Matthew Luxford</span>
         </div>
         <figcaption class="hello__card-foot">
           <span class="hello__who">
@@ -2346,7 +2332,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       </figure>
 
       <div class="hello__copy">
-        <h2 class="hello__name reveal-up" id="hello-name"><span class="hello__sig" aria-hidden="true">Matthew</span> Matthew Luxford</h2>
+        <h2 class="hello__name reveal-up" id="hello-name"><span class="hello__sig">Matthew</span><span class="hello__vh"> Luxford</span></h2>
         <p class="hello__lead reveal-up" style="--i:1">I'm a senior web designer. I make websites and products people actually use, from the first scrappy sketch to the version that goes live.</p>
         <p class="hello__body reveal-up" style="--i:2">Right now I'm the only designer on consumer web at <strong>Kraken</strong>, across crypto, equities and tokenised stocks. On my own time I build small things like <a href="reps.html">Reps</a> and <a href="riverfox.html">River Fox</a>, mostly to see how far one designer and an AI can get.</p>
         <p class="hello__aside reveal-up" style="--i:3"><b>Before that:</b> Spark44 for Jaguar Land Rover, Lifecake, The Collective, Yoppie.<br><b>Off-screen:</b> the gym, two kids, a Cavapoo called Bella, and three barbecues. All used.</p>
@@ -3395,6 +3381,82 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     }
   }
 
+  // Sound effects, synthesised from filtered noise so there are no files to
+  // load. Browsers only allow sound after the visitor has clicked or pressed
+  // a key somewhere, so until then every call is silent.
+  //  - rustle: three quick crackly bursts, photos pulled from a pile
+  //  - folder: a low card-stock slide with a soft tap as it lands
+  //  - tick: a lens focus-ring detent, tiny and dry
+  //  - shutter: a camera shutter, two quick clicks (open, close)
+  const sfx = (() => {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const quiet = { rustle() {}, folder() {}, tick() {}, shutter() {} };
+    if (!AC) return quiet;
+    let ctx = null;
+    const unlock = () => {
+      ctx = ctx || new AC();
+      if (ctx.state === "suspended") ctx.resume();
+    };
+    addEventListener("pointerdown", unlock, { passive: true });
+    addEventListener("keydown", unlock);
+    const ready = () => ctx && ctx.state === "running";
+    // one burst of noise through a filter chain, shaped by a gain envelope
+    const burst = ({ at = 0, len, grain = 1, filters, attack, peak }) => {
+      const t = ctx.currentTime + at;
+      const n = Math.floor(ctx.sampleRate * len);
+      const buf = ctx.createBuffer(1, n, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * (Math.random() < grain ? 1 : 0.3);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      let node = src;
+      filters.forEach(([type, freq, q = 0.7, to]) => {
+        const f = ctx.createBiquadFilter();
+        f.type = type;
+        f.frequency.setValueAtTime(freq, t);
+        if (to) f.frequency.exponentialRampToValueAtTime(to, t + len);
+        f.Q.value = q;
+        node = node.connect(f);
+      });
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(peak, t + attack);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+      node.connect(g).connect(ctx.destination);
+      src.start(t);
+    };
+    return {
+      rustle() {
+        if (!ready()) return;
+        [0, 0.05, 0.1].forEach((at, i) => burst({
+          at, len: 0.13 + Math.random() * 0.05, grain: 0.18, attack: 0.012, peak: 0.06,
+          filters: [["highpass", 1400], ["bandpass", 3200 + i * 700 + Math.random() * 600]],
+        }));
+      },
+      folder() {
+        if (!ready()) return;
+        // the slide: smooth hiss swept upward through the low mids
+        burst({
+          len: 0.17, attack: 0.04, peak: 0.07,
+          filters: [["bandpass", 700 + Math.random() * 150, 0.9, 1900], ["lowpass", 3200]],
+        });
+        // the landing: a short, dull tap
+        burst({ at: 0.13, len: 0.06, attack: 0.004, peak: 0.09, filters: [["lowpass", 420, 0.8]] });
+      },
+      tick() {
+        if (!ready()) return;
+        burst({ len: 0.012, attack: 0.001, peak: 0.035, filters: [["highpass", 2500], ["bandpass", 4600 + Math.random() * 800, 3]] });
+      },
+      shutter() {
+        if (!ready()) return;
+        [[0, 0.11], [0.065, 0.08]].forEach(([at, peak]) => {
+          burst({ at, len: 0.018, attack: 0.001, peak, filters: [["bandpass", 2600 + Math.random() * 300, 1.4]] });
+          burst({ at, len: 0.03, attack: 0.002, peak: peak * 0.6, filters: [["lowpass", 650, 0.8]] });
+        });
+      },
+    };
+  })();
+
   // Beyond the screen: the pinned snake. The shape is described in the CSS
   // note; here we build the text from the hidden paragraph, lay a wavy path
   // under it, park the polaroids on their own slower layer, and run a frame
@@ -3542,7 +3604,20 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       });
     };
     let lastTx = null, vb = 0, idle = 0, lastT = 0;
-    const paint = (p, dt) => {
+    // a lens click as each word lights up, a shutter on the key words; never
+    // on the paints that come from load or resize (silent), and the small
+    // clicks are capped so a fast scroll doesn't buzz
+    let lastTick = 0;
+    const click = (el) => {
+      // one shutter per key phrase ("the gym" is two words)
+      if (el.classList.contains("is-key")) {
+        const prev = el.previousSibling;
+        return prev && prev.classList && prev.classList.contains("is-key") ? undefined : sfx.shutter();
+      }
+      const now = performance.now();
+      if (now - lastTick > 45) { lastTick = now; sfx.tick(); }
+    };
+    const paint = (p, dt, silent) => {
       const tx = geo.enter - p * geo.travel;
       const cx = stage.clientWidth / 2, cy = stage.clientHeight / 2;
       // the curve: bends drift with scroll at a fraction of the words' speed,
@@ -3554,7 +3629,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       polsLayer.style.transform = `rotate(${SPINE}deg) translateX(${ptx}px)`;
       pols.forEach((pol, i) => { if (speed[i] !== 1) pol.style.setProperty("--dx", ptx * (speed[i] - 1) + "px"); });
       const readX = geo.read - tx;
-      words.forEach((el, i) => el.classList.toggle("is-on", geo.wordX[i] < readX));
+      words.forEach((el, i) => {
+        const on = geo.wordX[i] < readX;
+        if (on === el.classList.contains("is-on")) return;
+        el.classList.toggle("is-on", on);
+        if (on && !silent) click(el);
+      });
       // motion blur on the polaroids: bumped by how far the snake moved this
       // frame, decayed frame by frame so it clears the moment you stop
       if (lastTx !== null && !reduce) vb = Math.max(vb * 0.78, Math.min(4, Math.abs(tx - lastTx) * 0.05));
@@ -3579,7 +3659,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     };
     const start = () => { if (running) return; running = true; lastT = 0; raf = requestAnimationFrame(tick); };
     const stop = () => { running = false; cancelAnimationFrame(raf); };
-    const refresh = () => { measure(); if (geo) paint(reduce ? 0.45 : progress(), 0); };
+    const refresh = () => { measure(); if (geo) paint(reduce ? 0.45 : progress(), 0, true); };
     window.addEventListener("resize", refresh);
     refresh();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
@@ -3591,69 +3671,6 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       } else start();
     }
   }
-
-  // Sound effects, synthesised from filtered noise so there are no files to
-  // load. Browsers only allow sound after the visitor has clicked or pressed
-  // a key somewhere, so until then every call is silent.
-  //  - rustle: three quick crackly bursts, photos pulled from a pile
-  //  - folder: a low card-stock slide with a soft tap as it lands
-  const sfx = (() => {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    const quiet = { rustle() {}, folder() {} };
-    if (!AC) return quiet;
-    let ctx = null;
-    const unlock = () => {
-      ctx = ctx || new AC();
-      if (ctx.state === "suspended") ctx.resume();
-    };
-    addEventListener("pointerdown", unlock, { passive: true });
-    addEventListener("keydown", unlock);
-    const ready = () => ctx && ctx.state === "running";
-    // one burst of noise through a filter chain, shaped by a gain envelope
-    const burst = ({ at = 0, len, grain = 1, filters, attack, peak }) => {
-      const t = ctx.currentTime + at;
-      const n = Math.floor(ctx.sampleRate * len);
-      const buf = ctx.createBuffer(1, n, ctx.sampleRate);
-      const d = buf.getChannelData(0);
-      for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * (Math.random() < grain ? 1 : 0.3);
-      const src = ctx.createBufferSource();
-      src.buffer = buf;
-      let node = src;
-      filters.forEach(([type, freq, q = 0.7, to]) => {
-        const f = ctx.createBiquadFilter();
-        f.type = type;
-        f.frequency.setValueAtTime(freq, t);
-        if (to) f.frequency.exponentialRampToValueAtTime(to, t + len);
-        f.Q.value = q;
-        node = node.connect(f);
-      });
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(peak, t + attack);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + len);
-      node.connect(g).connect(ctx.destination);
-      src.start(t);
-    };
-    return {
-      rustle() {
-        if (!ready()) return;
-        [0, 0.05, 0.1].forEach((at, i) => burst({
-          at, len: 0.13 + Math.random() * 0.05, grain: 0.18, attack: 0.012, peak: 0.06,
-          filters: [["highpass", 1400], ["bandpass", 3200 + i * 700 + Math.random() * 600]],
-        }));
-      },
-      folder() {
-        if (!ready()) return;
-        // the slide: smooth hiss swept upward through the low mids
-        burst({
-          len: 0.17, attack: 0.04, peak: 0.07,
-          filters: [["bandpass", 700 + Math.random() * 150, 0.9, 1900], ["lowpass", 3200]],
-        });
-        // the landing: a short, dull tap
-        burst({ at: 0.13, len: 0.06, attack: 0.004, peak: 0.09, filters: [["lowpass", 420, 0.8]] });
-      },
-    };
-  })();
 
   // Case study deck: the fan of overlapping cards. One card is "active" (in
   // front); every card carries --o, its offset from the active one, which
@@ -3918,6 +3935,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       };
       const reset = () => cards.forEach((c) => c.classList.remove("is-popped"));
       cards.forEach((card) => {
+        // the deck's folder sound as a card lifts: on mouse hover, or the tap
+        // that pops it on a phone (below)
+        card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") sfx.folder(); });
         card.addEventListener("click", (e) => {
           if (!mql.matches) return;
           const target = linkTarget(card);
@@ -3925,7 +3945,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
           e.preventDefault();
           const wasPopped = card.classList.contains("is-popped");
           reset();
-          if (!wasPopped) card.classList.add("is-popped");
+          if (!wasPopped) { card.classList.add("is-popped"); sfx.folder(); }
         });
       });
       document.addEventListener("click", (e) => {
