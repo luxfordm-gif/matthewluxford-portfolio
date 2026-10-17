@@ -503,16 +503,17 @@ p,li{text-wrap:pretty}
     margin-left:-79px;top:80px;
     --r:5deg;--stack-tx:-30px;--stack-ty:90px;--stack-r:3deg;
   }
-  .fcard--3{
-    margin-left:-109px;top:170px;
+  /* the profile card comes last on phones, on top of the stack */
+  .fcard--5{
+    margin-left:-109px;top:170px;z-index:auto;
     --r:-2deg;--stack-tx:0;--stack-ty:0;--stack-r:-1deg;
   }
-  .fcard--5{
+  .fcard--4{
     margin-left:-139px;top:240px;
     --r:-5deg;--stack-tx:30px;--stack-ty:-70px;--stack-r:-3deg;
   }
-  .fcard--4{
-    margin-left:-89px;top:310px;
+  .fcard--3{
+    margin-left:-89px;top:310px;z-index:7;
     --r:6deg;--stack-tx:-20px;--stack-ty:-140px;--stack-r:4deg;
   }
 }
@@ -3971,9 +3972,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     }
   }
 
-  // Profile card: for the first half-screen of scroll it travels down with
-  // the page (so it holds still on screen), straightening and growing a
-  // touch, then stops and the page carries on: it lands on top of the About
+  // Profile card: once its centre has scrolled up to just above the middle
+  // of the screen, it travels down with the page for half a screen (so it
+  // holds still), straightening and (not on phones) growing a touch, then
+  // stops and the page carries on: it lands on top of the About
   // intro, which gets exactly enough top padding (--land) to hold it.
   // Skipped for reduced motion and the "Card beside copy" layout.
   {
@@ -3984,9 +3986,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     const html = document.documentElement;
     const reduce = matchMedia("(prefers-reduced-motion:reduce)");
     if (card && hero && fanIn && hello) {
-      const GROW = 0.3;
-      const r = parseFloat(getComputedStyle(card).getPropertyValue("--r")) || 0;
-      let k = 1, start = 0, travel = 0, on = false;
+      const HOLD_AT = 0.42; // where on screen its centre holds, from the top
+      const phone = matchMedia("(max-width:640px)");
+      let k = 1, start = 0, travel = 0, on = false, GROW = 0.3, r = 0;
       const active = () => !reduce.matches && html.dataset.prefIntro !== "beside" && hero.offsetParent !== null;
       const measure = () => {
         on = active();
@@ -3996,14 +3998,16 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         // fan__inner may be scaled (transform-origin top centre), so its top
         // is real but the card's offsets need multiplying by the scale
         k = new DOMMatrix(getComputedStyle(fanIn).transform).a || 1;
-        start = hero.getBoundingClientRect().top + scrollY;
+        GROW = phone.matches ? 0 : 0.3;
+        r = parseFloat(getComputedStyle(card).getPropertyValue("--r")) || 0;
         travel = innerHeight / 2;
+        const top = fanIn.getBoundingClientRect().top + scrollY + card.offsetTop * k;
+        const h = card.offsetHeight * k;
+        start = Math.max(hero.getBoundingClientRect().top + scrollY, top + h / 2 - innerHeight * HOLD_AT);
         // only make room when the intro sits straight under the hero
         let next = hero.nextElementSibling;
         while (next && getComputedStyle(next).display === "none") next = next.nextElementSibling;
         if (next !== hello) return;
-        const top = fanIn.getBoundingClientRect().top + scrollY + card.offsetTop * k;
-        const h = card.offsetHeight * k;
         const bottom = top + h / 2 + travel + (h * (1 + GROW)) / 2;
         const helloTop = hello.getBoundingClientRect().top + scrollY;
         hello.style.setProperty("--land", Math.max(0, Math.round(bottom - helloTop + 56)) + "px");
