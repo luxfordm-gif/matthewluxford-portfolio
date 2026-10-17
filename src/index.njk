@@ -11,6 +11,7 @@ navBrandHref: "#top"
 navLinkBase: ""
 prefSerif: true
 prefDeckTitle: true
+prefIntro: true
 ---
 {% extends "layouts/base.njk" %}
 
@@ -178,7 +179,7 @@ p,li{text-wrap:pretty}
 
 /* ============================================================ hero */
 .hero{
-  position:relative;z-index:2;
+  position:relative;z-index:3;
   min-height:100vh;
   min-height:100svh;
   display:flex;
@@ -337,20 +338,31 @@ p,li{text-wrap:pretty}
   background:#fff;color:#000;padding:6px 11px;border-radius:999px;
   font-weight:600;font-size:.8rem;
 }
+/* profile card — a mini of the photo card, centre of the fan and on top of
+   its neighbours. On scroll it travels down into the About intro (JS sets
+   translate / rotate / scale, which stack with the deal + hover transforms). */
 .fcard--3{
-  left:50%;margin-left:50px;top:-8px;padding:0;overflow:hidden;
-  --r:5deg;--stack-tx:-159px;--stack-ty:8px;--stack-r:-3deg;
-  background:#1a1a1a;
+  left:50%;margin-left:-110px;top:-2px;padding:7px;gap:0;z-index:5;
+  --r:-3deg;--stack-tx:1px;--stack-ty:2px;--stack-r:-1deg;
+  background:var(--paper);
+  will-change:translate,rotate,scale;
 }
-.fcard--3 .ph{
-  width:100%;height:100%;
-  /* Drop a local photo in here — assets/family.webp or similar. This used to
-     hotlink a Webflow CDN we no longer control, which stopped resolving and
-     left the card blank. Until there is a local file it stays a plain panel. */
-  background-size:cover;
-  background-position:center;
-  filter:grayscale(.15) contrast(1.02);
+.me__photo{position:relative;flex:1;min-height:0;border-radius:14px;overflow:hidden;background:#000}
+.me__photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 15%}
+.me__name{
+  position:absolute;top:10px;left:0;right:0;text-align:center;
+  color:#fff;font-size:.82rem;font-weight:500;letter-spacing:-.01em;
 }
+.me__foot{display:flex;align-items:center;gap:6px;padding:7px 1px 0 3px}
+.me__avatar{flex:none;width:22px;height:22px;border-radius:50%;background:#000}
+.me__who{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.me__who span:first-child{font-size:.62rem;font-weight:500;color:var(--ink)}
+.me__who span:last-child{font-size:.56rem;color:var(--muted-strong)}
+.me__connect{
+  margin-left:auto;flex:none;padding:.38rem .62rem;border-radius:999px;
+  background:var(--ink);color:#fff;text-decoration:none;font-size:.62rem;font-weight:500;
+}
+.me__connect:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .fcard--4{
   left:50%;margin-left:215px;top:42px;
   width:max-content;min-width:218px;
@@ -368,8 +380,8 @@ p,li{text-wrap:pretty}
 
 /* music card — album artwork fills the card, vinyl spins in the middle */
 .fcard--5{
-  left:50%;margin-left:-110px;top:-2px;
-  --r:-3deg;--stack-tx:1px;--stack-ty:2px;--stack-r:-1deg;
+  left:50%;margin-left:50px;top:-8px;
+  --r:5deg;--stack-tx:-159px;--stack-ty:8px;--stack-r:-3deg;
   background:#000;color:#fff;
   padding:0;
   text-align:left;
@@ -495,11 +507,11 @@ p,li{text-wrap:pretty}
     margin-left:-79px;top:80px;
     --r:5deg;--stack-tx:-30px;--stack-ty:90px;--stack-r:3deg;
   }
-  .fcard--5{
+  .fcard--3{
     margin-left:-109px;top:170px;
     --r:-2deg;--stack-tx:0;--stack-ty:0;--stack-r:-1deg;
   }
-  .fcard--3{
+  .fcard--5{
     margin-left:-139px;top:240px;
     --r:-5deg;--stack-tx:30px;--stack-ty:-70px;--stack-r:-3deg;
   }
@@ -544,8 +556,10 @@ p,li{text-wrap:pretty}
 }
 
 /* ============================================================ hello */
-/* the photo card + short intro under the WIP note — the seed of the new
-   about section. Card leans left and straightens on hover. */
+/* the About intro. Default: the hero's profile card slides down and lands
+   here, so this is a single centred column with --land of room on top (JS
+   measures it). Layout panel → About intro → "Card beside copy" brings back
+   the first take: its own photo card on the left, copy on the right. */
 .hello{
   position:relative;z-index:2;
   padding:clamp(2rem,4vw,4rem) var(--pad) clamp(5rem,9vw,8rem);
@@ -630,6 +644,13 @@ p,li{text-wrap:pretty}
 @media (prefers-reduced-motion:reduce){
   .hello__card,.hello__card.reveal-up,.is-revealed .hello__card.reveal-up:hover{transform:rotate(-4deg);transition:none}
 }
+html:not([data-pref-intro="beside"]) .hello{padding-top:var(--land,clamp(2rem,4vw,4rem))}
+html:not([data-pref-intro="beside"]) .hello__inner{display:block;max-width:860px;text-align:center}
+html:not([data-pref-intro="beside"]) .hello__card{display:none}
+html:not([data-pref-intro="beside"]) .hello__name{justify-content:center}
+html:not([data-pref-intro="beside"]) .hello__lead{max-width:26ch;margin-inline:auto}
+html:not([data-pref-intro="beside"]) .hello__body,
+html:not([data-pref-intro="beside"]) .hello__aside{margin-inline:auto}
 
 /* ========================================================= work life */
 /* horizontal scrubber timeline: one bar per role on a year axis. --s/--e
@@ -2280,7 +2301,17 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         </div>
       </a>
 
-      <article class="fcard fcard--3" aria-hidden="true"><div class="ph"></div></article>
+      <article class="fcard fcard--3 fcard--me">
+        <div class="me__photo">
+          <img src="assets/hello/matthew-card.webp" width="720" height="900" alt="Matthew Luxford smiling at the camera in a black cap and black T-shirt." loading="eager" />
+          <span class="me__name" aria-hidden="true">Matthew Luxford</span>
+        </div>
+        <div class="me__foot">
+          <img class="me__avatar" src="assets/hello/matthew-avatar.webp" width="96" height="96" alt="" loading="eager" />
+          <span class="me__who"><span>@matthewluxford</span><span>LinkedIn</span></span>
+          <a class="me__connect" href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener" aria-label="Connect on LinkedIn"><span aria-hidden="true">+</span> Connect</a>
+        </div>
+      </article>
       <article class="fcard fcard--4">
         <span class="ttl">senior <em>designer</em></span>
         <span class="phon">/ˈsiː.njə dɪˈzaɪ.nə/ <em>[noun]</em></span>
@@ -2296,15 +2327,8 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     </div>
   </section>
 
-  <!-- WORK IN PROGRESS -->
-  <section class="wip" aria-label="Work in progress" data-pref-section="FYI note">
-    <div class="wip__inner">
-      <h2 class="wip__title">FYI, this site isn't finished. <span class="it">Not even close.</span></h2>
-      <p class="wip__copy">Nothing here is complete. If you've come expecting my latest work, you'll be a bit disappointed — <em>it isn't up yet.</em> This stays until it is, mostly so it nags me to finish the thing in my spare time.</p>
-    </div>
-  </section>
-
-  <!-- HELLO — photo card + short intro; the start of the new about section -->
+  <!-- HELLO — the About intro; the hero's profile card lands on top of it
+       (the card here only shows in the "Card beside copy" layout) -->
   <section class="hello" id="hello" aria-labelledby="hello-name" data-reveal data-pref-section="Photo card intro">
     <div class="hello__inner">
       <figure class="hello__card reveal-up">
@@ -2327,6 +2351,14 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         <p class="hello__body reveal-up" style="--i:2">Right now I'm the only designer on consumer web at <strong>Kraken</strong>, across crypto, equities and tokenised stocks. On my own time I build small things like <a href="reps.html">Reps</a> and <a href="riverfox.html">River Fox</a>, mostly to see how far one designer and an AI can get.</p>
         <p class="hello__aside reveal-up" style="--i:3"><b>Before that:</b> Spark44 for Jaguar Land Rover, Lifecake, The Collective, Yoppie.<br><b>Off-screen:</b> the gym, two kids, a Cavapoo called Bella, and three barbecues. All used.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- WORK IN PROGRESS -->
+  <section class="wip" aria-label="Work in progress" data-pref-section="FYI note">
+    <div class="wip__inner">
+      <h2 class="wip__title">FYI, this site isn't finished. <span class="it">Not even close.</span></h2>
+      <p class="wip__copy">Nothing here is complete. If you've come expecting my latest work, you'll be a bit disappointed — <em>it isn't up yet.</em> This stays until it is, mostly so it nags me to finish the thing in my spare time.</p>
     </div>
   </section>
 
@@ -3560,6 +3592,69 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     }
   }
 
+  // Sound effects, synthesised from filtered noise so there are no files to
+  // load. Browsers only allow sound after the visitor has clicked or pressed
+  // a key somewhere, so until then every call is silent.
+  //  - rustle: three quick crackly bursts, photos pulled from a pile
+  //  - folder: a low card-stock slide with a soft tap as it lands
+  const sfx = (() => {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const quiet = { rustle() {}, folder() {} };
+    if (!AC) return quiet;
+    let ctx = null;
+    const unlock = () => {
+      ctx = ctx || new AC();
+      if (ctx.state === "suspended") ctx.resume();
+    };
+    addEventListener("pointerdown", unlock, { passive: true });
+    addEventListener("keydown", unlock);
+    const ready = () => ctx && ctx.state === "running";
+    // one burst of noise through a filter chain, shaped by a gain envelope
+    const burst = ({ at = 0, len, grain = 1, filters, attack, peak }) => {
+      const t = ctx.currentTime + at;
+      const n = Math.floor(ctx.sampleRate * len);
+      const buf = ctx.createBuffer(1, n, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * (Math.random() < grain ? 1 : 0.3);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      let node = src;
+      filters.forEach(([type, freq, q = 0.7, to]) => {
+        const f = ctx.createBiquadFilter();
+        f.type = type;
+        f.frequency.setValueAtTime(freq, t);
+        if (to) f.frequency.exponentialRampToValueAtTime(to, t + len);
+        f.Q.value = q;
+        node = node.connect(f);
+      });
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(peak, t + attack);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+      node.connect(g).connect(ctx.destination);
+      src.start(t);
+    };
+    return {
+      rustle() {
+        if (!ready()) return;
+        [0, 0.05, 0.1].forEach((at, i) => burst({
+          at, len: 0.13 + Math.random() * 0.05, grain: 0.18, attack: 0.012, peak: 0.06,
+          filters: [["highpass", 1400], ["bandpass", 3200 + i * 700 + Math.random() * 600]],
+        }));
+      },
+      folder() {
+        if (!ready()) return;
+        // the slide: smooth hiss swept upward through the low mids
+        burst({
+          len: 0.17, attack: 0.04, peak: 0.07,
+          filters: [["bandpass", 700 + Math.random() * 150, 0.9, 1900], ["lowpass", 3200]],
+        });
+        // the landing: a short, dull tap
+        burst({ at: 0.13, len: 0.06, attack: 0.004, peak: 0.09, filters: [["lowpass", 420, 0.8]] });
+      },
+    };
+  })();
+
   // Case study deck: the fan of overlapping cards. One card is "active" (in
   // front); every card carries --o, its offset from the active one, which
   // the CSS transform turns into position, depth and tilt. Dragging sets the
@@ -3625,6 +3720,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     };
     // move one card along: d is 1 (next) or -1 (back)
     const step = (d) => {
+      sfx.folder();
       learned = true;
       clearTimeout(idle);
       stopNudge();
@@ -3817,6 +3913,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       const linkTarget = (card) => {
         if (card.classList.contains("fcard--2")) return card.querySelector(".pill");
         if (card.classList.contains("fcard--5")) return card.querySelector(".mu-disc-wrap");
+        if (card.classList.contains("fcard--me")) return card.querySelector(".me__connect");
         return null;
       };
       const reset = () => cards.forEach((c) => c.classList.remove("is-popped"));
@@ -3836,6 +3933,61 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         if (e.target.closest(".fan .fcard")) return;
         reset();
       });
+    }
+  }
+
+  // Profile card: for the first half-screen of scroll it travels down with
+  // the page (so it holds still on screen), straightening and growing a
+  // touch, then stops and the page carries on: it lands on top of the About
+  // intro, which gets exactly enough top padding (--land) to hold it.
+  // Skipped for reduced motion and the "Card beside copy" layout.
+  {
+    const card = document.querySelector(".fcard--me");
+    const hero = document.querySelector(".hero");
+    const fanIn = document.querySelector(".fan__inner");
+    const hello = document.querySelector(".hello");
+    const html = document.documentElement;
+    const reduce = matchMedia("(prefers-reduced-motion:reduce)");
+    if (card && hero && fanIn && hello) {
+      const GROW = 0.3;
+      const r = parseFloat(getComputedStyle(card).getPropertyValue("--r")) || 0;
+      let k = 1, start = 0, travel = 0, on = false;
+      const active = () => !reduce.matches && html.dataset.prefIntro !== "beside" && hero.offsetParent !== null;
+      const measure = () => {
+        on = active();
+        card.style.translate = card.style.rotate = card.style.scale = "";
+        hello.style.removeProperty("--land");
+        if (!on) return;
+        // fan__inner may be scaled (transform-origin top centre), so its top
+        // is real but the card's offsets need multiplying by the scale
+        k = new DOMMatrix(getComputedStyle(fanIn).transform).a || 1;
+        start = hero.getBoundingClientRect().top + scrollY;
+        travel = innerHeight / 2;
+        // only make room when the intro sits straight under the hero
+        let next = hero.nextElementSibling;
+        while (next && getComputedStyle(next).display === "none") next = next.nextElementSibling;
+        if (next !== hello) return;
+        const top = fanIn.getBoundingClientRect().top + scrollY + card.offsetTop * k;
+        const h = card.offsetHeight * k;
+        const bottom = top + h / 2 + travel + (h * (1 + GROW)) / 2;
+        const helloTop = hello.getBoundingClientRect().top + scrollY;
+        hello.style.setProperty("--land", Math.max(0, Math.round(bottom - helloTop + 56)) + "px");
+      };
+      const update = () => {
+        if (!on) return;
+        const y = Math.min(travel, Math.max(0, scrollY - start));
+        const p = travel ? y / travel : 0;
+        card.style.translate = `0 ${(y / k).toFixed(1)}px`;
+        card.style.rotate = `${(-r * p).toFixed(2)}deg`;
+        card.style.scale = (1 + GROW * p).toFixed(3);
+      };
+      let raf = 0;
+      addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, { passive: true });
+      const refresh = () => { measure(); update(); };
+      addEventListener("resize", refresh);
+      addEventListener("load", refresh);
+      new MutationObserver(refresh).observe(html, { attributes: true, attributeFilter: ["data-pref-intro"] });
+      refresh();
     }
   }
 
@@ -3867,51 +4019,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     });
   }
 
-  // Work life fan: a short paper rustle as the cards come out. Synthesised
-  // (filtered noise bursts, one per card), so there's no file to load.
-  // Browsers only allow sound after the visitor has clicked or pressed a key
-  // somewhere, so it stays silent until then.
+  // Work life fan: a short paper rustle as the cards come out.
   const tlBars = document.querySelectorAll(".tl__bar");
-  if (tlBars.length && (window.AudioContext || window.webkitAudioContext)) {
-    let actx = null;
-    const unlock = () => {
-      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
-      if (actx.state === "suspended") actx.resume();
-    };
-    addEventListener("pointerdown", unlock, { passive: true });
-    addEventListener("keydown", unlock);
-    const rustle = () => {
-      if (!actx || actx.state !== "running") return;
-      const now = actx.currentTime;
-      [0, 0.05, 0.1].forEach((at, i) => {
-        const len = 0.13 + Math.random() * 0.05;
-        const n = Math.floor(actx.sampleRate * len);
-        const buf = actx.createBuffer(1, n, actx.sampleRate);
-        const d = buf.getChannelData(0);
-        // crackly noise: mostly soft hiss with sparse louder grains
-        for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * (Math.random() < 0.18 ? 1 : 0.3);
-        const src = actx.createBufferSource();
-        src.buffer = buf;
-        const hp = actx.createBiquadFilter();
-        hp.type = "highpass";
-        hp.frequency.value = 1400;
-        const bp = actx.createBiquadFilter();
-        bp.type = "bandpass";
-        bp.frequency.value = 3200 + i * 700 + Math.random() * 600;
-        bp.Q.value = 0.7;
-        const g = actx.createGain();
-        g.gain.setValueAtTime(0.0001, now + at);
-        g.gain.exponentialRampToValueAtTime(0.06, now + at + 0.012);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + at + len);
-        src.connect(hp).connect(bp).connect(g).connect(actx.destination);
-        src.start(now + at);
-      });
-    };
-    tlBars.forEach((bar) => {
-      bar.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") rustle(); });
-      bar.addEventListener("focus", rustle);
-    });
-  }
+  tlBars.forEach((bar) => {
+    bar.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") sfx.rustle(); });
+    bar.addEventListener("focus", sfx.rustle);
+  });
 
   // GA4: case study card clicks
   document.querySelectorAll("a.proj[href]").forEach((a) => {
