@@ -14,7 +14,7 @@ npm run check       # run the shared-CSS drift check (also runs in CI)
 ## Site map (source files)
 
 - `src/index.njk` — homepage (hero, FYI note, photo-card intro `.hello` — the nav's About lands here, work deck, "Where I've been" timeline `.tl`, beyond, testimonials, lux-large-footer). The old About list (accordion job rows) was removed in #80: the timeline carries that now.
-  - "Where I've been" `.tl`: a sideways scroller on desktop; on phones (≤760px) it pins to the screen (`.tl.is-pinned`, a tall runway with a sticky `.tl__pin`) and the page scroll travels back through the years, with the staircase rising on a smooth curve and a spring. Sideways swipes drive the same page scroll and coast on release.
+  - "Where I've been" `.tl`: the axis starts at 2007, with 2007–2015 squeezed (`--yr0` a year) so there's no empty desert. Going back, the years stop once 2007 reaches the left edge (sticky `.tl__inner`) and the needle walks the rest of the way, so the far end never leaves a blank screen. On screens wide enough to show every year (~2400px+), JS stretches `--yr` so the years fill the width and only the needle moves. The Ten London fan lists the ten studios from the CV (`.tl__card--list`, spread wider by `.tl__fan--wide`). Move the needle's parts with `--walk`, never a transform on `.tl__needle` itself: that makes it a layer and the axis paints over the pill. A sideways scroller on desktop; on phones (≤760px) it pins to the screen (`.tl.is-pinned`, a tall runway with a sticky `.tl__pin`) and the page scroll travels back through the years, with the staircase rising on a smooth curve and a spring. Sideways swipes drive the same page scroll and coast on release.
 - `src/cv.njk` — full CV / résumé (nav-cv variant, secret-footer)
 - `src/jlr.html` — Jaguar Land Rover case study
 - `src/lifecake.html` — Lifecake case study
@@ -53,6 +53,7 @@ All synthesised in one `sfx` helper in `src/index.njk` (Web Audio, filtered nois
 
 - `pop` — timeline fan opening (a soft, short paper puff; a longer rustle got repetitive hovering down the rows and a tonal bubble pop was "too much pop")
 - `folder` — a case-study deck move (card-stock slide + tap)
+- `fan` — the deck breathing out on the first hover over its cards (three quick rising flicks); plays again only after the pointer leaves the cards
 - `lift` — a hero card lifting on hover / tap-to-pop (lighter, no tap)
 - `pluck` / `thud` — a polaroid in the snake picked up / bumping the stage edge after a throw
 - `detent` — the timeline needle: a notch per month as it passes (lower and woodier than the lens tick, throttled), a firmer double notch on a new year; silent on load/resize
