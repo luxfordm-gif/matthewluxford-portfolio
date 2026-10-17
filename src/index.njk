@@ -3050,10 +3050,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   //  - folder: a low card-stock slide with a soft tap as it lands
   //  - lift: a light, airy flick, a card picked up off the table
   //  - tick: a lens focus-ring detent, tiny and dry
+  //  - detent: the timeline's dial, a notch per month (lower and woodier than
+  //    the lens tick) and a firmer double notch on a new year
   //  - shutter: a camera shutter, two quick clicks (open, close)
   const sfx = (() => {
     const AC = window.AudioContext || window.webkitAudioContext;
-    const quiet = { rustle() {}, folder() {}, lift() {}, tick() {}, shutter() {} };
+    const quiet = { rustle() {}, folder() {}, lift() {}, tick() {}, detent() {}, shutter() {} };
     if (!AC) return quiet;
     let ctx = null;
     const unlock = () => {
@@ -3117,6 +3119,11 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tick() {
         if (!ready()) return;
         burst({ len: 0.012, attack: 0.001, peak: 0.035, filters: [["highpass", 2500], ["bandpass", 4600 + Math.random() * 800, 3]] });
+      },
+      detent(year) {
+        if (!ready()) return;
+        burst({ len: 0.016, attack: 0.001, peak: year ? 0.06 : 0.04, filters: [["highpass", 1200], ["bandpass", 2300 + Math.random() * 400, 2.5]] });
+        if (year) burst({ at: 0.045, len: 0.02, attack: 0.001, peak: 0.055, filters: [["bandpass", 1500 + Math.random() * 200, 2]] });
       },
       shutter() {
         if (!ready()) return;
@@ -3815,11 +3822,21 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       needle.style.height = sc.bottom - ax.top + "px";
     };
     const posAt = (year) => padL + (year - fromYr) * yrPx - tlScroller.clientWidth * NEEDLE;
-    const setNeedle = (pos) => {
+    // the needle clicks like a dial as it passes each month, a firmer double
+    // notch on a new year; month clicks are capped so a fast scrub doesn't
+    // buzz. Silent on the paints that come from load or resize.
+    let lastDetent = 0;
+    const setNeedle = (pos, silent) => {
       const yr = Math.min(NOW, Math.max(fromYr, fromYr + (pos + tlScroller.clientWidth * NEEDLE - padL) / yrPx));
       const m = Math.min(11, Math.floor((yr % 1) * 12 + 0.5));
       const text = MONTHS[m] + " " + Math.floor(yr);
-      if (text !== shown) needleLabel.textContent = shown = text;
+      if (text === shown) return;
+      const newYear = shown && text.slice(-4) !== shown.slice(-4);
+      needleLabel.textContent = shown = text;
+      if (silent) return;
+      const now = performance.now();
+      if (newYear) { lastDetent = now; sfx.detent(true); }
+      else if (now - lastDetent > 45) { lastDetent = now; sfx.detent(false); }
     };
     let range = 0, runway = 0, depthAt = () => 0, cur = null, loop = 0, lastT = 0, visible = false;
 
@@ -3951,7 +3968,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     const remeasure = () => {
       measure(); placeNeedle();
       if (!tlSection.classList.contains("is-pinned") && !openedOnToday) { tlScroller.scrollLeft = posAt(NOW); openedOnToday = true; }
-      setNeedle(tlSection.classList.contains("is-pinned") ? (cur ? cur.x : posAt(NOW)) : tlScroller.scrollLeft); kick();
+      setNeedle(tlSection.classList.contains("is-pinned") ? (cur ? cur.x : posAt(NOW)) : tlScroller.scrollLeft, true); kick();
     };
     tlScroller.addEventListener("scroll", () => { if (!tlSection.classList.contains("is-pinned")) setNeedle(tlScroller.scrollLeft); }, { passive: true });
     addEventListener("resize", remeasure);

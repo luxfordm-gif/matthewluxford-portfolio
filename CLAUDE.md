@@ -54,6 +54,7 @@ All synthesised in one `sfx` helper in `src/index.njk` (Web Audio, filtered nois
 - `rustle` — timeline fan opening
 - `folder` — a case-study deck move (card-stock slide + tap)
 - `lift` — a hero card lifting on hover / tap-to-pop (lighter, no tap)
+- `detent` — the timeline needle: a notch per month as it passes (lower and woodier than the lens tick, throttled), a firmer double notch on a new year; silent on load/resize
 - `tick` / `shutter` — the snake: a tick per word (throttled, both scroll directions), a shutter once per key phrase; silent on load/resize paints
 
 ## Scroll smoothness
