@@ -870,13 +870,14 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   .tl.is-pinned{padding:0;z-index:3}
   .tl.is-pinned .tl__pin{
     position:sticky;
-    /* centred, but never so low that the nav's extra room pushes it off
-       the bottom of a short screen */
-    top:max(0px,min(calc((100svh - var(--tl-pin-h,100svh)) / 2),calc(100svh - var(--tl-pin-h,100svh) - var(--tl-top,0px))));
+    /* centred in the screen below the nav (JS sets --tl-stick). Only on a
+       screen too short for that does it start at the top and pad itself
+       clear of the nav instead (--tl-top) */
+    top:var(--tl-stick,0px);
     height:100vh;height:min(100svh,calc(var(--tl-pin-h,100svh) + var(--tl-top,0px)));
     display:flex;flex-direction:column;overflow:hidden;
     padding-top:calc(var(--tl-top,0px) + 1.5rem);
-    transition:padding-top .45s var(--ease);
+    transition:padding-top .45s var(--ease),top .45s var(--ease);
     touch-action:pan-y;
   }
   .tl.is-pinned .tl__view{flex:1;min-height:0;display:flex;flex-direction:column}
@@ -4089,9 +4090,17 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       };
     };
 
+    // where the pin sticks: centred in the screen below the nav when it's
+    // out. If the screen's too short to fit the pin under the nav, it
+    // sticks at the top and pads itself clear of the nav instead.
     const navRoom = () => {
       const out = navEl && !navEl.classList.contains("is-hidden") && !navEl.classList.contains("is-pinned");
-      tlSection.style.setProperty("--tl-top", out ? navEl.offsetHeight + "px" : "0px");
+      const navH = out ? navEl.offsetHeight : 0;
+      const pinH = parseFloat(tlSection.style.getPropertyValue("--tl-pin-h")) || 0;
+      const room = innerHeight - pinH;
+      const fits = pinH > 0 && room >= navH;
+      tlSection.style.setProperty("--tl-stick", (fits ? Math.round((room + navH) / 2) : 0) + "px");
+      tlSection.style.setProperty("--tl-top", (fits ? 0 : navH) + "px");
     };
     if (navEl) new MutationObserver(navRoom).observe(navEl, { attributes: true, attributeFilter: ["class"] });
     navRoom();
@@ -4101,7 +4110,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tlSection.classList.toggle("is-pinned", on);
       track.style.transform = rows.style.transform = "";
       cur = null;
-      if (!on) { tlSection.style.removeProperty("height"); tlSection.style.removeProperty("--tl-pin-h"); return; }
+      if (!on) { tlSection.style.removeProperty("height"); tlSection.style.removeProperty("--tl-pin-h"); navRoom(); return; }
       tlScroller.scrollLeft = 0;
       // the pin's height: down to the first role (less the nav's room, which
       // CSS adds back), then ROWS_SHOWN roles and room below the last one
@@ -4109,11 +4118,13 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       const navNow = parseFloat(tlSection.style.getPropertyValue("--tl-top")) || 0;
       const step = rowEls.length > 1 ? rowEls[1].offsetTop - rowEls[0].offsetTop : 56;
       const firstRow = rowEls[0].getBoundingClientRect().top - pin.getBoundingClientRect().top;
-      tlSection.style.setProperty("--tl-pin-h", Math.round(firstRow - navNow + ROWS_SHOWN * step + 36) + "px");
+      const pinH = Math.round(firstRow - navNow + ROWS_SHOWN * step + 36);
+      tlSection.style.setProperty("--tl-pin-h", pinH + "px");
+      navRoom();
       pad();
       range = Math.max(0, posAt(NOW) - posAt(FIRST));
       runway = range * RATIO;
-      tlSection.style.height = pin.offsetHeight + runway + "px";
+      tlSection.style.height = Math.min(pinH, innerHeight) + runway + "px";
       // each step of the staircase: where its bar starts along the track,
       // how far down it sits. Rows that start later but sit lower (the
       // holidays) never become the top one, so they're left out.
