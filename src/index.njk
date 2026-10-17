@@ -1622,12 +1622,14 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 @property --focus{syntax:"<number>";inherits:false;initial-value:0}
 .beyond__pol{
   position:absolute;left:calc(var(--x,0px) + var(--dx,0px));top:var(--y,0px);
-  width:clamp(130px,12vw,200px);
+  width:clamp(160px,14vw,240px);
   margin:0;padding:8px 8px 36px;
   background:var(--paper);border-radius:4px;
   box-shadow:0 0 0 1px var(--line),0 26px 46px -18px rgba(0,0,0,.22),0 6px 14px -4px rgba(0,0,0,.07);
   --focus:0;
-  transform:translate(-50%,-50%) rotate(calc(var(--th) + var(--r,0deg) * (1 - var(--focus)))) scale(calc(var(--s,1) + var(--focus) * .07));
+  /* --pop: how much a card grows in focus (hover a little, a tap/pin a lot) */
+  --pop:.1;
+  transform:translate(-50%,-50%) rotate(calc(var(--th) + var(--r,0deg) * (1 - var(--focus)))) scale(calc(var(--s,1) + var(--focus) * var(--pop)));
   filter:blur(calc((var(--b,0px) + var(--vb,0px)) * (1 - var(--focus))));
   transition:--focus .45s var(--ease);
   /* tap to sharpen, press and drag to pick up and throw (JS); none, so a
@@ -1637,12 +1639,13 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 }
 .beyond__pol img{pointer-events:none;-webkit-user-drag:none}
 .beyond__pol.is-focus{z-index:3}
+.beyond__pol[data-pin]{--pop:.28;z-index:4}
 .beyond__pol.is-held{
   z-index:6;cursor:grabbing;
   box-shadow:0 0 0 1px var(--line),0 40px 70px -20px rgba(0,0,0,.35),0 10px 24px -6px rgba(0,0,0,.12);
 }
-.beyond__pol[data-depth="near"]{--s:1.15;--b:2.5px;z-index:2}
-.beyond__pol[data-depth="far"]{--s:.78;--b:1px;opacity:.92}
+.beyond__pol[data-depth="near"]{--s:1.15;--b:1px;z-index:2}
+.beyond__pol[data-depth="far"]{--s:.78;--b:.5px;opacity:.94}
 .beyond__pol img,
 .beyond__pol__ph{
   /* height:auto so the img's height attribute doesn't beat aspect-ratio */
@@ -1680,7 +1683,11 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 .beyond__skip:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 @media (max-width:880px){
   .beyond__text{font-size:clamp(1.9rem,1rem + 4.4vw,2.8rem)}
-  .beyond__pol{width:clamp(96px,26vw,130px);padding:6px 6px 26px}
+  .beyond__pol{width:clamp(124px,34vw,170px);padding:6px 6px 28px}
+  /* phones: next to no depth blur, the cards are small enough already;
+     scale and opacity carry the depth, a tap pops one sharp and big */
+  .beyond__pol[data-depth="near"]{--b:.35px}
+  .beyond__pol[data-depth="far"]{--b:.25px}
   .beyond__pol figcaption{font-size:1rem;bottom:5px}
 }
 @media (prefers-reduced-motion:reduce){
@@ -3424,7 +3431,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       });
       // motion blur on the polaroids: bumped by how far the snake moved this
       // frame, decayed frame by frame so it clears the moment you stop
-      if (lastTx !== null && !reduce) vb = Math.max(vb * 0.78, Math.min(4, Math.abs(tx - lastTx) * 0.05));
+      if (lastTx !== null && !reduce) vb = Math.max(vb * 0.78, Math.min(2.5, Math.abs(tx - lastTx) * 0.04));
       if (vb < 0.05) vb = 0;
       stage.style.setProperty("--vb", vb.toFixed(2) + "px");
       lastTx = tx;
