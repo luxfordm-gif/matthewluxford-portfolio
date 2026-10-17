@@ -671,6 +671,7 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
           mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
 }
 .tl__scroller::-webkit-scrollbar{display:none}
+.tl__stick{display:none}
 .tl__scroller.is-dragging{cursor:grabbing;user-select:none}
 .tl__scroller:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
 .tl__track{
@@ -777,14 +778,24 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   .tl__bar:hover .tl__card:nth-child(2),.tl__bar:focus-within .tl__card:nth-child(2){transform:translate(0,-100px) rotate(0deg)}
   .tl__bar:hover .tl__card:nth-child(3),.tl__bar:focus-within .tl__card:nth-child(3){transform:translate(88px,-78px) rotate(11deg)}
   .tl__rows{padding-top:150px}
-  /* phones: the timeline is a short window and the staircase slides up and
-     down under the years as you swipe (JS sets --follow and the height), so
-     the roles for the years in view never drop off the bottom */
-  .tl__rows{transform:translateY(var(--follow,0px));transition:transform .45s var(--ease)}
+  /* phones: the years stick to the top of the screen (a copy outside the
+     scroller, since the scroller would clip a sticky child) and the page
+     follows the swipe so the roles for the years in view sit under them */
+  .tl__stick{
+    display:block;position:sticky;top:var(--tl-top,0px);z-index:6;
+    overflow:hidden;pointer-events:none;
+    background:rgba(250,250,247,.88);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    transition:top .45s var(--ease);
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
+  }
+  .tl__stick .tl__axis{margin-top:.6rem}
+  .tl__stick .tl__track{will-change:transform}
+  .tl__scroller .tl__axis{display:none}
 }
 @media (prefers-reduced-motion:reduce){
   .tl__card{transition:opacity .2s}
-  .tl__rows{transition:none}
 }
 
 /* ========================================================= marquee */
@@ -2697,6 +2708,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       <h2 class="tl__title" id="tl-title">Work life</h2>
       <p class="tl__hint">Drag to scrub · hover a role</p>
     </div>
+    <div class="tl__stick" aria-hidden="true"><div class="tl__track"></div></div>
     <div class="tl__scroller" tabindex="0" aria-label="Work history, 2007 to now. Scrolls sideways.">
       <div class="tl__track">
         <ol class="tl__axis" aria-hidden="true"><li style="--y:2015">2015</li><li style="--y:2016">2016</li><li style="--y:2017">2017</li><li style="--y:2018">2018</li><li style="--y:2019">2019</li><li style="--y:2020">2020</li><li style="--y:2021">2021</li><li style="--y:2022">2022</li><li style="--y:2023">2023</li><li style="--y:2024">2024</li><li style="--y:2025">2025</li><li style="--y:2026">2026</li></ol>
@@ -4085,37 +4097,50 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tlScroller.classList.remove("is-dragging");
     });
 
-    // Phones: the staircase is too tall to see whole, so the scroller shows a
-    // window about five rows deep, and as you swipe the rows slide so the
-    // top role in view sits right under the years.
-    const tlRows = tlScroller.querySelector(".tl__rows");
-    const rowEls = [...tlRows.children];
+    // Phones: the years stick to the top of the screen (a copy of the axis,
+    // slid sideways in step with the scroller), and as you swipe the page
+    // scrolls so the top role in view sits just under them, with room for
+    // its photo fan. The sticky row drops below the nav when the nav is out.
     const phone = matchMedia("(max-width:760px)");
-    const VISIBLE = 5;
-    let tlRaf = 0;
-    const follow = () => {
-      tlRaf = 0;
-      if (!phone.matches) {
-        tlScroller.style.removeProperty("height");
-        tlRows.style.removeProperty("--follow");
-        return;
-      }
-      const cs = getComputedStyle(tlRows);
-      const rowH = rowEls[0].offsetHeight, gap = parseFloat(cs.rowGap) || 0;
-      tlScroller.style.height = tlRows.offsetTop + parseFloat(cs.paddingTop) + VISIBLE * (rowH + gap) + 8 + "px";
+    const tlSection = tlScroller.closest(".tl");
+    const stick = tlSection.querySelector(".tl__stick");
+    const stickTrack = stick.querySelector(".tl__track");
+    stickTrack.appendChild(tlScroller.querySelector(".tl__axis").cloneNode(true));
+    const rowEls = [...tlScroller.querySelectorAll(".tl__row")];
+    const navEl = document.querySelector(".nav");
+    const FAN_ROOM = 140;
+    const stickTop = () => {
+      const out = navEl && !navEl.classList.contains("is-hidden") && !navEl.classList.contains("is-pinned");
+      tlSection.style.setProperty("--tl-top", out ? navEl.offsetHeight + "px" : "0px");
+    };
+    if (navEl) new MutationObserver(stickTop).observe(navEl, { attributes: true, attributeFilter: ["class"] });
+    stickTop();
+    let lastRow = null, tlRaf = 0;
+    const topRow = () => {
       const view = tlScroller.getBoundingClientRect();
-      const top = rowEls.find((row) => {
+      return rowEls.find((row) => {
         const r = row.querySelector(".tl__bar").getBoundingClientRect();
         return r.right > view.left + 24 && r.left < view.right - 24;
       });
-      const shift = top ? top.offsetTop - rowEls[0].offsetTop : 0;
-      tlRows.style.setProperty("--follow", -shift + "px");
     };
-    const queueFollow = () => { if (!tlRaf) tlRaf = requestAnimationFrame(follow); };
-    tlScroller.addEventListener("scroll", queueFollow, { passive: true });
-    addEventListener("resize", queueFollow);
-    addEventListener("DOMContentLoaded", queueFollow);
-    follow();
+    const follow = (user) => {
+      tlRaf = 0;
+      stickTrack.style.transform = `translateX(${-tlScroller.scrollLeft}px)`;
+      if (!phone.matches) return;
+      const row = topRow();
+      if (!row || row === lastRow) return;
+      lastRow = row;
+      // only move the page while you're actually in the timeline
+      const sec = tlSection.getBoundingClientRect();
+      if (!user || sec.top > innerHeight * 0.5 || sec.bottom < innerHeight * 0.5) return;
+      const under = parseFloat(tlSection.style.getPropertyValue("--tl-top")) + stick.offsetHeight;
+      const y = row.getBoundingClientRect().top + scrollY - under - FAN_ROOM;
+      scrollTo({ top: Math.max(0, y), behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth" });
+    };
+    tlScroller.addEventListener("scroll", () => { if (!tlRaf) tlRaf = requestAnimationFrame(() => follow(true)); }, { passive: true });
+    addEventListener("resize", () => follow(false));
+    addEventListener("DOMContentLoaded", () => follow(false));
+    follow(false);
   }
 
   // Work life fan: a short paper rustle as the cards come out.
