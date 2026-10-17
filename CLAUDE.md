@@ -47,6 +47,19 @@ A draggable pill with Layout and Viewport toggles for reviewing pages at Mobile 
 - **Sections** button: every homepage section carries `data-pref-section="Label"`, so it can be switched off or dragged into a new order from the panel (saved per page, review-only). Don't delete or hide sections in the HTML to try a layout; use the panel. Tag new top-level sections the same way.
 - Close with × or ⌥⇧P; same shortcut brings it back.
 
+## Homepage sounds
+
+All synthesised in one `sfx` helper in `src/index.njk` (Web Audio, filtered noise bursts; no files). Browsers only allow sound after a click or key press, so every call is silent until then. Four sounds, each tied to one thing — don't reuse one across sections, Matthew found that repetitive:
+
+- `rustle` — timeline fan opening
+- `folder` — a case-study deck move (card-stock slide + tap)
+- `lift` — a hero card lifting on hover / tap-to-pop (lighter, no tap)
+- `tick` / `shutter` — the snake: a tick per word (throttled, both scroll directions), a shutter once per key phrase; silent on load/resize paints
+
+## Scroll smoothness
+
+Measure before and after any change meant to help it: an rAF frame-time trace over a scripted scroll (see the snake check in the wrap-up logs). `background-attachment:fixed` on `.page` is the known-good background; a fixed `::before` layer under a `clip-path` looked cheaper on a raster trace but dropped frames on the snake. The hero cards, deck, snake, profile-card slide and timeline all animate transforms only; keep it that way.
+
 ## Type scale on laptops
 
 The site is designed at 1920. Between 761px and 1599px wide every page drops the rem base to 93.75% (`html{font-size}` in `layouts/base.njk`) so copy, gaps and paddings come in ~6% together. On the homepage section titles use `--h2`, a step below the hero's `--h1`; `--h1` is in px so the rem nudge can't touch it. The case-study title token `--fs-h1` (also in `base.njk`) has a lighter rem share so it actually comes down on laptops (~101px at 1280, 144px at 1920). Check changes at 1280×800 with the panel's Small laptop preset.
