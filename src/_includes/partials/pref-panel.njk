@@ -21,6 +21,12 @@
         {value:"fraunces",title:"Fraunces",sub:"The original italic"}
       ]},
 {%- endif %}
+{%- if prefIntro %}
+      {id:"intro",label:"About intro",options:[
+        {value:"slide",title:"Card slides from hero",sub:"Profile card lands on centred copy"},
+        {value:"beside",title:"Card beside copy",sub:"The first take, card on the left"}
+      ]},
+{%- endif %}
 {%- if prefDeckTitle %}
       {id:"cardtitle",label:"Card title",options:[
         {value:"medium",title:"Inter Medium",sub:"Firmer, a step smaller"},
