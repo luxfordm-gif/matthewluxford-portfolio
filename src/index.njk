@@ -638,6 +638,9 @@ p,li{text-wrap:pretty}
 }
 .hello__body a:hover{text-decoration-color:var(--ink)}
 @media (max-width:760px){
+  /* a wider gutter than the page's --pad, so the intro copy reads as a
+     narrower, calmer column on a phone */
+  .hello{padding-left:calc(var(--pad) + 1rem);padding-right:calc(var(--pad) + 1rem)}
   .hello__inner{grid-template-columns:1fr;gap:3.5rem}
   .hello__card{width:min(100%,340px);margin:0 auto}
 }
@@ -3891,7 +3894,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         if (next !== hello) return;
         const bottom = top + h / 2 + travel + (h * (1 + GROW)) / 2;
         const helloTop = hello.getBoundingClientRect().top + scrollY;
-        hello.style.setProperty("--land", Math.max(0, Math.round(bottom - helloTop + 56)) + "px");
+        // breathing room between the landed card and the copy; more on
+        // phones, where the copy starts right under it
+        const gap = phone.matches ? 96 : 56;
+        hello.style.setProperty("--land", Math.max(0, Math.round(bottom - helloTop + gap)) + "px");
       };
       const update = () => {
         if (!on) return;
