@@ -777,9 +777,14 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   .tl__bar:hover .tl__card:nth-child(2),.tl__bar:focus-within .tl__card:nth-child(2){transform:translate(0,-100px) rotate(0deg)}
   .tl__bar:hover .tl__card:nth-child(3),.tl__bar:focus-within .tl__card:nth-child(3){transform:translate(88px,-78px) rotate(11deg)}
   .tl__rows{padding-top:150px}
+  /* phones: the timeline is a short window and the staircase slides up and
+     down under the years as you swipe (JS sets --follow and the height), so
+     the roles for the years in view never drop off the bottom */
+  .tl__rows{transform:translateY(var(--follow,0px));transition:transform .45s var(--ease)}
 }
 @media (prefers-reduced-motion:reduce){
   .tl__card{transition:opacity .2s}
+  .tl__rows{transition:none}
 }
 
 /* ========================================================= marquee */
@@ -4079,6 +4084,38 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tlDrag = null;
       tlScroller.classList.remove("is-dragging");
     });
+
+    // Phones: the staircase is too tall to see whole, so the scroller shows a
+    // window about five rows deep, and as you swipe the rows slide so the
+    // top role in view sits right under the years.
+    const tlRows = tlScroller.querySelector(".tl__rows");
+    const rowEls = [...tlRows.children];
+    const phone = matchMedia("(max-width:760px)");
+    const VISIBLE = 5;
+    let tlRaf = 0;
+    const follow = () => {
+      tlRaf = 0;
+      if (!phone.matches) {
+        tlScroller.style.removeProperty("height");
+        tlRows.style.removeProperty("--follow");
+        return;
+      }
+      const cs = getComputedStyle(tlRows);
+      const rowH = rowEls[0].offsetHeight, gap = parseFloat(cs.rowGap) || 0;
+      tlScroller.style.height = tlRows.offsetTop + parseFloat(cs.paddingTop) + VISIBLE * (rowH + gap) + 8 + "px";
+      const view = tlScroller.getBoundingClientRect();
+      const top = rowEls.find((row) => {
+        const r = row.querySelector(".tl__bar").getBoundingClientRect();
+        return r.right > view.left + 24 && r.left < view.right - 24;
+      });
+      const shift = top ? top.offsetTop - rowEls[0].offsetTop : 0;
+      tlRows.style.setProperty("--follow", -shift + "px");
+    };
+    const queueFollow = () => { if (!tlRaf) tlRaf = requestAnimationFrame(follow); };
+    tlScroller.addEventListener("scroll", queueFollow, { passive: true });
+    addEventListener("resize", queueFollow);
+    addEventListener("DOMContentLoaded", queueFollow);
+    follow();
   }
 
   // Work life fan: a short paper rustle as the cards come out.
