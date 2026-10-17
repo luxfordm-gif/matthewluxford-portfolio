@@ -51,7 +51,7 @@ A draggable pill with Layout and Viewport toggles for reviewing pages at Mobile 
 
 All synthesised in one `sfx` helper in `src/index.njk` (Web Audio, filtered noise bursts; no files). Browsers only allow sound after a click or key press, so every call is silent until then. Four sounds, each tied to one thing — don't reuse one across sections, Matthew found that repetitive:
 
-- `rustle` — timeline fan opening
+- `pop` — timeline fan opening (a soft, short paper puff; a longer rustle got repetitive hovering down the rows and a tonal bubble pop was "too much pop")
 - `folder` — a case-study deck move (card-stock slide + tap)
 - `lift` — a hero card lifting on hover / tap-to-pop (lighter, no tap)
 - `pluck` / `thud` — a polaroid in the snake picked up / bumping the stage edge after a throw
