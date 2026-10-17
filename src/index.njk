@@ -259,11 +259,11 @@ p,li{text-wrap:pretty}
 @keyframes cardDeal{
   0%{
     opacity:0;
-    transform:translate(var(--stack-tx,0), calc(var(--stack-ty,0) + 50px)) rotate(var(--stack-r, 0deg)) scale(.86);
+    transform:translate(calc(var(--stack-tx,0px) + var(--wfix,0px)), calc(var(--stack-ty,0px) + 50px)) rotate(var(--stack-r, 0deg)) scale(.86);
   }
   40%{
     opacity:1;
-    transform:translate(var(--stack-tx,0), var(--stack-ty,0)) rotate(var(--stack-r, 0deg)) scale(1);
+    transform:translate(calc(var(--stack-tx,0px) + var(--wfix,0px)), var(--stack-ty,0px)) rotate(var(--stack-r, 0deg)) scale(1);
   }
   100%{
     opacity:1;
@@ -506,7 +506,7 @@ p,li{text-wrap:pretty}
   /* the profile card comes last on phones, on top of the stack */
   .fcard--5{
     margin-left:-109px;top:170px;z-index:auto;
-    --r:-2deg;--stack-tx:0;--stack-ty:0;--stack-r:-1deg;
+    --r:-2deg;--stack-tx:0px;--stack-ty:0px;--stack-r:-1deg;
   }
   .fcard--4{
     margin-left:-139px;top:240px;
@@ -2317,6 +2317,26 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         </ol>
       </article>
       </div>
+      <script>
+      // The deal gathers every hero card into one pile before fanning out, and
+      // the pile spot assumes a 218px card. The sticky note and the definition
+      // card size to their text, so nudge them back by half the difference
+      // (--wfix, used in the cardDeal keyframes) or they sit off to the right
+      // and then jump. A ResizeObserver re-measures whenever a card's width
+      // changes (the handwriting font landing changes the sticky note's), and
+      // runs before that frame paints, so there's no one-frame flick.
+      {
+        const dealt = [...document.querySelectorAll(".fan .fcard")];
+        const wfix = (c) => {
+          if (getComputedStyle(c).getPropertyValue("--stack-tx").trim()) c.style.setProperty("--wfix", (218 - c.offsetWidth) / 2 + "px");
+        };
+        dealt.forEach(wfix);
+        if ("ResizeObserver" in window) {
+          const ro = new ResizeObserver((entries) => entries.forEach((e) => wfix(e.target)));
+          dealt.forEach((c) => ro.observe(c));
+        }
+      }
+      </script>
     </div>
   </section>
 
@@ -3988,7 +4008,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     if (card && hero && fanIn && hello) {
       const HOLD_AT = 0.42; // where on screen its centre holds, from the top
       const phone = matchMedia("(max-width:640px)");
-      let k = 1, start = 0, travel = 0, on = false, GROW = 0.3, r = 0;
+      let k = 1, start = 0, travel = 0, on = false, GROW = 0.3, r = 0, dx = 0;
       const active = () => !reduce.matches && html.dataset.prefIntro !== "beside" && hero.offsetParent !== null;
       const measure = () => {
         on = active();
@@ -4001,6 +4021,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         GROW = phone.matches ? 0 : 0.3;
         r = parseFloat(getComputedStyle(card).getPropertyValue("--r")) || 0;
         travel = innerHeight / 2;
+        // how far its slot sits off the centre line (20px right on phones);
+        // it drifts back to the middle as it travels
+        dx = card.offsetLeft + card.offsetWidth / 2 - fanIn.offsetWidth / 2;
         const top = fanIn.getBoundingClientRect().top + scrollY + card.offsetTop * k;
         const h = card.offsetHeight * k;
         start = Math.max(hero.getBoundingClientRect().top + scrollY, top + h / 2 - innerHeight * HOLD_AT);
@@ -4016,7 +4039,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         if (!on) return;
         const y = Math.min(travel, Math.max(0, scrollY - start));
         const p = travel ? y / travel : 0;
-        card.style.translate = `0 ${(y / k).toFixed(1)}px`;
+        card.style.translate = `${(-dx * p).toFixed(1)}px ${(y / k).toFixed(1)}px`;
         card.style.rotate = `${(-r * p).toFixed(2)}deg`;
         card.style.scale = (1 + GROW * p).toFixed(3);
       };
