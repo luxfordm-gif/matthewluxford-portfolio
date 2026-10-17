@@ -13,7 +13,7 @@ npm run check       # run the shared-CSS drift check (also runs in CI)
 
 ## Site map (source files)
 
-- `src/index.njk` — homepage (hero, FYI note, photo-card intro `.hello`, work deck, "Where I've been" timeline `.tl`, about list, beyond, testimonials, lux-large-footer)
+- `src/index.njk` — homepage (hero, FYI note, photo-card intro `.hello` — the nav's About lands here, work deck, "Where I've been" timeline `.tl`, beyond, testimonials, lux-large-footer). The old About list (accordion job rows) was removed in #80: the timeline carries that now.
   - "Where I've been" `.tl`: a sideways scroller on desktop; on phones (≤760px) it pins to the screen (`.tl.is-pinned`, a tall runway with a sticky `.tl__pin`) and the page scroll travels back through the years, with the staircase rising on a smooth curve and a spring. Sideways swipes drive the same page scroll and coast on release.
 - `src/cv.njk` — full CV / résumé (nav-cv variant, secret-footer)
 - `src/jlr.html` — Jaguar Land Rover case study
@@ -54,6 +54,8 @@ All synthesised in one `sfx` helper in `src/index.njk` (Web Audio, filtered nois
 - `rustle` — timeline fan opening
 - `folder` — a case-study deck move (card-stock slide + tap)
 - `lift` — a hero card lifting on hover / tap-to-pop (lighter, no tap)
+- `pluck` / `thud` — a polaroid in the snake picked up / bumping the stage edge after a throw
+- `detent` — the timeline needle: a notch per month as it passes (lower and woodier than the lens tick, throttled), a firmer double notch on a new year; silent on load/resize
 - `tick` / `shutter` — the snake: a tick per word (throttled, both scroll directions), a shutter once per key phrase; silent on load/resize paints
 
 ## Scroll smoothness
