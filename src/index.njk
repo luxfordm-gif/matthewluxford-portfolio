@@ -637,8 +637,13 @@ p,li{text-wrap:pretty}
   .hello__card,.hello__card.reveal-up,.is-revealed .hello__card.reveal-up:hover{transform:rotate(-4deg);transition:none}
 }
 html:not([data-pref-intro="beside"]) .hello{padding-top:var(--land,clamp(2rem,4vw,4rem))}
-html:not([data-pref-intro="beside"]) .hello__inner{display:block;max-width:860px}
+/* the column is as wide as the copy's measure, so the left-aligned block
+   sits in the middle of the page rather than hugging the left of a wider box */
+html:not([data-pref-intro="beside"]) .hello__inner{display:block;max-width:min(100%,720px)}
 html:not([data-pref-intro="beside"]) .hello__card{display:none}
+html:not([data-pref-intro="beside"]) .hello__lead,
+html:not([data-pref-intro="beside"]) .hello__body,
+html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
 
 /* ========================================================= work life */
 /* horizontal scrubber timeline: one bar per role on a year axis. --s/--e
