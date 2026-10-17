@@ -52,7 +52,6 @@ prefIntro: true
   --anchor-gap:1.5rem;
   --work-pad-top:clamp(5rem,9vw,8rem);
   --work-head-pad-top:clamp(2rem,5vw,4rem);
-  --about-pad-top:clamp(5rem,10vw,8rem);
 }
 /* preference panel: Layout → Accent serif (only loads in review, see
    partials/pref-panel.njk) */
@@ -301,7 +300,6 @@ p,li{text-wrap:pretty}
 }
 .fcard--1{
   left:50%;margin-left:-458px;top:54px;
-  width:max-content;min-width:218px;
   --r:-8deg;--stack-tx:349px;--stack-ty:-54px;--stack-r:-2deg;
   background:#fde68a;
   font-family:var(--hand);font-size:1.12rem;line-height:1.3;color:#3a2e0d;
@@ -309,7 +307,7 @@ p,li{text-wrap:pretty}
 }
 .fcard--1 .ttl{font-weight:600;font-size:1.12rem;margin-bottom:6px}
 .fcard--1 ul{display:flex;flex-direction:column;gap:5px;margin-top:4px}
-.fcard--1 ul li{display:flex;gap:5px;font-family:var(--hand);font-size:18px;line-height:1.2}
+.fcard--1 ul li{display:flex;gap:5px;font-family:var(--hand);font-size:18px;line-height:1.2;text-wrap:balance}
 .fcard--1 ul li b{font-weight:700;margin-right:2px}
 .fcard--2{
   left:50%;margin-left:-270px;top:18px;
@@ -357,8 +355,9 @@ p,li{text-wrap:pretty}
    translate / rotate / scale, which stack with the deal + hover transforms). */
 .fcard--3{
   left:50%;margin-left:-110px;top:-2px;padding:7px;gap:0;z-index:5;
-  /* dealt and held straight: it's the one that slides down the page */
-  --r:0deg;--stack-tx:1px;--stack-ty:2px;--stack-r:0deg;
+  /* dealt leaning a touch right; it straightens as it slides down the page
+     (the slide JS rotates by -r as it goes). Never wiggles. */
+  --r:4deg;--stack-tx:1px;--stack-ty:2px;--stack-r:2deg;
   background:var(--paper);
   will-change:translate,rotate,scale;
 }
@@ -376,7 +375,6 @@ p,li{text-wrap:pretty}
 .me__connect:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .fcard--4{
   left:50%;margin-left:215px;top:42px;
-  width:max-content;min-width:218px;
   --r:7deg;--stack-tx:-362px;--stack-ty:-42px;--stack-r:4deg;
   background:var(--paper);
   padding:16px 16px 18px;
@@ -385,7 +383,7 @@ p,li{text-wrap:pretty}
 .fcard--4 .ttl em{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.12rem}
 .fcard--4 .phon{font-family:var(--serif);font-style:italic;color:var(--muted-strong);font-size:.83rem;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
 .fcard--4 ol{display:flex;flex-direction:column;gap:3px;font-size:.88rem;color:var(--ink-2);counter-reset:fc}
-.fcard--4 ol li{counter-increment:fc;line-height:1.35;white-space:nowrap}
+.fcard--4 ol li{counter-increment:fc;line-height:1.35;text-wrap:balance}
 .fcard--4 ol li::before{content:"(" counter(fc) ") ";color:var(--muted-strong)}
 .fcard--4 ol li em{font-family:var(--serif);font-style:italic;color:var(--muted-strong)}
 
@@ -529,7 +527,7 @@ p,li{text-wrap:pretty}
   }
   .fcard--3{
     margin-left:-89px;top:310px;z-index:7;
-    --r:0deg;--stack-tx:-20px;--stack-ty:-140px;--stack-r:0deg;
+    --r:4deg;--stack-tx:-20px;--stack-ty:-140px;--stack-r:2deg;
   }
 }
 
@@ -568,6 +566,8 @@ p,li{text-wrap:pretty}
 }
 
 /* ============================================================ hello */
+/* the nav's About link lands here; same fixed-nav allowance as #work */
+#hello{scroll-margin-top:calc(var(--nav-h) + var(--anchor-gap))}
 /* the About intro. Default: the hero's profile card slides down and lands
    here, so this is a single centred column with --land of room on top (JS
    measures it). Layout panel → About intro → "Card beside copy" brings back
@@ -673,12 +673,21 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   --yr:150px;--from:2014;--to:2027;
   padding:clamp(4rem,8vw,7rem) 0 clamp(3rem,6vw,5rem);
 }
-.tl__head{
-  max-width:1400px;margin:0 auto;padding:0 var(--pad);
-  display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+/* same title as the deck above: a step down from --h2, italic second line */
+.tl__head{max-width:1400px;margin:0 auto;padding:0 var(--pad);text-align:center}
+.tl__title{
+  font-family:var(--sans);font-weight:500;
+  font-size:calc(var(--h2) * .78);
+  letter-spacing:-.03em;line-height:1.08;
+  margin:0 auto;color:var(--ink);
+  text-wrap:balance;
 }
-.tl__title{margin:0;font-weight:700;font-size:var(--h2);letter-spacing:-.035em;line-height:1.05}
-.tl__hint{margin:0;font-size:.85rem;color:var(--muted-strong)}
+.tl__title .it{
+  display:block;
+  font-family:var(--serif-2);font-style:italic;font-weight:400;
+  letter-spacing:-.015em;
+}
+.tl__title .tl__it--phone{display:none}
 .tl__scroller{
   overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
   cursor:grab;
@@ -707,7 +716,6 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;
   background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:1px;z-index:-1;
 }
-.tl__hint--phone{display:none}
 .tl__scroller.is-dragging{cursor:grabbing;user-select:none}
 .tl__scroller:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
 .tl__track{
@@ -817,14 +825,13 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
 .tl__card:nth-child(2){z-index:1}
 @media (max-width:760px){
   .tl{--yr:105px}
-  .tl__hint{display:none}
-  .tl__head{flex-direction:column;align-items:flex-start;gap:.35rem}
   .tl__card{width:112px;left:-56px;bottom:-30px}
   .tl__bar.is-open .tl__card:nth-child(1),.tl__bar:focus-within .tl__card:nth-child(1){transform:translate(-88px,-80px) rotate(-12deg)}
   .tl__bar.is-open .tl__card:nth-child(2),.tl__bar:focus-within .tl__card:nth-child(2){transform:translate(0,-100px) rotate(0deg)}
   .tl__bar.is-open .tl__card:nth-child(3),.tl__bar:focus-within .tl__card:nth-child(3){transform:translate(88px,-78px) rotate(11deg)}
   .tl__rows{padding-top:150px}
-  .tl__hint--phone{display:block}
+  .tl__title .tl__it--desk{display:none}
+  .tl__title .tl__it--phone{display:block}
   /* phones: the timeline pins to the screen and scrolling the page travels
      back through the years. The section is a tall runway (JS sets its
      height) with a full-screen sticky pin; JS moves the track sideways and
@@ -918,7 +925,7 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   letter-spacing:-.05em;line-height:.9;
   margin:0;color:var(--ink);
 }
-/* the desktop ramp was eased down to sit alongside .about__title; mobile keeps
+/* the desktop ramp was eased down to sit alongside the section titles; mobile keeps
    the original scale, where the title is already tuned against a 375px column */
 @media (max-width:760px){
   .work__title{font-size:clamp(2.6rem,1.4rem + 6.5vw,9rem)}
@@ -1217,7 +1224,7 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
 }
 .deck__head{padding:0 var(--pad) clamp(4.5rem,8.5vw,8.5rem);text-align:center}
 /* the nav's Work link lands here now: cancel the section's own top padding
-   so the title sits --anchor-gap below the fixed nav (same idea as #about) */
+   so the title sits --anchor-gap below the fixed nav (same idea as #hello) */
 .deck#work{scroll-margin-top:calc(var(--nav-h) + var(--anchor-gap) - clamp(4rem,8vw,7rem))}
 .deck__title{
   /* lighter and a step down from --h2: the cards are the headline here */
@@ -1422,259 +1429,6 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 }
 @media (prefers-reduced-motion:reduce){
   .deck__card,.deck__cards[class*="is-nudging"] .deck__card{transition:none}
-}
-
-/* ========================================================== about */
-.about{
-  position:relative;z-index:2;
-  padding:var(--about-pad-top) var(--pad) clamp(4rem,8vw,6rem);
-}
-/* Same fixed-nav problem as #work — see the note there. */
-#about{scroll-margin-top:calc(var(--nav-h) + var(--anchor-gap) - var(--about-pad-top))}
-.about__inner{
-  max-width:1400px;
-  margin:0 auto;
-  position:relative;
-}
-.about__exp{
-  position:relative;
-  z-index:1;
-}
-/* The rows only become interactive at ≤880px, where tapping one expands its
-   description — the click handler early-returns above that. So the pointer
-   cursor belongs to that breakpoint, not to the hover-image behaviour. */
-@media (max-width:880px){
-  .about__exp{cursor:pointer}
-}
-.about__exp::before{
-  content:"";
-  position:absolute;
-  left:calc(50% - 50vw);right:calc(50% - 50vw);
-  top:0;bottom:0;
-  background:transparent;
-  z-index:-1;
-  transition:background .35s var(--ease);
-}
-.about__exp:hover::before{
-  background:rgba(236, 224, 188, .15);
-}
-
-/* hover-follow preview image */
-.about__hover-img{
-  position:fixed;left:0;top:0;
-  --w:330px;
-  --h:240px;
-  width:var(--w);
-  /* Height is reserved per row (from data-h) rather than left to height:auto.
-     Deriving it from the image meant the box kept the *previous* image's
-     height until the new one decoded, then snapped — and because the panel is
-     centred with translate(-50%,-50%), that snap re-centred it on the cursor.
-     Reserving the box makes the geometry known the instant a row is shown. */
-  height:var(--h);
-  background:#fff;
-  border-radius:6px;padding:6px;
-  pointer-events:none;
-  opacity:0;
-  --rot:10deg;
-  /* --tilt is added to each row's own --rot by the pointer handler, so the
-     card leans into the direction you're moving and settles back when you
-     stop. Additive, so every row keeps its own base angle. */
-  --tilt:0deg;
-  transform:translate(-50%, -50%) rotate(calc(var(--rot) + var(--tilt))) scale(.86);
-  transform-origin:center;
-  transition:opacity .3s var(--ease), transform .4s var(--ease),
-             width .35s var(--ease), height .35s var(--ease);
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,.04),
-    0 35px 70px -25px rgba(0,0,0,.4),
-    0 12px 24px -10px rgba(0,0,0,.18);
-  z-index:30;
-}
-.about__hover-img img{
-  width:100%;height:100%;
-  object-fit:cover;
-  display:block;border-radius:3px;
-}
-.about__hover-img.is-active{
-  opacity:1;
-  transform:translate(-50%, -50%) rotate(calc(var(--rot) + var(--tilt))) scale(1);
-}
-@media (max-width:880px){
-  .about__hover-img{display:none}
-}
-@media (prefers-reduced-motion:reduce){
-  .about__hover-img{display:none}
-}
-.about__title{
-  font-family:var(--sans);font-weight:700;
-  font-size:var(--h2);
-  letter-spacing:-.035em;line-height:1.05;
-  margin:0 0 clamp(3rem,6vw,5rem);
-  color:var(--ink);
-}
-@media (max-width:760px){
-  .about__title{
-    font-size:var(--h2);
-    margin-bottom:clamp(1.5rem,4vw,2.25rem);
-  }
-  /* lead sits closer to the title and is bigger so it breaks up the body */
-  .about__intro{
-    margin-bottom:clamp(2.25rem,6vw,3.5rem);
-    gap:clamp(1.25rem,4vw,2rem);
-  }
-  .about__lead{
-    font-size:clamp(1.4rem,1rem + 1.6vw,1.7rem);
-    line-height:1.25;
-    max-width:24ch;
-  }
-}
-.about__intro{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:clamp(2rem,5vw,5rem);
-  margin-bottom:clamp(4rem,9vw,7rem);
-}
-.about__lead{
-  font-size:clamp(1.05rem,.95rem + .55vw,1.4rem);
-  font-weight:400;line-height:37px;color:var(--ink);
-  letter-spacing:-.01em;
-  max-width:32ch;
-}
-.about__body{
-  font-size:clamp(1.05rem,.95rem + .55vw,1.4rem);
-  font-weight:400;
-  color:var(--ink);line-height:1.55;max-width:48ch;
-  letter-spacing:-.005em;
-}
-.about__body p{margin:0 0 1em}
-.about__body p:last-child{margin-bottom:0}
-.about__body em{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
-
-.about__body strong{color:var(--ink);font-weight:600}
-.about__body a.dotted-link{
-  text-decoration:underline dotted #000;
-  text-underline-offset:3px;
-}
-.about__body a.dotted-link:hover{text-decoration-style:solid}
-
-.about__exp{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-areas:
-    "when role"
-    ".    desc";
-  column-gap:clamp(2rem,5vw,5rem);
-  row-gap:.85rem;
-  padding:1.75rem 0;
-  border-top:1px solid var(--line);
-}
-.about__exp:last-of-type{border-bottom:1px solid var(--line)}
-/* continuation row — same date column, no top border, tighter spacing */
-.about__exp--continued{
-  border-top:none!important;
-  padding-top:1.5rem;
-}
-.about__exp--continued .about__exp__when{visibility:hidden}
-.about__exp__when{
-  grid-area:when;
-  font-size:clamp(.95rem,.9rem + .2vw,1.1rem);
-  color:var(--ink);font-weight:400;letter-spacing:-.005em;
-}
-.about__exp__role{
-  grid-area:role;
-  font-size:clamp(.95rem,.9rem + .2vw,1.1rem);
-  color:var(--ink);font-weight:600;letter-spacing:-.005em;
-  line-height:1.3;
-}
-.about__exp__role .sep{color:inherit;font-weight:inherit}
-.about__exp__loc{display:block;color:var(--ink);font-weight:400;font-size:1em}
-.about__exp__desc{
-  grid-area:desc;
-  font-size:clamp(.95rem,.9rem + .2vw,1.1rem);
-  color:var(--ink-2);max-width:55ch;font-weight:400;
-  line-height:1.45;letter-spacing:-.005em;
-}
-.about__exp__desc p{margin:0 0 .85em}
-.about__exp__desc p:last-child{margin-bottom:0}
-@media (max-width:880px){
-  .about__intro{grid-template-columns:1fr}
-  /* compact mobile row: when on top, chevron aligns to the company name row */
-  .about__exp{
-    grid-template-columns:1fr 36px;
-    grid-template-areas:
-      "when when"
-      "role chev"
-      "desc desc";
-    column-gap:.75rem;row-gap:.25rem;
-    padding:1.4rem 0;
-    cursor:pointer;
-    align-items:start;
-  }
-  .about__exp__when{
-    font-size:.78rem;color:var(--muted);font-weight:500;
-    letter-spacing:.02em;
-  }
-  .about__exp__role{font-size:1rem;line-height:1.2}
-  .about__exp__place,
-  .about__exp__job{display:block}
-  .about__exp__place{
-    font-size:1.35rem;
-    font-weight:700;
-    letter-spacing:-.02em;
-    line-height:1.15;
-    margin-bottom:.1rem;
-  }
-  .about__exp__job{
-    font-weight:400;
-    font-size:.92rem;
-    color:var(--ink-2);
-    letter-spacing:-.005em;
-  }
-  /* hide location on mobile per design */
-  .about__exp__loc{display:none}
-  .about__exp__role .sep{display:none}
-  /* description fully hidden until row is tapped */
-  .about__exp__desc{
-    overflow:hidden;
-    max-height:0;
-    margin:0;
-    transition:max-height .45s var(--ease), margin .45s var(--ease);
-  }
-  /* chevron toggle replaces "Read more" copy */
-  .about__exp__more{
-    grid-area:chev;
-    align-self:start;
-    margin-top:2px;
-    width:36px;height:36px;
-    border-radius:8px;
-    border:1px solid var(--dot);
-    background:transparent;
-    display:flex;align-items:center;justify-content:center;
-    font-size:0;color:transparent;
-    text-decoration:none;
-    transition:background .25s var(--ease), border-color .25s var(--ease);
-  }
-  .about__exp__more::before{
-    content:"";
-    width:9px;height:9px;
-    border-right:2px solid var(--ink-2);
-    border-bottom:2px solid var(--ink-2);
-    transform:rotate(45deg) translate(-1.5px,-1.5px);
-    transition:transform .35s var(--ease), border-color .25s var(--ease);
-  }
-  .about__exp.is-expanded .about__exp__more{
-    background:var(--ink);border-color:var(--ink);
-  }
-  .about__exp.is-expanded .about__exp__more::before{
-    border-color:var(--paper);
-    transform:rotate(225deg) translate(-1.5px,-1.5px);
-  }
-  .about__exp.is-expanded .about__exp__desc{
-    max-height:60em;
-    margin-top:.85rem;
-  }
-}
-@media (min-width:881px){
-  .about__exp__more{display:none}
 }
 
 /* =========================================================== foot */
@@ -2328,10 +2082,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         <span class="ttl">6 things about me</span>
         <ul>
           <li><b>1.</b> Elite BBQ chef</li>
-          <li><b>2.</b> Newly converted road cyclist</li>
+          <li><b>2.</b> New to road cycling</li>
           <li><b>3.</b> 18+ years designing</li>
           <li><b>4.</b> Wife's fav designer</li>
-          <li><b>5.</b> Never finished GTA: Vice City</li>
+          <li><b>5.</b> Never finished Vice City</li>
           <li><b>6.</b> Father of two</li>
         </ul>
       </article>
@@ -2376,10 +2130,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         <span class="phon">/ˈsiː.njə dɪˈzaɪ.nə/ <em>[noun]</em></span>
         <ol>
           <li>Strategy &amp; IA</li>
-          <li>Design systems devs don't hate</li>
-          <li>Make complex interfaces simple</li>
-          <li>Systems thinking <em>(essential)</em></li>
-          <li>Vibe coder to prototype</li>
+          <li>Usable design systems</li>
+          <li>Complex made simple</li>
+          <li>Systems brain <em>(vital)</em></li>
+          <li>Vibe-codes prototypes</li>
         </ol>
       </article>
       </div>
@@ -2756,9 +2510,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   <section class="tl" id="timeline" aria-labelledby="tl-title" data-reveal data-pref-section="Work life timeline">
    <div class="tl__pin">
     <div class="tl__head">
-      <h2 class="tl__title" id="tl-title">Where I've been</h2>
-      <p class="tl__hint">Drag to scrub · hover a role</p>
-      <p class="tl__hint tl__hint--phone">Scroll to go back in time</p>
+      <h2 class="tl__title" id="tl-title">Where I've been, <span class="it tl__it--desk">drag to go back in time.</span><span class="it tl__it--phone">scroll to go back in time.</span></h2>
     </div>
     <div class="tl__view">
     <div class="tl__scroller" tabindex="0" aria-label="Work history, 2007 to now. Scrolls sideways.">
@@ -2809,68 +2561,6 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       </div>
     </div>
     <div class="tl__needle" aria-hidden="true"><span class="tl__needle-label">Oct 2026</span></div>
-    </div>
-   </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="about" id="about" data-reveal data-pref-section="About list">
-   <div class="about__inner">
-    <div class="about__hover-img" aria-hidden="true">
-      <img loading="lazy" alt="" />
-    </div>
-    <h2 class="about__title reveal-h"><span class="rw"><span>About</span></span> <span class="rw"><span>me</span></span></h2>
-
-    <div class="about__intro">
-      <div class="about__lead reveal-up">
-        I'm <strong>Matthew Luxford</strong>, a Senior&nbsp;Web&nbsp;Designer based in <strong>Surrey,&nbsp;UK</strong>.
-      </div>
-      <div class="about__body">
-        <p>Eighteen years across UX, UI, brand, and design systems. Four years in at <strong>Kraken</strong>, and <strong>open to the right senior role in 2026</strong> — remote or hybrid, worldwide.</p>
-        <p>Happiest doing full-cycle work, from kickoff brief to shipped code. I care about the work, not the title — and I genuinely love getting stuck in. Right now I'm leaning hard into <strong>AI</strong> as a working partner.</p>
-      </div>
-    </div>
-
-    <div class="about__exp" data-img="assets/kraken-logo.webp" data-rot="10deg" data-w="260px" data-h="260px">
-      <div class="about__exp__when">2022 – Present</div>
-      <div class="about__exp__role"><span class="about__exp__place">Kraken</span><span class="sep">, </span><span class="about__exp__job">Senior Web Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">Remote · Multi-asset trading · NDA</span></div>
-      <div class="about__exp__desc">Sole designer for consumer web — crypto, equities and tokenised stocks. Work under NDA.</div>
-    </div>
-
-    <div class="about__exp" data-img="assets/yoppie.webp" data-rot="-8deg" data-h="200px">
-      <div class="about__exp__when">2021 – 2022</div>
-      <div class="about__exp__role"><span class="about__exp__place">Yoppie</span><span class="sep">, </span><span class="about__exp__job">Head of Design &amp; Creative (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
-      <div class="about__exp__desc">Sole creative in a nine-person company. Hired for a week, stayed a year.</div>
-    </div>
-
-    <div class="about__exp" data-img="assets/landrover-s44.webp" data-rot="11deg" data-h="245px" data-w="363px">
-      <div class="about__exp__when">2020 – 2021</div>
-      <div class="about__exp__role"><span class="about__exp__place">Spark44 (Jaguar Land Rover)</span><span class="sep">, </span><span class="about__exp__job">Lead Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London · Automotive</span></div>
-      <div class="about__exp__desc">Ground-up rebuild of the component library — one of two senior leads, six months, 27 markets.</div>
-    </div>
-
-    <div class="about__exp about__exp--continued" data-img="assets/collective.webp" data-rot="-7deg" data-h="210px">
-      <div class="about__exp__when">2020 – 2021</div>
-      <div class="about__exp__role"><span class="about__exp__place">The Collective</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer (Contract)</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
-      <div class="about__exp__desc">Rebuilt the booking flow — <strong>500% more enquiries</strong> in month one. Plus brand refresh and the iOS/Android app.</div>
-    </div>
-
-    <div class="about__exp" data-img="assets/lifecake.webp" data-rot="-11deg" data-h="215px">
-      <div class="about__exp__when">2018 – 2020</div>
-      <div class="about__exp__role"><span class="about__exp__place">Lifecake</span><span class="sep">, </span><span class="about__exp__job">Lead Product Designer</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
-      <div class="about__exp__desc">Reimagined across iOS, Android and web. Apple's Best Storytelling App 2019, 3.4M users.</div>
-    </div>
-
-    <div class="about__exp" data-img="assets/rr-s44.webp" data-rot="9deg" data-h="235px" data-w="363px">
-      <div class="about__exp__when">2016 – 2018</div>
-      <div class="about__exp__role"><span class="about__exp__place">Spark44 (Jaguar Land Rover)</span><span class="sep">, </span><span class="about__exp__job">Senior Designer</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
-      <div class="about__exp__desc">Help Me Choose, comparison and customer portal tools — 27 markets, both brands.</div>
-    </div>
-
-    <div class="about__exp">
-      <div class="about__exp__when">2007 – 2016</div>
-      <div class="about__exp__role"><span class="about__exp__place">A decade of agency &amp; in-house</span><span class="sep">.</span> <span class="about__exp__loc">London</span></div>
-      <div class="about__exp__desc">Design Director, Creative Lead and Senior Designer across ten London studios — LONO, Totally Communications, OLIVER, EY-Seren, Big Group, Global Beach and more. Where the craft was sharpened.</div>
     </div>
    </div>
   </section>
@@ -3289,141 +2979,6 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     requestAnimationFrame(() => { activeQueued = false; setActive(); });
   }, { passive: true });
   setActive();
-
-  // about: collapsible rows on mobile (≤880px)
-  const mqMobile = window.matchMedia("(max-width: 880px)");
-  document.querySelectorAll(".about__exp").forEach((row) => {
-    const desc = row.querySelector(".about__exp__desc");
-    if (!desc) return;
-    const more = document.createElement("span");
-    more.className = "about__exp__more";
-    more.textContent = "Read more →";
-    row.appendChild(more);
-    row.addEventListener("click", (e) => {
-      if (!mqMobile.matches) return;
-      if (e.target.closest("a")) return;
-      const expanded = row.classList.toggle("is-expanded");
-      more.textContent = expanded ? "Show less ←" : "Read more →";
-    });
-  });
-
-  // about: hover image follows cursor over experience rows
-  const hoverImg = document.querySelector(".about__hover-img");
-  const hoverPic = hoverImg?.querySelector("img");
-  const expRows = [...document.querySelectorAll(".about__exp")];
-  const expHost = expRows[0]?.parentElement;
-  if (hoverImg && hoverPic && expHost) {
-    // preload per-row images so hot-swap is instant. `pending` caches the
-    // in-flight promise, `settled` the resolved value — the latter lets an
-    // already-decoded image swap in synchronously, with no dropped frame.
-    const pending = new Map();
-    const settled = new Map();
-    const tryLoad = (src) => {
-      if (!src) return Promise.resolve(null);
-      if (pending.has(src)) return pending.get(src);
-      const p = new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(src);
-        img.onerror = () => resolve(null);
-        img.src = src;
-      }).then((ok) => { settled.set(src, ok); return ok; });
-      pending.set(src, p);
-      return p;
-    };
-    expRows.forEach((row) => tryLoad(row.dataset.img));
-
-    let currentRow = null;
-    let pointer = null;
-    // guards against a slow load from a row you've already scrolled past
-    // resolving late and overwriting the row you're actually on
-    let token = 0;
-
-    const place = (x, y) => {
-      hoverImg.style.left = x + "px";
-      hoverImg.style.top = y + "px";
-    };
-
-    // Lean the card into the direction of travel. The angle rides on top of
-    // each row's own --rot, so a row tilted -11deg and one tilted +10deg both
-    // lean the same way relative to themselves. Flip TILT_PER_PX's sign to
-    // reverse the direction.
-    const TILT_PER_PX = 0.7;
-    const TILT_MAX = 10;
-    let lastX = null, tiltReset = 0;
-    const tilt = (x) => {
-      if (lastX !== null) {
-        const dx = x - lastX;
-        const deg = Math.max(-TILT_MAX, Math.min(TILT_MAX, dx * TILT_PER_PX));
-        hoverImg.style.setProperty("--tilt", deg.toFixed(2) + "deg");
-        // mousemove stops firing when the cursor stops, so ease back to level
-        clearTimeout(tiltReset);
-        tiltReset = setTimeout(() => {
-          hoverImg.style.setProperty("--tilt", "0deg");
-        }, 120);
-      }
-      lastX = x;
-    };
-
-    // Crossing between rows only swaps src + rotation — `is-active` stays on
-    // throughout. Tearing it down per row made every boundary a 400ms
-    // fade-out/rotate/fade-in pulse, which read as the image jumping about.
-    const show = (row) => {
-      if (row === currentRow) return;
-      currentRow = row;
-      const src = row.dataset.img;
-      hoverImg.style.setProperty("--rot", row.dataset.rot || "10deg");
-      hoverImg.style.setProperty("--w", row.dataset.w || "330px");
-      hoverImg.style.setProperty("--h", row.dataset.h || "240px");
-      const mine = ++token;
-      const apply = (ok) => {
-        if (mine !== token) return;
-        // No image for this row: show nothing. Substituting an unrelated
-        // picture is worse than an absent one.
-        if (!ok) { hoverImg.classList.remove("is-active"); return; }
-        hoverPic.src = ok;
-        hoverImg.classList.add("is-active");
-      };
-      if (settled.has(src)) apply(settled.get(src));
-      else tryLoad(src).then(apply);
-    };
-
-    const hide = () => {
-      if (!currentRow) return;
-      currentRow = null;
-      token++;
-      clearTimeout(tiltReset);
-      hoverImg.style.setProperty("--tilt", "0deg");
-      hoverImg.classList.remove("is-active");
-    };
-
-    // Tracked on the document, not on the rows: moving the cursor away (over
-    // the testimonials, say) has to keep `pointer` current, or scrolling back
-    // up re-shows the image at wherever the cursor last was over a row.
-    // One delegated handler also avoids per-row enter/leave pairs.
-    document.addEventListener("mousemove", (e) => {
-      pointer = { x: e.clientX, y: e.clientY };
-      place(pointer.x, pointer.y);
-      tilt(pointer.x);
-      const row = e.target.closest?.(".about__exp");
-      if (row) show(row); else hide();
-    }, { passive: true });
-    // cursor left the window entirely — no mousemove will fire
-    document.addEventListener("mouseleave", hide);
-
-    // mousemove doesn't fire while the page scrolls under a still cursor, so
-    // re-resolve the row under the pointer on scroll instead
-    let queued = false;
-    window.addEventListener("scroll", () => {
-      if (!pointer || queued) return;
-      queued = true;
-      requestAnimationFrame(() => {
-        queued = false;
-        const el = document.elementFromPoint(pointer.x, pointer.y);
-        const row = el?.closest?.(".about__exp");
-        if (row) show(row); else hide();
-      });
-    }, { passive: true });
-  }
 
   // testimonials: inject 5 stars at the top of each, then fade + stagger-in on scroll
   const tCards = [...document.querySelectorAll(".testimonial")];
