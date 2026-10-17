@@ -4097,7 +4097,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     const measure = () => {
       const on = phone.matches;
       tlSection.classList.toggle("is-pinned", on);
-      track.style.transform = rows.style.transform = "";
+      track.style.transform = rows.style.transform = rows.style.clipPath = "";
       cur = null;
       if (!on) { tlSection.style.removeProperty("height"); return; }
       tlScroller.scrollLeft = 0;
@@ -4105,25 +4105,33 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       range = Math.max(0, posAt(NOW) - posAt(FIRST));
       runway = range * RATIO;
       tlSection.style.height = pin.offsetHeight + runway + "px";
-      // each step of the staircase: where its bar starts along the track,
-      // how far down it sits. Rows that start later but sit lower (the
-      // holidays) never become the top one, so they're left out.
+      // each step of the staircase: where its bar ends along the track (so a
+      // role is up at the top as soon as the needle reaches it, going back),
+      // how far down it sits. Rows that end later but sit lower never become
+      // the top one, so they're left out.
       const t0 = track.getBoundingClientRect().left;
       const pts = rowEls
-        .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().left - t0, y: row.offsetTop - rowEls[0].offsetTop }))
+        .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().right - t0, y: row.offsetTop - rowEls[0].offsetTop }))
         .sort((a, b) => a.x - b.x)
         .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y < q.y));
-      // the staircase rises a row per role, as far as it takes to bring the
-      // last role to just above the bottom of the screen (measured with the
-      // nav away), then holds: by then every older role is on screen below,
-      // and the journey ends on Ten London rather than on rows of nothing
       const rise = monotone(pts);
+      // the last role, once it's at the top, glides down to sit just above
+      // the bottom of the screen (measured with the nav away) over its own
+      // stretch of years, so the journey ends on it with the next section
+      // straight after, rather than on a screen of nothing below it
       const navNow = parseFloat(tlSection.style.getPropertyValue("--tl-top")) || 0;
       const last = rowEls[rowEls.length - 1];
+      const lastBar = last.querySelector(".tl__bar").getBoundingClientRect();
+      const lastL = lastBar.left - t0, lastR = lastBar.right - t0;
       const firstTop = rowEls[0].getBoundingClientRect().top - pin.getBoundingClientRect().top - navNow;
-      const lastBottom = last.offsetTop - rowEls[0].offsetTop + last.offsetHeight;
-      const maxRise = Math.max(0, lastBottom - (pin.clientHeight - firstTop - 24));
-      depthAt = (x) => Math.min(maxRise, rise(x));
+      const lastY = last.offsetTop - rowEls[0].offsetTop;
+      const landY = Math.min(lastY, Math.max(0, lastY + last.offsetHeight - (pin.clientHeight - firstTop - 24)));
+      const ease = (t) => t * t * (3 - 2 * t);
+      depthAt = (x) => {
+        if (x >= lastR || lastR <= lastL) return rise(x);
+        const t = ease(Math.min(1, (lastR - x) / (lastR - lastL)));
+        return lastY - (lastY - landY) * t;
+      };
     };
 
     const frame = (t) => {
@@ -4144,6 +4152,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       walk(cur.x);
       setNeedle(cur.x);
       rows.style.transform = `translate3d(0,${-cur.y.toFixed(2)}px,0)`;
+      // roles that have climbed past the years slip out of sight behind
+      // them, rather than showing in the gap above the axis
+      rows.style.clipPath = `inset(${cur.y.toFixed(2)}px -100vw -100vh -100vw)`;
       const settled = Math.abs(x - cur.x) < 0.1 && Math.abs(y - cur.y) < 0.1;
       if (visible || !settled) loop = requestAnimationFrame(frame);
       else lastT = 0;
