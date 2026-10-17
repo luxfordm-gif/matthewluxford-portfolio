@@ -671,7 +671,7 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
           mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
 }
 .tl__scroller::-webkit-scrollbar{display:none}
-.tl__stick{display:none}
+.tl__hint--phone{display:none}
 .tl__scroller.is-dragging{cursor:grabbing;user-select:none}
 .tl__scroller:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
 .tl__track{
@@ -778,21 +778,22 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   .tl__bar:hover .tl__card:nth-child(2),.tl__bar:focus-within .tl__card:nth-child(2){transform:translate(0,-100px) rotate(0deg)}
   .tl__bar:hover .tl__card:nth-child(3),.tl__bar:focus-within .tl__card:nth-child(3){transform:translate(88px,-78px) rotate(11deg)}
   .tl__rows{padding-top:150px}
-  /* phones: the years stick to the top of the screen (a copy outside the
-     scroller, since the scroller would clip a sticky child) and the page
-     follows the swipe so the roles for the years in view sit under them */
-  .tl__stick{
-    display:block;position:sticky;top:var(--tl-top,0px);z-index:6;
-    overflow:hidden;pointer-events:none;
-    background:rgba(250,250,247,.88);
-    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-    transition:top .45s var(--ease);
-    -webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
-            mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
+  .tl__hint--phone{display:block}
+  /* phones: the timeline pins to the screen and scrolling the page travels
+     back through the years. The section is a tall runway (JS sets its
+     height) with a full-screen sticky pin; JS moves the track sideways and
+     the staircase up with transforms, springing towards the scroll. */
+  .tl.is-pinned{padding:0}
+  .tl.is-pinned .tl__pin{
+    position:sticky;top:0;height:100vh;height:100svh;
+    display:flex;flex-direction:column;overflow:hidden;
+    padding-top:calc(var(--tl-top,0px) + 1.5rem);
+    transition:padding-top .45s var(--ease);
+    touch-action:pan-y;
   }
-  .tl__stick .tl__axis{margin-top:.6rem}
-  .tl__stick .tl__track{will-change:transform}
-  .tl__scroller .tl__axis{display:none}
+  .tl.is-pinned .tl__scroller{flex:1;min-height:0;overflow:hidden;cursor:auto}
+  .tl.is-pinned .tl__track,.tl.is-pinned .tl__rows{will-change:transform}
+  .tl.is-pinned .tl__axis{position:relative;z-index:6;background:linear-gradient(var(--bg) 70%,rgba(250,250,247,0))}
 }
 @media (prefers-reduced-motion:reduce){
   .tl__card{transition:opacity .2s}
@@ -2704,11 +2705,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
        life, not work: the holidays are placeholders until real ones (and
        photos for their fan cards) land. Fan images: assets/timeline/, 320×240. -->
   <section class="tl" id="timeline" aria-labelledby="tl-title" data-reveal data-pref-section="Work life timeline">
+   <div class="tl__pin">
     <div class="tl__head">
       <h2 class="tl__title" id="tl-title">Work life</h2>
       <p class="tl__hint">Drag to scrub · hover a role</p>
+      <p class="tl__hint tl__hint--phone">Scroll to go back in time</p>
     </div>
-    <div class="tl__stick" aria-hidden="true"><div class="tl__track"></div></div>
     <div class="tl__scroller" tabindex="0" aria-label="Work history, 2007 to now. Scrolls sideways.">
       <div class="tl__track">
         <ol class="tl__axis" aria-hidden="true"><li style="--y:2015">2015</li><li style="--y:2016">2016</li><li style="--y:2017">2017</li><li style="--y:2018">2018</li><li style="--y:2019">2019</li><li style="--y:2020">2020</li><li style="--y:2021">2021</li><li style="--y:2022">2022</li><li style="--y:2023">2023</li><li style="--y:2024">2024</li><li style="--y:2025">2025</li><li style="--y:2026">2026</li></ol>
@@ -2752,6 +2754,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         </ol>
       </div>
     </div>
+   </div>
   </section>
 
   <!-- ABOUT -->
@@ -4076,7 +4079,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   if (tlScroller) {
     // again once the DOM's settled: moving a section (the review panel can)
     // resets its scroll
-    const toNow = () => { tlScroller.scrollLeft = tlScroller.scrollWidth; };
+    const toNow = () => { if (!matchMedia("(max-width:760px)").matches) tlScroller.scrollLeft = tlScroller.scrollWidth; };
     toNow();
     addEventListener("DOMContentLoaded", toNow);
     let tlDrag = null;
@@ -4097,78 +4100,148 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tlScroller.classList.remove("is-dragging");
     });
 
-    // Phones: the years stick to the top of the screen (a copy of the axis,
-    // slid sideways in step with the scroller), and as you swipe the page
-    // scrolls down the staircase with you. The sticky row drops below the
-    // nav when the nav is out.
+    // Phones: the timeline pins to the screen and your scroll travels back
+    // through the years. The section becomes a tall runway with a sticky,
+    // full-screen pin; how far you are through the runway sets a target
+    // (how far along the years, how far the staircase has risen) and what's
+    // drawn springs towards it every frame. All transforms, riding on the
+    // phone's own scroll momentum. A sideways swipe drives the same page
+    // scroll and coasts when you let go.
     const phone = matchMedia("(max-width:760px)");
     const tlSection = tlScroller.closest(".tl");
-    const stick = tlSection.querySelector(".tl__stick");
-    const stickTrack = stick.querySelector(".tl__track");
-    stickTrack.appendChild(tlScroller.querySelector(".tl__axis").cloneNode(true));
-    const rowEls = [...tlScroller.querySelectorAll(".tl__row")];
+    const pin = tlSection.querySelector(".tl__pin");
+    const track = tlScroller.querySelector(".tl__track");
+    const rows = tlScroller.querySelector(".tl__rows");
+    const rowEls = [...rows.querySelectorAll(".tl__row")];
     const navEl = document.querySelector(".nav");
-    const stickTop = () => {
+    const still = matchMedia("(prefers-reduced-motion:reduce)");
+    const RATIO = 1.15; // px of page scroll per px of travel along the years
+    let range = 0, runway = 0, depthAt = () => 0, cur = null, loop = 0, lastT = 0, visible = false;
+
+    // a smooth curve through the steps of the staircase (monotone cubic,
+    // Fritsch–Carlson), so the rise eases into and out of each role
+    // instead of kinking at it, and never overshoots between them
+    const monotone = (pts) => {
+      const n = pts.length;
+      if (n < 2) return () => (n ? pts[0].y : 0);
+      const d = [], m = [];
+      for (let i = 0; i < n - 1; i++) d.push((pts[i + 1].y - pts[i].y) / (pts[i + 1].x - pts[i].x || 1));
+      m.push(d[0]);
+      for (let i = 1; i < n - 1; i++) m.push(d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2);
+      m.push(d[n - 2]);
+      for (let i = 0; i < n - 1; i++) {
+        if (!d[i]) { m[i] = m[i + 1] = 0; continue; }
+        const a = m[i] / d[i], b = m[i + 1] / d[i], h = Math.hypot(a, b);
+        if (h > 3) { m[i] = (3 * a * d[i]) / h; m[i + 1] = (3 * b * d[i]) / h; }
+      }
+      return (x) => {
+        if (x <= pts[0].x) return pts[0].y;
+        if (x >= pts[n - 1].x) return pts[n - 1].y;
+        let i = 0;
+        while (x > pts[i + 1].x) i++;
+        const w = pts[i + 1].x - pts[i].x, t = (x - pts[i].x) / w, t2 = t * t, t3 = t2 * t;
+        return (2 * t3 - 3 * t2 + 1) * pts[i].y + (t3 - 2 * t2 + t) * w * m[i] + (-2 * t3 + 3 * t2) * pts[i + 1].y + (t3 - t2) * w * m[i + 1];
+      };
+    };
+
+    const navRoom = () => {
       const out = navEl && !navEl.classList.contains("is-hidden") && !navEl.classList.contains("is-pinned");
       tlSection.style.setProperty("--tl-top", out ? navEl.offsetHeight + "px" : "0px");
     };
-    if (navEl) new MutationObserver(stickTop).observe(navEl, { attributes: true, attributeFilter: ["class"] });
-    stickTop();
-    // The page follows continuously: each step of the staircase is a point
-    // (where its bar starts, how far down it sits), joined by straight lines.
-    // While you swipe, the page glides (a fifth of the gap each frame)
-    // towards putting the current point on that line just under the years,
-    // with room above for its photo fan; it stops half a second after the
-    // swipe does, so it never fights your own vertical scrolling.
-    const FAN_ROOM = 140;
-    let pts = [], glide = 0, lastSwipe = 0, glideFrom = 0;
-    const measureRows = () => {
-      const view = tlScroller.getBoundingClientRect();
-      pts = rowEls
-        .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().left - view.left + tlScroller.scrollLeft, y: row.offsetTop }))
+    if (navEl) new MutationObserver(navRoom).observe(navEl, { attributes: true, attributeFilter: ["class"] });
+    navRoom();
+
+    const measure = () => {
+      const on = phone.matches;
+      tlSection.classList.toggle("is-pinned", on);
+      track.style.transform = rows.style.transform = "";
+      cur = null;
+      if (!on) { tlSection.style.removeProperty("height"); return; }
+      tlScroller.scrollLeft = 0;
+      range = Math.max(0, tlScroller.scrollWidth - tlScroller.clientWidth);
+      runway = range * RATIO;
+      tlSection.style.height = pin.offsetHeight + runway + "px";
+      // each step of the staircase: where its bar starts along the track,
+      // how far down it sits. Rows that start later but sit lower (the
+      // holidays) never become the top one, so they're left out.
+      const t0 = track.getBoundingClientRect().left;
+      const pts = rowEls
+        .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().left - t0, y: row.offsetTop - rowEls[0].offsetTop }))
         .sort((a, b) => a.x - b.x)
-        // keep only the steps of the staircase: a row that starts later but
-        // sits lower (a holiday) never becomes the top one, so it's dropped,
-        // and the depth only ever runs one way as you swipe one way
         .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y < q.y));
+      depthAt = monotone(pts);
     };
-    const depth = () => {
-      const v = tlScroller.scrollLeft + tlScroller.clientWidth * 0.8;
-      if (!pts.length) return 0;
-      if (v <= pts[0].x) return pts[0].y;
-      for (let i = 1; i < pts.length; i++) {
-        if (v <= pts[i].x) {
-          const a = pts[i - 1], b = pts[i];
-          return a.y + ((b.y - a.y) * (v - a.x)) / (b.x - a.x || 1);
-        }
+
+    const frame = (t) => {
+      loop = 0;
+      if (!tlSection.classList.contains("is-pinned")) return;
+      const dt = lastT ? Math.min(64, t - lastT) : 16;
+      lastT = t;
+      const p = runway ? Math.min(1, Math.max(0, -tlSection.getBoundingClientRect().top / runway)) : 0;
+      const x = range * (1 - p); // starts at now, ends at the oldest
+      const y = depthAt(x + tlScroller.clientWidth * 0.8);
+      if (!cur || still.matches) cur = { x, y };
+      else {
+        const k = 1 - Math.exp(-dt / 110); // ~110ms spring, frame-rate independent
+        cur.x += (x - cur.x) * k;
+        cur.y += (y - cur.y) * k;
       }
-      return pts[pts.length - 1].y;
+      track.style.transform = `translate3d(${-cur.x.toFixed(2)}px,0,0)`;
+      rows.style.transform = `translate3d(0,${-cur.y.toFixed(2)}px,0)`;
+      const settled = Math.abs(x - cur.x) < 0.1 && Math.abs(y - cur.y) < 0.1;
+      if (visible || !settled) loop = requestAnimationFrame(frame);
+      else lastT = 0;
     };
-    const step = () => {
-      glide = 0;
-      stickTrack.style.transform = `translateX(${-tlScroller.scrollLeft}px)`;
-      if (!phone.matches) return;
-      const now = performance.now();
-      const sec = tlSection.getBoundingClientRect();
-      if (sec.bottom < 0 || sec.top > innerHeight) return;
-      // page y of the rows' own top, so offsetTop-based depths map to the page
-      const origin = rowEls[0].getBoundingClientRect().top + scrollY - rowEls[0].offsetTop;
-      const under = parseFloat(tlSection.style.getPropertyValue("--tl-top")) + stick.offsetHeight + FAN_ROOM;
-      const diff = origin + depth() - under - scrollY;
-      if (Math.abs(diff) > 0.5) scrollBy({ top: diff * 0.2, behavior: "instant" });
-      if ((now - lastSwipe < 500 || Math.abs(diff) > 1) && now - glideFrom < 2000) glide = requestAnimationFrame(step);
+    const kick = () => { if (!loop) loop = requestAnimationFrame(frame); };
+    addEventListener("scroll", kick, { passive: true });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es) => { visible = es[0].isIntersecting; if (visible) kick(); }).observe(tlSection);
+    } else visible = true;
+
+    // sideways swipes on the pinned timeline drive the page scroll, with a
+    // coast when you let go; vertical ones are left to the browser
+    let swipe = null, coast = 0;
+    const stopCoast = () => { cancelAnimationFrame(coast); coast = 0; };
+    pin.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" || !tlSection.classList.contains("is-pinned")) return;
+      stopCoast();
+      swipe = { x: e.clientX, y: e.clientY, lx: e.clientX, lt: e.timeStamp, v: 0, on: false };
+    });
+    pin.addEventListener("pointermove", (e) => {
+      if (!swipe) return;
+      const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y;
+      if (!swipe.on) {
+        if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { swipe = null; return; }
+        if (Math.abs(dx) < 8) return;
+        swipe.on = true;
+      }
+      const step = e.clientX - swipe.lx, dt = Math.max(1, e.timeStamp - swipe.lt);
+      swipe.v = swipe.v * 0.6 + (step / dt) * 0.4; // px per ms, smoothed
+      swipe.lx = e.clientX;
+      swipe.lt = e.timeStamp;
+      scrollBy({ top: step * RATIO, behavior: "instant" });
+    });
+    const endSwipe = () => {
+      if (!swipe || !swipe.on) { swipe = null; return; }
+      let v = swipe.v, prev = performance.now();
+      swipe = null;
+      const glide = (t) => {
+        const dt = Math.min(48, t - prev);
+        prev = t;
+        v *= Math.pow(0.94, dt / 16);
+        if (Math.abs(v) < 0.02) { coast = 0; return; }
+        scrollBy({ top: v * dt * RATIO, behavior: "instant" });
+        coast = requestAnimationFrame(glide);
+      };
+      if (!still.matches) coast = requestAnimationFrame(glide);
     };
-    tlScroller.addEventListener("scroll", () => {
-      const now = performance.now();
-      if (now - lastSwipe > 500) glideFrom = now;
-      lastSwipe = now;
-      if (!glide) glide = requestAnimationFrame(step);
-    }, { passive: true });
-    // only the sticky copy needs syncing outside a swipe
-    const syncAxis = () => { stickTrack.style.transform = `translateX(${-tlScroller.scrollLeft}px)`; };
-    const remeasure = () => { measureRows(); syncAxis(); };
+    pin.addEventListener("pointerup", endSwipe);
+    pin.addEventListener("pointercancel", () => { swipe = null; });
+    addEventListener("wheel", stopCoast, { passive: true });
+
+    const remeasure = () => { measure(); kick(); };
     addEventListener("resize", remeasure);
-    addEventListener("DOMContentLoaded", remeasure);
+    phone.addEventListener?.("change", remeasure);
     addEventListener("load", remeasure);
     remeasure();
   }
