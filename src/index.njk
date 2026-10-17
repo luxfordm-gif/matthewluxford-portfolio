@@ -75,14 +75,22 @@ body{
 h1,h2,h3,h4{text-wrap:balance}
 .page{overflow-x:clip}
 .hero{overflow-x:clip}
+/* the glow + dot grid stay put while the page scrolls over them. They used
+   to be background-attachment:fixed, which makes the browser repaint the
+   whole page every scroll frame; a fixed layer of its own is composited
+   instead. clip-path keeps that layer inside .page, so the secret footer
+   underneath still shows when the page scrolls off it. */
 .page{
   position:relative;z-index:2;
   background-color:var(--bg);
+  clip-path:inset(0);
+}
+.page::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   background-image:
     radial-gradient(ellipse 70% 55% at 50% 38%, #ffffff 0%, transparent 70%),
     radial-gradient(circle, var(--dot) 1px, transparent 1.4px);
   background-size:auto, 18px 18px;
-  background-attachment:fixed;
   background-position:center top, 0 0;
 }
 img,svg{display:block;max-width:100%}
@@ -259,17 +267,28 @@ p,li{text-wrap:pretty}
 @keyframes cardDeal{
   0%{
     opacity:0;
-    transform:translate(var(--stack-tx,0), calc(var(--stack-ty,0) + 50px)) rotate(var(--stack-r, 0deg)) scale(.86);
+    transform:translate(calc(var(--stack-tx,0px) + var(--wfix,0px)), calc(var(--stack-ty,0px) + 50px)) rotate(var(--stack-r, 0deg)) scale(.86);
   }
   40%{
     opacity:1;
-    transform:translate(var(--stack-tx,0), var(--stack-ty,0)) rotate(var(--stack-r, 0deg)) scale(1);
+    transform:translate(calc(var(--stack-tx,0px) + var(--wfix,0px)), var(--stack-ty,0px)) rotate(var(--stack-r, 0deg)) scale(1);
   }
   100%{
     opacity:1;
     transform:rotate(var(--r));
   }
 }
+/* phones: a card left alone gives the odd wiggle, a hint they can be
+   picked up (JS picks one at random while the hero's idle). Animates the
+   rotate property, so it stacks on the card's own transform. */
+@keyframes fcWiggle{
+  0%,100%{rotate:0deg}
+  18%{rotate:-4.5deg}
+  40%{rotate:3.5deg}
+  62%{rotate:-2deg}
+  82%{rotate:.8deg}
+}
+.fcard.is-wiggling{animation:cardDeal 1.7s cubic-bezier(.4,1.2,.5,1) backwards,fcWiggle .95s cubic-bezier(.36,.07,.19,.97)}
 @media (hover:hover){
   .fcard:hover{
     transform:translateY(-18px) rotate(0deg)!important;
@@ -503,16 +522,17 @@ p,li{text-wrap:pretty}
     margin-left:-79px;top:80px;
     --r:5deg;--stack-tx:-30px;--stack-ty:90px;--stack-r:3deg;
   }
-  .fcard--3{
-    margin-left:-109px;top:170px;
-    --r:-2deg;--stack-tx:0;--stack-ty:0;--stack-r:-1deg;
-  }
+  /* the profile card comes last on phones, on top of the stack */
   .fcard--5{
+    margin-left:-109px;top:170px;z-index:auto;
+    --r:-2deg;--stack-tx:0px;--stack-ty:0px;--stack-r:-1deg;
+  }
+  .fcard--4{
     margin-left:-139px;top:240px;
     --r:-5deg;--stack-tx:30px;--stack-ty:-70px;--stack-r:-3deg;
   }
-  .fcard--4{
-    margin-left:-89px;top:310px;
+  .fcard--3{
+    margin-left:-89px;top:310px;z-index:7;
     --r:6deg;--stack-tx:-20px;--stack-ty:-140px;--stack-r:4deg;
   }
 }
@@ -670,6 +690,28 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
           mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent);
 }
 .tl__scroller::-webkit-scrollbar{display:none}
+.tl__pin{position:relative}
+.tl__scroller{position:relative;z-index:2}
+/* the needle: where you are along the years. A hairline behind the bars
+   with a dark pill on the axis reading the month and year under it. */
+.tl__needle{position:absolute;z-index:1;top:0;left:0;width:0;height:0;pointer-events:none}
+.tl__needle::before{
+  content:"";position:absolute;left:-.75px;top:1.4rem;bottom:0;width:1.5px;border-radius:2px;
+  background:linear-gradient(var(--ink),rgba(10,10,10,0));
+}
+.tl__needle-label{
+  position:absolute;z-index:8;top:0;left:0;transform:translateX(-50%);
+  padding:.28rem .6rem;border-radius:999px;
+  background:var(--ink);color:#fff;
+  font-size:.75rem;font-weight:600;letter-spacing:.01em;line-height:1.1;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+  box-shadow:0 6px 16px -6px rgba(10,10,10,.45);
+}
+.tl__needle-label::after{
+  content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;
+  background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:1px;z-index:-1;
+}
+.tl__hint--phone{display:none}
 .tl__scroller.is-dragging{cursor:grabbing;user-select:none}
 .tl__scroller:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
 .tl__track{
@@ -776,6 +818,24 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   .tl__bar:hover .tl__card:nth-child(2),.tl__bar:focus-within .tl__card:nth-child(2){transform:translate(0,-100px) rotate(0deg)}
   .tl__bar:hover .tl__card:nth-child(3),.tl__bar:focus-within .tl__card:nth-child(3){transform:translate(88px,-78px) rotate(11deg)}
   .tl__rows{padding-top:150px}
+  .tl__hint--phone{display:block}
+  /* phones: the timeline pins to the screen and scrolling the page travels
+     back through the years. The section is a tall runway (JS sets its
+     height) with a full-screen sticky pin; JS moves the track sideways and
+     the staircase up with transforms, springing towards the scroll. */
+  .tl.is-pinned{padding:0}
+  .tl.is-pinned .tl__pin{
+    position:sticky;top:0;height:100vh;height:100svh;
+    display:flex;flex-direction:column;overflow:hidden;
+    padding-top:calc(var(--tl-top,0px) + 1.5rem);
+    transition:padding-top .45s var(--ease);
+    touch-action:pan-y;
+  }
+  .tl.is-pinned .tl__scroller{flex:1;min-height:0;overflow:hidden;cursor:auto}
+  .tl.is-pinned .tl__track,.tl.is-pinned .tl__rows{will-change:transform}
+  .tl.is-pinned .tl__axis{position:relative;z-index:6;background:linear-gradient(var(--bg) 70%,rgba(250,250,247,0))}
+  .tl.is-pinned .tl__needle{z-index:3}
+  .tl.is-pinned .tl__axis{margin-top:2.4rem}
 }
 @media (prefers-reduced-motion:reduce){
   .tl__card{transition:opacity .2s}
@@ -2316,6 +2376,26 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         </ol>
       </article>
       </div>
+      <script>
+      // The deal gathers every hero card into one pile before fanning out, and
+      // the pile spot assumes a 218px card. The sticky note and the definition
+      // card size to their text, so nudge them back by half the difference
+      // (--wfix, used in the cardDeal keyframes) or they sit off to the right
+      // and then jump. A ResizeObserver re-measures whenever a card's width
+      // changes (the handwriting font landing changes the sticky note's), and
+      // runs before that frame paints, so there's no one-frame flick.
+      {
+        const dealt = [...document.querySelectorAll(".fan .fcard")];
+        const wfix = (c) => {
+          if (getComputedStyle(c).getPropertyValue("--stack-tx").trim()) c.style.setProperty("--wfix", (218 - c.offsetWidth) / 2 + "px");
+        };
+        dealt.forEach(wfix);
+        if ("ResizeObserver" in window) {
+          const ro = new ResizeObserver((entries) => entries.forEach((e) => wfix(e.target)));
+          dealt.forEach((c) => ro.observe(c));
+        }
+      }
+      </script>
     </div>
   </section>
 
@@ -2667,9 +2747,11 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
        life, not work: the holidays are placeholders until real ones (and
        photos for their fan cards) land. Fan images: assets/timeline/, 320×240. -->
   <section class="tl" id="timeline" aria-labelledby="tl-title" data-reveal data-pref-section="Work life timeline">
+   <div class="tl__pin">
     <div class="tl__head">
       <h2 class="tl__title" id="tl-title">Work life</h2>
       <p class="tl__hint">Drag to scrub · hover a role</p>
+      <p class="tl__hint tl__hint--phone">Scroll to go back in time</p>
     </div>
     <div class="tl__scroller" tabindex="0" aria-label="Work history, 2007 to now. Scrolls sideways.">
       <div class="tl__track">
@@ -2678,6 +2760,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         <li class="tl__row"><div class="tl__bar tl__bar--now" style="--s:2022;--e:2027" tabindex="0">
           <img class="tl__logo" src="assets/kraken-logo-sm.webp" alt="" width="20" height="20" loading="lazy" /><span class="tl__role">Senior Web Designer</span> <span class="tl__org">Kraken</span><span class="tl__now">2022 – now</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/kraken-logo.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">Consumer web, under NDA</span><span class="tl__card tl__card--txt">Crypto · equities · tokenised stocks</span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2026.17;--e:2026.2" tabindex="0">
+          <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Skiing</span> <span class="tl__org">with the family</span><span class="tl__when">March 2026</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2024.55;--e:2024.6" tabindex="0">
           <span class="tl__dot" aria-hidden="true"></span><span class="tl__role">Holiday</span> <span class="tl__org">Placeholder</span><span class="tl__when">Summer 2024</span>
@@ -2714,6 +2800,8 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         </ol>
       </div>
     </div>
+    <div class="tl__needle" aria-hidden="true"><span class="tl__needle-label">Oct 2026</span></div>
+   </div>
   </section>
 
   <!-- ABOUT -->
@@ -3185,7 +3273,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     sections.forEach((s, idx) => { if (s && s.offsetTop <= y) i = idx; });
     links.forEach((l, idx) => l.classList.toggle("is-active", idx === i));
   };
-  window.addEventListener("scroll", setActive, { passive: true });
+  let activeQueued = false;
+  window.addEventListener("scroll", () => {
+    if (activeQueued) return;
+    activeQueued = true;
+    requestAnimationFrame(() => { activeQueued = false; setActive(); });
+  }, { passive: true });
   setActive();
 
   // about: collapsible rows on mobile (≤880px)
@@ -3914,7 +4007,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       const remaining = docH - winH - window.scrollY;
       secretEl.classList.toggle("is-revealed", remaining < winH * 0.18);
     };
-    window.addEventListener("scroll", checkReveal, { passive: true });
+    let revealQueued = false;
+    window.addEventListener("scroll", () => {
+      if (revealQueued) return;
+      revealQueued = true;
+      requestAnimationFrame(() => { revealQueued = false; checkReveal(); });
+    }, { passive: true });
     window.addEventListener("resize", checkReveal);
     checkReveal();
   }
@@ -3931,6 +4029,41 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       clock.textContent = `${h}:${m}:${s} ${ap}`;
     };
     tick(); setInterval(tick, 1000);
+  }
+
+  // Phones: while the hero's on screen and left alone (no scroll or touch
+  // for a few seconds), a random card gives a little wiggle every few
+  // seconds, like the deck's nudge further down. Stops for good once a
+  // card has been tapped. Never with reduced motion.
+  {
+    const mql = matchMedia("(max-width:760px)");
+    const cards = [...document.querySelectorAll(".fan .fcard")];
+    const heroEl = document.querySelector(".hero");
+    let idleSince = performance.now(), inView = false, learned = false, lastCard = null, timer = 0;
+    const poke = () => { idleSince = performance.now(); };
+    addEventListener("scroll", poke, { passive: true });
+    addEventListener("touchstart", poke, { passive: true });
+    cards.forEach((c) => {
+      c.addEventListener("click", () => { learned = true; });
+      c.addEventListener("animationend", (e) => { if (e.animationName === "fcWiggle") c.classList.remove("is-wiggling"); });
+    });
+    const wiggle = () => {
+      timer = setTimeout(wiggle, 3200 + Math.random() * 2600);
+      if (learned || !inView || !mql.matches || document.hidden) return;
+      if (performance.now() - idleSince < 2500) return;
+      if (scrollY > 40) return; // the profile card is mid-slide once you scroll
+      const pool = cards.filter((c) => c !== lastCard && !c.classList.contains("is-popped"));
+      const c = pool[Math.floor(Math.random() * pool.length)];
+      if (!c) return;
+      lastCard = c;
+      c.classList.remove("is-wiggling");
+      void c.offsetWidth;
+      c.classList.add("is-wiggling");
+    };
+    if (cards.length && heroEl && "IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion:reduce)").matches) {
+      new IntersectionObserver((es) => { inView = es[0].intersectionRatio > 0.4; }, { threshold: [0, 0.4, 1] }).observe(heroEl);
+      timer = setTimeout(wiggle, 4200);
+    }
   }
 
   // Mobile tap-to-pop for the fanned hero cards. On phones (≤640px) the
@@ -3971,9 +4104,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     }
   }
 
-  // Profile card: for the first half-screen of scroll it travels down with
-  // the page (so it holds still on screen), straightening and growing a
-  // touch, then stops and the page carries on: it lands on top of the About
+  // Profile card: once its centre has scrolled up to just above the middle
+  // of the screen, it travels down with the page for half a screen (so it
+  // holds still), straightening and (not on phones) growing a touch, then
+  // stops and the page carries on: it lands on top of the About
   // intro, which gets exactly enough top padding (--land) to hold it.
   // Skipped for reduced motion and the "Card beside copy" layout.
   {
@@ -3984,9 +4118,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     const html = document.documentElement;
     const reduce = matchMedia("(prefers-reduced-motion:reduce)");
     if (card && hero && fanIn && hello) {
-      const GROW = 0.3;
-      const r = parseFloat(getComputedStyle(card).getPropertyValue("--r")) || 0;
-      let k = 1, start = 0, travel = 0, on = false;
+      const HOLD_AT = 0.42; // where on screen its centre holds, from the top
+      const phone = matchMedia("(max-width:640px)");
+      let k = 1, start = 0, travel = 0, on = false, GROW = 0.3, r = 0, dx = 0;
       const active = () => !reduce.matches && html.dataset.prefIntro !== "beside" && hero.offsetParent !== null;
       const measure = () => {
         on = active();
@@ -3996,14 +4130,19 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         // fan__inner may be scaled (transform-origin top centre), so its top
         // is real but the card's offsets need multiplying by the scale
         k = new DOMMatrix(getComputedStyle(fanIn).transform).a || 1;
-        start = hero.getBoundingClientRect().top + scrollY;
+        GROW = phone.matches ? 0 : 0.3;
+        r = parseFloat(getComputedStyle(card).getPropertyValue("--r")) || 0;
         travel = innerHeight / 2;
+        // how far its slot sits off the centre line (20px right on phones);
+        // it drifts back to the middle as it travels
+        dx = card.offsetLeft + card.offsetWidth / 2 - fanIn.offsetWidth / 2;
+        const top = fanIn.getBoundingClientRect().top + scrollY + card.offsetTop * k;
+        const h = card.offsetHeight * k;
+        start = Math.max(hero.getBoundingClientRect().top + scrollY, top + h / 2 - innerHeight * HOLD_AT);
         // only make room when the intro sits straight under the hero
         let next = hero.nextElementSibling;
         while (next && getComputedStyle(next).display === "none") next = next.nextElementSibling;
         if (next !== hello) return;
-        const top = fanIn.getBoundingClientRect().top + scrollY + card.offsetTop * k;
-        const h = card.offsetHeight * k;
         const bottom = top + h / 2 + travel + (h * (1 + GROW)) / 2;
         const helloTop = hello.getBoundingClientRect().top + scrollY;
         hello.style.setProperty("--land", Math.max(0, Math.round(bottom - helloTop + 56)) + "px");
@@ -4012,7 +4151,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         if (!on) return;
         const y = Math.min(travel, Math.max(0, scrollY - start));
         const p = travel ? y / travel : 0;
-        card.style.translate = `0 ${(y / k).toFixed(1)}px`;
+        card.style.translate = `${(-dx * p).toFixed(1)}px ${(y / k).toFixed(1)}px`;
         card.style.rotate = `${(-r * p).toFixed(2)}deg`;
         card.style.scale = (1 + GROW * p).toFixed(3);
       };
@@ -4032,7 +4171,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   if (tlScroller) {
     // again once the DOM's settled: moving a section (the review panel can)
     // resets its scroll
-    const toNow = () => { tlScroller.scrollLeft = tlScroller.scrollWidth; };
+    const toNow = () => { if (!matchMedia("(max-width:760px)").matches) tlScroller.scrollLeft = tlScroller.scrollWidth; };
     toNow();
     addEventListener("DOMContentLoaded", toNow);
     let tlDrag = null;
@@ -4052,6 +4191,183 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tlDrag = null;
       tlScroller.classList.remove("is-dragging");
     });
+
+    // Phones: the timeline pins to the screen and your scroll travels back
+    // through the years. The section becomes a tall runway with a sticky,
+    // full-screen pin; how far you are through the runway sets a target
+    // (how far along the years, how far the staircase has risen) and what's
+    // drawn springs towards it every frame. All transforms, riding on the
+    // phone's own scroll momentum. A sideways swipe drives the same page
+    // scroll and coasts when you let go.
+    const phone = matchMedia("(max-width:760px)");
+    const tlSection = tlScroller.closest(".tl");
+    const pin = tlSection.querySelector(".tl__pin");
+    const track = tlScroller.querySelector(".tl__track");
+    const rows = tlScroller.querySelector(".tl__rows");
+    const rowEls = [...rows.querySelectorAll(".tl__row")];
+    const navEl = document.querySelector(".nav");
+    const still = matchMedia("(prefers-reduced-motion:reduce)");
+    const RATIO = 1.15; // px of page scroll per px of travel along the years
+
+    // the needle: placed over the scroller, reading the month and year at
+    // NEEDLE of the way across. Only touches the DOM when the month changes.
+    const NEEDLE = 0.7;
+    const needle = tlSection.querySelector(".tl__needle");
+    const needleLabel = needle.querySelector(".tl__needle-label");
+    const axisEl = track.querySelector(".tl__axis");
+    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const today = new Date();
+    const NOW = today.getFullYear() + today.getMonth() / 12;
+    let yrPx = 150, fromYr = 2014, padL = 0, shown = "";
+    const placeNeedle = () => {
+      const cs = getComputedStyle(tlSection);
+      yrPx = parseFloat(cs.getPropertyValue("--yr")) || 150;
+      fromYr = parseFloat(cs.getPropertyValue("--from")) || 2014;
+      padL = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+      needle.style.left = tlScroller.offsetLeft + tlScroller.clientWidth * NEEDLE + "px";
+      // from where the axis actually sits (its top margin collapses into the
+      // track, so offsetTop can't be trusted)
+      const base = needle.offsetParent.getBoundingClientRect();
+      const ax = axisEl.getBoundingClientRect(), sc = tlScroller.getBoundingClientRect();
+      needle.style.top = ax.top - base.top + "px";
+      needle.style.height = sc.bottom - ax.top + "px";
+    };
+    const setNeedle = (pos) => {
+      const yr = Math.min(NOW, Math.max(fromYr, fromYr + (pos + tlScroller.clientWidth * NEEDLE - padL) / yrPx));
+      const m = Math.min(11, Math.floor((yr % 1) * 12));
+      const text = MONTHS[m] + " " + Math.floor(yr);
+      if (text !== shown) needleLabel.textContent = shown = text;
+    };
+    let range = 0, runway = 0, depthAt = () => 0, cur = null, loop = 0, lastT = 0, visible = false;
+
+    // a smooth curve through the steps of the staircase (monotone cubic,
+    // Fritsch–Carlson), so the rise eases into and out of each role
+    // instead of kinking at it, and never overshoots between them
+    const monotone = (pts) => {
+      const n = pts.length;
+      if (n < 2) return () => (n ? pts[0].y : 0);
+      const d = [], m = [];
+      for (let i = 0; i < n - 1; i++) d.push((pts[i + 1].y - pts[i].y) / (pts[i + 1].x - pts[i].x || 1));
+      m.push(d[0]);
+      for (let i = 1; i < n - 1; i++) m.push(d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2);
+      m.push(d[n - 2]);
+      for (let i = 0; i < n - 1; i++) {
+        if (!d[i]) { m[i] = m[i + 1] = 0; continue; }
+        const a = m[i] / d[i], b = m[i + 1] / d[i], h = Math.hypot(a, b);
+        if (h > 3) { m[i] = (3 * a * d[i]) / h; m[i + 1] = (3 * b * d[i]) / h; }
+      }
+      return (x) => {
+        if (x <= pts[0].x) return pts[0].y;
+        if (x >= pts[n - 1].x) return pts[n - 1].y;
+        let i = 0;
+        while (x > pts[i + 1].x) i++;
+        const w = pts[i + 1].x - pts[i].x, t = (x - pts[i].x) / w, t2 = t * t, t3 = t2 * t;
+        return (2 * t3 - 3 * t2 + 1) * pts[i].y + (t3 - 2 * t2 + t) * w * m[i] + (-2 * t3 + 3 * t2) * pts[i + 1].y + (t3 - t2) * w * m[i + 1];
+      };
+    };
+
+    const navRoom = () => {
+      const out = navEl && !navEl.classList.contains("is-hidden") && !navEl.classList.contains("is-pinned");
+      tlSection.style.setProperty("--tl-top", out ? navEl.offsetHeight + "px" : "0px");
+    };
+    if (navEl) new MutationObserver(navRoom).observe(navEl, { attributes: true, attributeFilter: ["class"] });
+    navRoom();
+
+    const measure = () => {
+      const on = phone.matches;
+      tlSection.classList.toggle("is-pinned", on);
+      track.style.transform = rows.style.transform = "";
+      cur = null;
+      if (!on) { tlSection.style.removeProperty("height"); return; }
+      tlScroller.scrollLeft = 0;
+      range = Math.max(0, tlScroller.scrollWidth - tlScroller.clientWidth);
+      runway = range * RATIO;
+      tlSection.style.height = pin.offsetHeight + runway + "px";
+      // each step of the staircase: where its bar starts along the track,
+      // how far down it sits. Rows that start later but sit lower (the
+      // holidays) never become the top one, so they're left out.
+      const t0 = track.getBoundingClientRect().left;
+      const pts = rowEls
+        .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().left - t0, y: row.offsetTop - rowEls[0].offsetTop }))
+        .sort((a, b) => a.x - b.x)
+        .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y < q.y));
+      depthAt = monotone(pts);
+    };
+
+    const frame = (t) => {
+      loop = 0;
+      if (!tlSection.classList.contains("is-pinned")) return;
+      const dt = lastT ? Math.min(64, t - lastT) : 16;
+      lastT = t;
+      const p = runway ? Math.min(1, Math.max(0, -tlSection.getBoundingClientRect().top / runway)) : 0;
+      const x = range * (1 - p); // starts at now, ends at the oldest
+      const y = depthAt(x + tlScroller.clientWidth * NEEDLE);
+      if (!cur || still.matches) cur = { x, y };
+      else {
+        const k = 1 - Math.exp(-dt / 110); // ~110ms spring, frame-rate independent
+        cur.x += (x - cur.x) * k;
+        cur.y += (y - cur.y) * k;
+      }
+      track.style.transform = `translate3d(${-cur.x.toFixed(2)}px,0,0)`;
+      setNeedle(cur.x);
+      rows.style.transform = `translate3d(0,${-cur.y.toFixed(2)}px,0)`;
+      const settled = Math.abs(x - cur.x) < 0.1 && Math.abs(y - cur.y) < 0.1;
+      if (visible || !settled) loop = requestAnimationFrame(frame);
+      else lastT = 0;
+    };
+    const kick = () => { if (!loop) loop = requestAnimationFrame(frame); };
+    addEventListener("scroll", kick, { passive: true });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es) => { visible = es[0].isIntersecting; if (visible) kick(); }).observe(tlSection);
+    } else visible = true;
+
+    // sideways swipes on the pinned timeline drive the page scroll, with a
+    // coast when you let go; vertical ones are left to the browser
+    let swipe = null, coast = 0;
+    const stopCoast = () => { cancelAnimationFrame(coast); coast = 0; };
+    pin.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" || !tlSection.classList.contains("is-pinned")) return;
+      stopCoast();
+      swipe = { x: e.clientX, y: e.clientY, lx: e.clientX, lt: e.timeStamp, v: 0, on: false };
+    });
+    pin.addEventListener("pointermove", (e) => {
+      if (!swipe) return;
+      const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y;
+      if (!swipe.on) {
+        if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { swipe = null; return; }
+        if (Math.abs(dx) < 8) return;
+        swipe.on = true;
+      }
+      const step = e.clientX - swipe.lx, dt = Math.max(1, e.timeStamp - swipe.lt);
+      swipe.v = swipe.v * 0.6 + (step / dt) * 0.4; // px per ms, smoothed
+      swipe.lx = e.clientX;
+      swipe.lt = e.timeStamp;
+      scrollBy({ top: step * RATIO, behavior: "instant" });
+    });
+    const endSwipe = () => {
+      if (!swipe || !swipe.on) { swipe = null; return; }
+      let v = swipe.v, prev = performance.now();
+      swipe = null;
+      const glide = (t) => {
+        const dt = Math.min(48, t - prev);
+        prev = t;
+        v *= Math.pow(0.94, dt / 16);
+        if (Math.abs(v) < 0.02) { coast = 0; return; }
+        scrollBy({ top: v * dt * RATIO, behavior: "instant" });
+        coast = requestAnimationFrame(glide);
+      };
+      if (!still.matches) coast = requestAnimationFrame(glide);
+    };
+    pin.addEventListener("pointerup", endSwipe);
+    pin.addEventListener("pointercancel", () => { swipe = null; });
+    addEventListener("wheel", stopCoast, { passive: true });
+
+    const remeasure = () => { measure(); placeNeedle(); setNeedle(tlSection.classList.contains("is-pinned") ? (cur ? cur.x : range) : tlScroller.scrollLeft); kick(); };
+    tlScroller.addEventListener("scroll", () => { if (!tlSection.classList.contains("is-pinned")) setNeedle(tlScroller.scrollLeft); }, { passive: true });
+    addEventListener("resize", remeasure);
+    phone.addEventListener?.("change", remeasure);
+    addEventListener("load", remeasure);
+    remeasure();
   }
 
   // Work life fan: a short paper rustle as the cards come out.
