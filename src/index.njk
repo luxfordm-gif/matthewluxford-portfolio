@@ -638,6 +638,9 @@ p,li{text-wrap:pretty}
 }
 .hello__body a:hover{text-decoration-color:var(--ink)}
 @media (max-width:760px){
+  /* a wider gutter than the page's --pad, so the intro copy reads as a
+     narrower, calmer column on a phone */
+  .hello{padding-left:calc(var(--pad) + 1rem);padding-right:calc(var(--pad) + 1rem)}
   .hello__inner{grid-template-columns:1fr;gap:3.5rem}
   .hello__card{width:min(100%,340px);margin:0 auto}
 }
@@ -857,18 +860,34 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   .tl__hint .tl__hint--phone{display:inline}
   /* phones: the timeline pins to the screen and scrolling the page travels
      back through the years. The section is a tall runway (JS sets its
-     height) with a full-screen sticky pin; JS moves the track sideways and
-     the staircase up with transforms, springing towards the scroll. */
-  .tl.is-pinned{padding:0}
+     height) with a sticky pin; JS moves the track sideways and the
+     staircase up with transforms, springing towards the scroll. The pin is
+     only as tall as the heading, the years and a window of rows (JS sets
+     --tl-pin-h), held in the middle of the screen, so there's no screen of
+     empty track under the last role. */
+  /* z-index 3: the last role now sits right above Beyond the screen, whose
+     fade (.beyond::before) reaches up over it; the timeline draws on top */
+  .tl.is-pinned{padding:0;z-index:3}
   .tl.is-pinned .tl__pin{
-    position:sticky;top:0;height:100vh;height:100svh;
+    position:sticky;
+    /* centred, but never so low that the nav's extra room pushes it off
+       the bottom of a short screen */
+    top:max(0px,min(calc((100svh - var(--tl-pin-h,100svh)) / 2),calc(100svh - var(--tl-pin-h,100svh) - var(--tl-top,0px))));
+    height:100vh;height:min(100svh,calc(var(--tl-pin-h,100svh) + var(--tl-top,0px)));
     display:flex;flex-direction:column;overflow:hidden;
     padding-top:calc(var(--tl-top,0px) + 1.5rem);
     transition:padding-top .45s var(--ease);
     touch-action:pan-y;
   }
   .tl.is-pinned .tl__view{flex:1;min-height:0;display:flex;flex-direction:column}
-  .tl.is-pinned .tl__scroller{flex:1;min-height:0;overflow:hidden;cursor:auto}
+  .tl.is-pinned .tl__scroller{
+    flex:1;min-height:0;overflow:hidden;cursor:auto;
+    /* rows below the window fade out rather than being cut off */
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent),linear-gradient(#000 calc(100% - 2rem),transparent);
+    -webkit-mask-composite:source-in;
+            mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent),linear-gradient(#000 calc(100% - 2rem),transparent);
+            mask-composite:intersect;
+  }
   .tl.is-pinned .tl__track,.tl.is-pinned .tl__rows{will-change:transform}
   /* pinned, nothing scrolls natively: JS holds the years at the left edge */
   .tl.is-pinned .tl__inner{position:relative;right:auto}
@@ -3891,7 +3910,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         if (next !== hello) return;
         const bottom = top + h / 2 + travel + (h * (1 + GROW)) / 2;
         const helloTop = hello.getBoundingClientRect().top + scrollY;
-        hello.style.setProperty("--land", Math.max(0, Math.round(bottom - helloTop + 56)) + "px");
+        // breathing room between the landed card and the copy; more on
+        // phones, where the copy starts right under it
+        const gap = phone.matches ? 96 : 56;
+        hello.style.setProperty("--land", Math.max(0, Math.round(bottom - helloTop + gap)) + "px");
       };
       const update = () => {
         if (!on) return;
@@ -4039,6 +4061,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       else if (now - lastDetent > 45) { lastDetent = now; sfx.detent(false); }
     };
     let range = 0, runway = 0, depthAt = () => 0, cur = null, loop = 0, lastT = 0, visible = false;
+    const ROWS_SHOWN = 4; // how many roles the pinned window holds below the years
 
     // a smooth curve through the steps of the staircase (monotone cubic,
     // Fritsch–Carlson), so the rise eases into and out of each role
@@ -4078,8 +4101,15 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tlSection.classList.toggle("is-pinned", on);
       track.style.transform = rows.style.transform = "";
       cur = null;
-      if (!on) { tlSection.style.removeProperty("height"); return; }
+      if (!on) { tlSection.style.removeProperty("height"); tlSection.style.removeProperty("--tl-pin-h"); return; }
       tlScroller.scrollLeft = 0;
+      // the pin's height: down to the first role (less the nav's room, which
+      // CSS adds back), then ROWS_SHOWN roles and room below the last one
+      // for the scroller's bottom fade (2rem) to sit clear of it
+      const navNow = parseFloat(tlSection.style.getPropertyValue("--tl-top")) || 0;
+      const step = rowEls.length > 1 ? rowEls[1].offsetTop - rowEls[0].offsetTop : 56;
+      const firstRow = rowEls[0].getBoundingClientRect().top - pin.getBoundingClientRect().top;
+      tlSection.style.setProperty("--tl-pin-h", Math.round(firstRow - navNow + ROWS_SHOWN * step + 36) + "px");
       pad();
       range = Math.max(0, posAt(NOW) - posAt(FIRST));
       runway = range * RATIO;
@@ -4092,7 +4122,11 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().left - t0, y: row.offsetTop - rowEls[0].offsetTop }))
         .sort((a, b) => a.x - b.x)
         .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y < q.y));
-      depthAt = monotone(pts);
+      // the staircase stops rising once the last role reaches the bottom of
+      // the window, so the far end of the journey isn't rows of nothing
+      const rise = monotone(pts);
+      const maxRise = Math.max(0, rowEls[rowEls.length - 1].offsetTop - rowEls[0].offsetTop - (ROWS_SHOWN - 1) * step);
+      depthAt = (x) => Math.min(maxRise, rise(x));
     };
 
     const frame = (t) => {
@@ -4100,7 +4134,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       if (!tlSection.classList.contains("is-pinned")) return;
       const dt = lastT ? Math.min(64, t - lastT) : 16;
       lastT = t;
-      const p = runway ? Math.min(1, Math.max(0, -tlSection.getBoundingClientRect().top / runway)) : 0;
+      // the pin sticks part-way down the screen, and that spot moves when the
+      // nav comes and goes, so it's read every frame
+      const stickTop = parseFloat(getComputedStyle(pin).top) || 0;
+      const p = runway ? Math.min(1, Math.max(0, (stickTop - tlSection.getBoundingClientRect().top) / runway)) : 0;
       const x = posAt(FIRST) + range * (1 - p); // today at the top, FIRST at the end
       const y = depthAt(x + needleX());
       if (!cur || still.matches) cur = { x, y };
