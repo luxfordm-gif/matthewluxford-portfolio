@@ -3391,11 +3391,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   // a key somewhere, so until then every call is silent.
   //  - rustle: three quick crackly bursts, photos pulled from a pile
   //  - folder: a low card-stock slide with a soft tap as it lands
+  //  - lift: a light, airy flick, a card picked up off the table
   //  - tick: a lens focus-ring detent, tiny and dry
   //  - shutter: a camera shutter, two quick clicks (open, close)
   const sfx = (() => {
     const AC = window.AudioContext || window.webkitAudioContext;
-    const quiet = { rustle() {}, folder() {}, tick() {}, shutter() {} };
+    const quiet = { rustle() {}, folder() {}, lift() {}, tick() {}, shutter() {} };
     if (!AC) return quiet;
     let ctx = null;
     const unlock = () => {
@@ -3447,6 +3448,14 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         });
         // the landing: a short, dull tap
         burst({ at: 0.13, len: 0.06, attack: 0.004, peak: 0.09, filters: [["lowpass", 420, 0.8]] });
+      },
+      lift() {
+        if (!ready()) return;
+        // short hiss swept downward through the upper mids, no landing
+        burst({
+          len: 0.09, attack: 0.012, peak: 0.04,
+          filters: [["highpass", 900], ["bandpass", 2600 + Math.random() * 500, 1.1, 1300]],
+        });
       },
       tick() {
         if (!ready()) return;
@@ -3941,9 +3950,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       };
       const reset = () => cards.forEach((c) => c.classList.remove("is-popped"));
       cards.forEach((card) => {
-        // the deck's folder sound as a card lifts: on mouse hover, or the tap
-        // that pops it on a phone (below)
-        card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") sfx.folder(); });
+        // a light flick as a card lifts (the deck has the heavier folder
+        // sound): on mouse hover, or the tap that pops it on a phone (below)
+        card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") sfx.lift(); });
         card.addEventListener("click", (e) => {
           if (!mql.matches) return;
           const target = linkTarget(card);
@@ -3951,7 +3960,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
           e.preventDefault();
           const wasPopped = card.classList.contains("is-popped");
           reset();
-          if (!wasPopped) { card.classList.add("is-popped"); sfx.folder(); }
+          if (!wasPopped) { card.classList.add("is-popped"); sfx.lift(); }
         });
       });
       document.addEventListener("click", (e) => {
