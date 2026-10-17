@@ -3609,7 +3609,8 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       });
     };
     let lastTx = null, vb = 0, idle = 0, lastT = 0;
-    // a lens click as each word lights up, a shutter on the key words; never
+    // a lens click as each word lights up (or goes dark, scrolling back), a
+    // shutter on the key words; never
     // on the paints that come from load or resize (silent), and the small
     // clicks are capped so a fast scroll doesn't buzz
     let lastTick = 0;
@@ -3638,7 +3639,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         const on = geo.wordX[i] < readX;
         if (on === el.classList.contains("is-on")) return;
         el.classList.toggle("is-on", on);
-        if (on && !silent) click(el);
+        if (!silent) click(el);
       });
       // motion blur on the polaroids: bumped by how far the snake moved this
       // frame, decayed frame by frame so it clears the moment you stop
