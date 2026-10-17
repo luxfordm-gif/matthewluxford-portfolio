@@ -861,34 +861,24 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   /* phones: the timeline pins to the screen and scrolling the page travels
      back through the years. The section is a tall runway (JS sets its
      height) with a sticky pin; JS moves the track sideways and the
-     staircase up with transforms, springing towards the scroll. The pin is
-     only as tall as the heading, the years and a window of rows (JS sets
-     --tl-pin-h), held in the middle of the screen, so there's no screen of
-     empty track under the last role. */
-  /* z-index 3: the last role now sits right above Beyond the screen, whose
-     fade (.beyond::before) reaches up over it; the timeline draws on top */
-  .tl.is-pinned{padding:0;z-index:3}
+     staircase up with transforms, springing towards the scroll. The pin
+     fills the screen and the staircase only ever rises: the role you're in
+     is at the top as soon as you reach it. The next section is pulled up
+     into the empty room under the last role (--tl-overlap), so the journey
+     ends on Ten London with Beyond the screen straight after. */
+  /* z-index 3: Beyond the screen rises up under the last role (see
+     --tl-overlap in the JS) and its fade (.beyond::before) reaches over the
+     timeline; the timeline draws on top */
+  .tl.is-pinned{padding:0;z-index:3;margin-bottom:calc(-1 * var(--tl-overlap,0px))}
   .tl.is-pinned .tl__pin{
-    position:sticky;
-    /* centred in the screen below the nav (JS sets --tl-stick). Only on a
-       screen too short for that does it start at the top and pad itself
-       clear of the nav instead (--tl-top) */
-    top:var(--tl-stick,0px);
-    height:100vh;height:min(100svh,calc(var(--tl-pin-h,100svh) + var(--tl-top,0px)));
+    position:sticky;top:0;height:100vh;height:100svh;
     display:flex;flex-direction:column;overflow:hidden;
     padding-top:calc(var(--tl-top,0px) + 1.5rem);
-    transition:padding-top .45s var(--ease),top .45s var(--ease);
+    transition:padding-top .45s var(--ease);
     touch-action:pan-y;
   }
   .tl.is-pinned .tl__view{flex:1;min-height:0;display:flex;flex-direction:column}
-  .tl.is-pinned .tl__scroller{
-    flex:1;min-height:0;overflow:hidden;cursor:auto;
-    /* rows below the window fade out rather than being cut off */
-    -webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent),linear-gradient(#000 calc(100% - 2rem),transparent);
-    -webkit-mask-composite:source-in;
-            mask-image:linear-gradient(90deg,transparent,#000 var(--pad),#000 calc(100% - 6rem),transparent),linear-gradient(#000 calc(100% - 2rem),transparent);
-            mask-composite:intersect;
-  }
+  .tl.is-pinned .tl__scroller{flex:1;min-height:0;overflow:hidden;cursor:auto}
   .tl.is-pinned .tl__track,.tl.is-pinned .tl__rows{will-change:transform}
   /* pinned, nothing scrolls natively: JS holds the years at the left edge */
   .tl.is-pinned .tl__inner{position:relative;right:auto}
@@ -3007,6 +2997,16 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     anchorHold = performance.now() + 900;
   });
 
+  // while the phone timeline is pinned to the screen, scrolling up is
+  // travelling forward through the years, not reaching for the nav, and the
+  // nav coming back would shove the timeline down: keep it away until the
+  // timeline lets go of the screen
+  const tlHoldsScreen = () => {
+    const tl = document.querySelector(".tl.is-pinned");
+    if (!tl) return false;
+    const r = tl.getBoundingClientRect();
+    return r.top <= 1 && r.bottom >= innerHeight - 1;
+  };
   const updateNav = () => {
     const y = window.scrollY;
     const delta = y - lastY;
@@ -3014,7 +3014,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     if (y < 24) {
       nav.classList.remove("is-floating", "is-hidden");
       nav.classList.add("is-pinned");
-    } else if (delta > 6 && !holding) {
+    } else if ((delta > 6 || tlHoldsScreen()) && !holding) {
       nav.classList.add("is-hidden");
       nav.classList.remove("is-floating", "is-pinned");
     } else if (delta < -6 || holding) {
@@ -4062,45 +4062,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       else if (now - lastDetent > 45) { lastDetent = now; sfx.detent(false); }
     };
     let range = 0, runway = 0, depthAt = () => 0, cur = null, loop = 0, lastT = 0, visible = false;
-    const ROWS_SHOWN = 4; // how many roles the pinned window holds below the years
 
-    // a smooth curve through the steps of the staircase (monotone cubic,
-    // Fritsch–Carlson), so the rise eases into and out of each role
-    // instead of kinking at it, and never overshoots between them
-    const monotone = (pts) => {
-      const n = pts.length;
-      if (n < 2) return () => (n ? pts[0].y : 0);
-      const d = [], m = [];
-      for (let i = 0; i < n - 1; i++) d.push((pts[i + 1].y - pts[i].y) / (pts[i + 1].x - pts[i].x || 1));
-      m.push(d[0]);
-      for (let i = 1; i < n - 1; i++) m.push(d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2);
-      m.push(d[n - 2]);
-      for (let i = 0; i < n - 1; i++) {
-        if (!d[i]) { m[i] = m[i + 1] = 0; continue; }
-        const a = m[i] / d[i], b = m[i + 1] / d[i], h = Math.hypot(a, b);
-        if (h > 3) { m[i] = (3 * a * d[i]) / h; m[i + 1] = (3 * b * d[i]) / h; }
-      }
-      return (x) => {
-        if (x <= pts[0].x) return pts[0].y;
-        if (x >= pts[n - 1].x) return pts[n - 1].y;
-        let i = 0;
-        while (x > pts[i + 1].x) i++;
-        const w = pts[i + 1].x - pts[i].x, t = (x - pts[i].x) / w, t2 = t * t, t3 = t2 * t;
-        return (2 * t3 - 3 * t2 + 1) * pts[i].y + (t3 - 2 * t2 + t) * w * m[i] + (-2 * t3 + 3 * t2) * pts[i + 1].y + (t3 - t2) * w * m[i + 1];
-      };
-    };
-
-    // where the pin sticks: centred in the screen below the nav when it's
-    // out. If the screen's too short to fit the pin under the nav, it
-    // sticks at the top and pads itself clear of the nav instead.
     const navRoom = () => {
       const out = navEl && !navEl.classList.contains("is-hidden") && !navEl.classList.contains("is-pinned");
-      const navH = out ? navEl.offsetHeight : 0;
-      const pinH = parseFloat(tlSection.style.getPropertyValue("--tl-pin-h")) || 0;
-      const room = innerHeight - pinH;
-      const fits = pinH > 0 && room >= navH;
-      tlSection.style.setProperty("--tl-stick", (fits ? Math.round((room + navH) / 2) : 0) + "px");
-      tlSection.style.setProperty("--tl-top", (fits ? 0 : navH) + "px");
+      tlSection.style.setProperty("--tl-top", out ? navEl.offsetHeight + "px" : "0px");
     };
     if (navEl) new MutationObserver(navRoom).observe(navEl, { attributes: true, attributeFilter: ["class"] });
     navRoom();
@@ -4108,36 +4073,48 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     const measure = () => {
       const on = phone.matches;
       tlSection.classList.toggle("is-pinned", on);
-      track.style.transform = rows.style.transform = "";
+      track.style.transform = rows.style.transform = rows.style.clipPath = "";
       cur = null;
-      if (!on) { tlSection.style.removeProperty("height"); tlSection.style.removeProperty("--tl-pin-h"); navRoom(); return; }
+      if (!on) { tlSection.style.removeProperty("height"); tlSection.style.removeProperty("--tl-overlap"); return; }
       tlScroller.scrollLeft = 0;
-      // the pin's height: down to the first role (less the nav's room, which
-      // CSS adds back), then ROWS_SHOWN roles and room below the last one
-      // for the scroller's bottom fade (2rem) to sit clear of it
-      const navNow = parseFloat(tlSection.style.getPropertyValue("--tl-top")) || 0;
-      const step = rowEls.length > 1 ? rowEls[1].offsetTop - rowEls[0].offsetTop : 56;
-      const firstRow = rowEls[0].getBoundingClientRect().top - pin.getBoundingClientRect().top;
-      const pinH = Math.round(firstRow - navNow + ROWS_SHOWN * step + 36);
-      tlSection.style.setProperty("--tl-pin-h", pinH + "px");
-      navRoom();
       pad();
       range = Math.max(0, posAt(NOW) - posAt(FIRST));
       runway = range * RATIO;
-      tlSection.style.height = Math.min(pinH, innerHeight) + runway + "px";
-      // each step of the staircase: where its bar starts along the track,
-      // how far down it sits. Rows that start later but sit lower (the
-      // holidays) never become the top one, so they're left out.
+      tlSection.style.height = pin.offsetHeight + runway + "px";
+      // the staircase: while the needle is inside a role, that role sits at
+      // the top. Going back, the hand-over happens where the newer role
+      // starts (a bar's left edge; its right edge is as wide as its label,
+      // so it can't be trusted), as a short ramp so it reads as a move, not
+      // a cut. Holidays are rows but never take the top. With overlapping
+      // roles the one that started more recently wins until you pass its
+      // start, so the top only ever moves to a lower row.
       const t0 = track.getBoundingClientRect().left;
-      const pts = rowEls
-        .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().left - t0, y: row.offsetTop - rowEls[0].offsetTop }))
-        .sort((a, b) => a.x - b.x)
-        .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y < q.y));
-      // the staircase stops rising once the last role reaches the bottom of
-      // the window, so the far end of the journey isn't rows of nothing
-      const rise = monotone(pts);
-      const maxRise = Math.max(0, rowEls[rowEls.length - 1].offsetTop - rowEls[0].offsetTop - (ROWS_SHOWN - 1) * step);
-      depthAt = (x) => Math.min(maxRise, rise(x));
+      const roles = rowEls
+        .map((row) => ({ bar: row.querySelector(".tl__bar"), y: row.offsetTop - rowEls[0].offsetTop }))
+        .filter((r) => !r.bar.classList.contains("tl__bar--life"))
+        .map((r) => ({ x: r.bar.getBoundingClientRect().left - t0, y: r.y }))
+        .sort((a, b) => b.x - a.x)
+        .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y > q.y));
+      const bounds = roles.slice(0, -1).map((r) => r.x); // crossing below bounds[i] hands the top to roles[i + 1]
+      const gaps = bounds.slice(1).map((b, i) => bounds[i] - b);
+      const W = Math.max(8, Math.min(40, ...gaps)); // ramp width, never wider than the closest two hand-overs
+      const ease = (t) => t * t * (3 - 2 * t);
+      depthAt = (x) => {
+        let i = 0;
+        while (i < bounds.length && x < bounds[i] - W / 2) i++;
+        let y = roles[i] ? roles[i].y : 0;
+        if (i < bounds.length && x < bounds[i] + W / 2) y += (roles[i + 1].y - y) * ease((bounds[i] + W / 2 - x) / W);
+        return y;
+      };
+      // at the end of the journey the last role is alone at the top, with
+      // the rest of the screen empty under it. Rather than leave that as a
+      // gap, the next section is pulled up by that much (a negative margin,
+      // --tl-overlap): it rises into the space during the last years and
+      // is tucked under the last role by the time the timeline lets go.
+      const navNow = parseFloat(tlSection.style.getPropertyValue("--tl-top")) || 0;
+      const firstTop = rowEls[0].getBoundingClientRect().top - pin.getBoundingClientRect().top - navNow;
+      const overlap = Math.max(0, pin.clientHeight - (firstTop + rowEls[0].offsetHeight + 24));
+      tlSection.style.setProperty("--tl-overlap", Math.round(overlap) + "px");
     };
 
     const frame = (t) => {
@@ -4145,10 +4122,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       if (!tlSection.classList.contains("is-pinned")) return;
       const dt = lastT ? Math.min(64, t - lastT) : 16;
       lastT = t;
-      // the pin sticks part-way down the screen, and that spot moves when the
-      // nav comes and goes, so it's read every frame
-      const stickTop = parseFloat(getComputedStyle(pin).top) || 0;
-      const p = runway ? Math.min(1, Math.max(0, (stickTop - tlSection.getBoundingClientRect().top) / runway)) : 0;
+      const p = runway ? Math.min(1, Math.max(0, -tlSection.getBoundingClientRect().top / runway)) : 0;
       const x = posAt(FIRST) + range * (1 - p); // today at the top, FIRST at the end
       const y = depthAt(x + needleX());
       if (!cur || still.matches) cur = { x, y };
@@ -4161,6 +4135,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       walk(cur.x);
       setNeedle(cur.x);
       rows.style.transform = `translate3d(0,${-cur.y.toFixed(2)}px,0)`;
+      // roles that have climbed past the years slip out of sight behind
+      // them, rather than showing in the gap above the axis
+      rows.style.clipPath = `inset(${cur.y.toFixed(2)}px -100vw -100vh -100vw)`;
       const settled = Math.abs(x - cur.x) < 0.1 && Math.abs(y - cur.y) < 0.1;
       if (visible || !settled) loop = requestAnimationFrame(frame);
       else lastT = 0;
