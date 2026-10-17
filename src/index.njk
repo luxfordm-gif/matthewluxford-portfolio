@@ -1583,7 +1583,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 .beyond__svg{
   position:absolute;inset:0;width:100%;height:100%;
   overflow:visible;
+  /* the words sit over the polaroids; let taps and drags through to them */
+  pointer-events:none;
 }
+.beyond__link{pointer-events:auto}
 .beyond__text{
   font-family:var(--sans);font-weight:700;
   font-size:clamp(2.2rem,1.3rem + 3.6vw,5.2rem);
@@ -1627,9 +1630,17 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   transform:translate(-50%,-50%) rotate(calc(var(--th) + var(--r,0deg) * (1 - var(--focus)))) scale(calc(var(--s,1) + var(--focus) * .07));
   filter:blur(calc((var(--b,0px) + var(--vb,0px)) * (1 - var(--focus))));
   transition:--focus .45s var(--ease);
-  pointer-events:none;
+  /* tap to sharpen, press and drag to pick up and throw (JS); none, so a
+     drag is ours on touch too */
+  pointer-events:auto;touch-action:none;cursor:grab;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
 }
+.beyond__pol img{pointer-events:none;-webkit-user-drag:none}
 .beyond__pol.is-focus{z-index:3}
+.beyond__pol.is-held{
+  z-index:6;cursor:grabbing;
+  box-shadow:0 0 0 1px var(--line),0 40px 70px -20px rgba(0,0,0,.35),0 10px 24px -6px rgba(0,0,0,.12);
+}
 .beyond__pol[data-depth="near"]{--s:1.15;--b:2.5px;z-index:2}
 .beyond__pol[data-depth="far"]{--s:.78;--b:1px;opacity:.92}
 .beyond__pol img,
@@ -2568,7 +2579,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   <!-- BEYOND THE SCREEN -->
   <section class="beyond" id="beyond" aria-label="Beyond the screen" data-pref-section="Beyond the screen">
    <!-- the copy, once: the snake on screen is generated from this -->
-   <p class="beyond__sr">Beyond the screen. <b>The gym</b> — early starts, heavy lifts, a bit of zen for the brain. <b>Family</b> — dad of two, plus Bella the Cavapoo. The best reason to log off on time. <b>Road bike</b> — my newest hobby. Apologies to anyone stuck behind me. <b>Barbecues</b> — I had five, I'm down to three, and they all get used. <a href="cv.html">Now read my CV</a></p>
+   <p class="beyond__sr">Beyond the screen. <b>The gym</b> — early starts, heavy lifts, a bit of zen for the brain. <b>Family</b> — dad of two, plus Bella the Cavapoo. The best reason to log off on time. <b>Road bike</b> — my newest hobby. Apologies to anyone stuck behind me. <b>Barbecues</b> — I had five, I'm down to three, and they all get used.</p>
    <div class="beyond__frame">
     <div class="beyond__stage" aria-hidden="true">
       <!-- Polaroids sit inside the snake's bends and move with it; --r = tilt,
@@ -3050,12 +3061,13 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   //  - folder: a low card-stock slide with a soft tap as it lands
   //  - lift: a light, airy flick, a card picked up off the table
   //  - tick: a lens focus-ring detent, tiny and dry
+  //  - pluck: a polaroid picked up off the pile; thud: one bumping the edge
   //  - detent: the timeline's dial, a notch per month (lower and woodier than
   //    the lens tick) and a firmer double notch on a new year
   //  - shutter: a camera shutter, two quick clicks (open, close)
   const sfx = (() => {
     const AC = window.AudioContext || window.webkitAudioContext;
-    const quiet = { rustle() {}, folder() {}, lift() {}, tick() {}, detent() {}, shutter() {} };
+    const quiet = { rustle() {}, folder() {}, lift() {}, tick() {}, detent() {}, shutter() {}, pluck() {}, thud() {} };
     if (!AC) return quiet;
     let ctx = null;
     const unlock = () => {
@@ -3119,6 +3131,14 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tick() {
         if (!ready()) return;
         burst({ len: 0.012, attack: 0.001, peak: 0.035, filters: [["highpass", 2500], ["bandpass", 4600 + Math.random() * 800, 3]] });
+      },
+      pluck() {
+        if (!ready()) return;
+        burst({ len: 0.07, attack: 0.006, peak: 0.045, filters: [["highpass", 700], ["bandpass", 1900 + Math.random() * 300, 1.2, 3200]] });
+      },
+      thud() {
+        if (!ready()) return;
+        burst({ len: 0.07, attack: 0.003, peak: 0.07, filters: [["lowpass", 380 + Math.random() * 80, 0.9]] });
       },
       detent(year) {
         if (!ready()) return;
@@ -3268,8 +3288,8 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     stage.addEventListener("pointerleave", () => { ptr = null; });
     const focusPols = () => {
       pols.forEach((pol) => {
-        let f = 0;
-        if (ptr) {
+        let f = pol.dataset.pin ? 1 : 0;
+        if (ptr && !f) {
           const r = pol.getBoundingClientRect();
           const d = Math.hypot(ptr.x - (r.left + r.width / 2), ptr.y - (r.top + r.height / 2));
           f = Math.max(0, Math.min(1, 1 - (d - r.width * 0.5) / 200));
@@ -3281,6 +3301,92 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         }
       });
     };
+    // The polaroids can be handled: a tap pins one in focus (a tap elsewhere
+    // lets it go), a press and drag picks it up and a flick throws it. It
+    // coasts with a little friction, bumps off the edges of the stage and
+    // stays where it lands, still riding the layer as you scroll. Offsets go
+    // on the `translate` property, which sits outside the card's own
+    // transform; pointer deltas are turned by -SPINE into the layer's frame.
+    const cosS = Math.cos(RAD), sinS = Math.sin(RAD);
+    const toLayer = (dx, dy) => [dx * cosS + dy * sinS, -dx * sinS + dy * cosS];
+    const flying = new Map();
+    pols.forEach((pol) => { pol.__tx = 0; pol.__ty = 0; });
+    const placePol = (pol) => { pol.style.translate = `${pol.__tx.toFixed(1)}px ${pol.__ty.toFixed(1)}px`; };
+    const pinPol = (pol, on) => {
+      pols.forEach((q) => { if (q !== pol) delete q.dataset.pin; });
+      if (on) pol.dataset.pin = "1"; else delete pol.dataset.pin;
+    };
+    const stopFly = (pol) => { const id = flying.get(pol); if (id) { cancelAnimationFrame(id); flying.delete(pol); } };
+    const fly = (pol, vx, vy) => {
+      let prev = performance.now();
+      const step = (t) => {
+        const dt = Math.min(48, t - prev);
+        prev = t;
+        pol.__tx += vx * dt;
+        pol.__ty += vy * dt;
+        const k = Math.pow(0.994, dt);
+        vx *= k; vy *= k;
+        // the edges, inset from the stage's fade so it never vanishes: a fast
+        // card bumps off them with a thud, a slow one (or one dropped past
+        // them) eases back inside
+        const r = pol.getBoundingClientRect(), st = stage.getBoundingClientRect();
+        const L = st.left + st.width * 0.08, R = st.right - st.width * 0.08, T = st.top + st.height * 0.06, B = st.bottom - st.height * 0.06;
+        const ox = r.left < L ? L - r.left : r.right > R ? R - r.right : 0;
+        const oy = r.top < T ? T - r.top : r.bottom > B ? B - r.bottom : 0;
+        const fast = Math.hypot(vx, vy) > 0.15;
+        if (ox) { if (fast) { pol.__tx += ox; vx = Math.sign(ox) * Math.abs(vx) * 0.55; } else pol.__tx += ox * 0.18; }
+        if (oy) { if (fast) { pol.__ty += oy; vy = Math.sign(oy) * Math.abs(vy) * 0.55; } else pol.__ty += oy * 0.18; }
+        if ((ox || oy) && fast) sfx.thud();
+        placePol(pol);
+        if (Math.hypot(vx, vy) > 0.02 || Math.abs(ox) > 0.5 || Math.abs(oy) > 0.5) flying.set(pol, requestAnimationFrame(step));
+        else flying.delete(pol);
+      };
+      flying.set(pol, requestAnimationFrame(step));
+    };
+    let held = null;
+    pols.forEach((pol) => {
+      pol.addEventListener("pointerdown", (e) => {
+        if (e.button || held) return;
+        e.preventDefault();
+        stopFly(pol);
+        held = { pol, x0: e.clientX, y0: e.clientY, lx: e.clientX, ly: e.clientY, lt: e.timeStamp, vx: 0, vy: 0, moved: false, wasPinned: !!pol.dataset.pin };
+        pol.setPointerCapture(e.pointerId);
+      });
+      pol.addEventListener("pointermove", (e) => {
+        if (!held || held.pol !== pol) return;
+        if (!held.moved) {
+          if (Math.hypot(e.clientX - held.x0, e.clientY - held.y0) < 6) return;
+          held.moved = true;
+          pol.classList.add("is-held");
+          pinPol(pol, true);
+          sfx.pluck();
+        }
+        const dt = Math.max(1, e.timeStamp - held.lt);
+        const [lx, ly] = toLayer(e.clientX - held.lx, e.clientY - held.ly);
+        pol.__tx += lx; pol.__ty += ly;
+        placePol(pol);
+        held.vx = held.vx * 0.5 + (lx / dt) * 0.5;
+        held.vy = held.vy * 0.5 + (ly / dt) * 0.5;
+        held.lx = e.clientX; held.ly = e.clientY; held.lt = e.timeStamp;
+      });
+      const release = (e) => {
+        if (!held || held.pol !== pol) return;
+        const h = held;
+        held = null;
+        pol.classList.remove("is-held");
+        if (!h.moved) { pinPol(pol, !h.wasPinned); return; } // a tap: sharpen, or let go
+        // a flick throws it; a card held still before letting go just drops
+        // (and eases back in if it was left past the edge)
+        const stale = e.timeStamp - h.lt > 80;
+        if (!reduce) fly(pol, stale ? 0 : h.vx, stale ? 0 : h.vy);
+      };
+      pol.addEventListener("pointerup", release);
+      pol.addEventListener("pointercancel", release);
+    });
+    stage.addEventListener("pointerdown", (e) => {
+      if (!e.target.closest(".beyond__pol")) pols.forEach((q) => delete q.dataset.pin);
+    });
+
     let lastTx = null, vb = 0, idle = 0, lastT = 0;
     // a lens click as each word lights up (or goes dark, scrolling back), a
     // shutter on the key words; never
