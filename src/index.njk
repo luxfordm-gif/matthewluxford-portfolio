@@ -2995,6 +2995,16 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     anchorHold = performance.now() + 900;
   });
 
+  // while the phone timeline is pinned to the screen, scrolling up is
+  // travelling forward through the years, not reaching for the nav, and the
+  // nav coming back would shove the timeline down: keep it away until the
+  // timeline lets go of the screen
+  const tlHoldsScreen = () => {
+    const tl = document.querySelector(".tl.is-pinned");
+    if (!tl) return false;
+    const r = tl.getBoundingClientRect();
+    return r.top <= 1 && r.bottom >= innerHeight - 1;
+  };
   const updateNav = () => {
     const y = window.scrollY;
     const delta = y - lastY;
@@ -3002,7 +3012,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     if (y < 24) {
       nav.classList.remove("is-floating", "is-hidden");
       nav.classList.add("is-pinned");
-    } else if (delta > 6 && !holding) {
+    } else if ((delta > 6 || tlHoldsScreen()) && !holding) {
       nav.classList.add("is-hidden");
       nav.classList.remove("is-floating", "is-pinned");
     } else if (delta < -6 || holding) {
@@ -4103,9 +4113,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().left - t0, y: row.offsetTop - rowEls[0].offsetTop }))
         .sort((a, b) => a.x - b.x)
         .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y < q.y));
-      // the staircase rises all the way through, but scaled so that at the
-      // far end the last role sits just above the bottom of the screen
-      // (measured with the nav away): the roles fill the screen as you go,
+      // the staircase rises a row per role, as far as it takes to bring the
+      // last role to just above the bottom of the screen (measured with the
+      // nav away), then holds: by then every older role is on screen below,
       // and the journey ends on Ten London rather than on rows of nothing
       const rise = monotone(pts);
       const navNow = parseFloat(tlSection.style.getPropertyValue("--tl-top")) || 0;
@@ -4113,9 +4123,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       const firstTop = rowEls[0].getBoundingClientRect().top - pin.getBoundingClientRect().top - navNow;
       const lastBottom = last.offsetTop - rowEls[0].offsetTop + last.offsetHeight;
       const maxRise = Math.max(0, lastBottom - (pin.clientHeight - firstTop - 24));
-      const fullRise = Math.max(0, ...pts.map((pt) => pt.y));
-      const k = fullRise > 0 ? Math.min(1, maxRise / fullRise) : 1;
-      depthAt = (x) => rise(x) * k;
+      depthAt = (x) => Math.min(maxRise, rise(x));
     };
 
     const frame = (t) => {
