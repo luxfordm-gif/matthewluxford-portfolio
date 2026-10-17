@@ -13,8 +13,8 @@ npm run check       # run the shared-CSS drift check (also runs in CI)
 
 ## Site map (source files)
 
-- `src/index.njk` — homepage (hero, FYI note, photo-card intro `.hello`, work deck, "Work life" scrubber timeline `.tl`, about list, beyond, testimonials, lux-large-footer)
-  - "Work life" `.tl`: a sideways scroller on desktop; on phones (≤760px) it pins to the screen (`.tl.is-pinned`, a tall runway with a sticky `.tl__pin`) and the page scroll travels back through the years, with the staircase rising on a smooth curve and a spring. Sideways swipes drive the same page scroll and coast on release.
+- `src/index.njk` — homepage (hero, FYI note, photo-card intro `.hello`, work deck, "Where I've been" timeline `.tl`, about list, beyond, testimonials, lux-large-footer)
+  - "Where I've been" `.tl`: a sideways scroller on desktop; on phones (≤760px) it pins to the screen (`.tl.is-pinned`, a tall runway with a sticky `.tl__pin`) and the page scroll travels back through the years, with the staircase rising on a smooth curve and a spring. Sideways swipes drive the same page scroll and coast on release.
 - `src/cv.njk` — full CV / résumé (nav-cv variant, secret-footer)
 - `src/jlr.html` — Jaguar Land Rover case study
 - `src/lifecake.html` — Lifecake case study
