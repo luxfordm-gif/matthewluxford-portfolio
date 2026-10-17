@@ -862,12 +862,14 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
      back through the years. The section is a tall runway (JS sets its
      height) with a sticky pin; JS moves the track sideways and the
      staircase up with transforms, springing towards the scroll. The pin
-     fills the screen; the staircase rises only as far as it takes to bring
-     the last role to the bottom of it, so the journey ends on Ten London
-     with the next section straight after, not a screen of empty track. */
-  /* z-index 3: the last role now sits right above Beyond the screen, whose
-     fade (.beyond::before) reaches up over it; the timeline draws on top */
-  .tl.is-pinned{padding:0;z-index:3}
+     fills the screen and the staircase only ever rises: the role you're in
+     is at the top as soon as you reach it. The next section is pulled up
+     into the empty room under the last role (--tl-overlap), so the journey
+     ends on Ten London with Beyond the screen straight after. */
+  /* z-index 3: Beyond the screen rises up under the last role (see
+     --tl-overlap in the JS) and its fade (.beyond::before) reaches over the
+     timeline; the timeline draws on top */
+  .tl.is-pinned{padding:0;z-index:3;margin-bottom:calc(-1 * var(--tl-overlap,0px))}
   .tl.is-pinned .tl__pin{
     position:sticky;top:0;height:100vh;height:100svh;
     display:flex;flex-direction:column;overflow:hidden;
@@ -4099,7 +4101,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       tlSection.classList.toggle("is-pinned", on);
       track.style.transform = rows.style.transform = rows.style.clipPath = "";
       cur = null;
-      if (!on) { tlSection.style.removeProperty("height"); return; }
+      if (!on) { tlSection.style.removeProperty("height"); tlSection.style.removeProperty("--tl-overlap"); return; }
       tlScroller.scrollLeft = 0;
       pad();
       range = Math.max(0, posAt(NOW) - posAt(FIRST));
@@ -4114,24 +4116,16 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().right - t0, y: row.offsetTop - rowEls[0].offsetTop }))
         .sort((a, b) => a.x - b.x)
         .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y < q.y));
-      const rise = monotone(pts);
-      // the last role, once it's at the top, glides down to sit just above
-      // the bottom of the screen (measured with the nav away) over its own
-      // stretch of years, so the journey ends on it with the next section
-      // straight after, rather than on a screen of nothing below it
+      depthAt = monotone(pts);
+      // at the end of the journey the last role is alone at the top, with
+      // the rest of the screen empty under it. Rather than leave that as a
+      // gap, the next section is pulled up by that much (a negative margin,
+      // --tl-overlap): it rises into the space during the last years and
+      // is tucked under the last role by the time the timeline lets go.
       const navNow = parseFloat(tlSection.style.getPropertyValue("--tl-top")) || 0;
-      const last = rowEls[rowEls.length - 1];
-      const lastBar = last.querySelector(".tl__bar").getBoundingClientRect();
-      const lastL = lastBar.left - t0, lastR = lastBar.right - t0;
       const firstTop = rowEls[0].getBoundingClientRect().top - pin.getBoundingClientRect().top - navNow;
-      const lastY = last.offsetTop - rowEls[0].offsetTop;
-      const landY = Math.min(lastY, Math.max(0, lastY + last.offsetHeight - (pin.clientHeight - firstTop - 24)));
-      const ease = (t) => t * t * (3 - 2 * t);
-      depthAt = (x) => {
-        if (x >= lastR || lastR <= lastL) return rise(x);
-        const t = ease(Math.min(1, (lastR - x) / (lastR - lastL)));
-        return lastY - (lastY - landY) * t;
-      };
+      const overlap = Math.max(0, pin.clientHeight - (firstTop + rowEls[0].offsetHeight + 24));
+      tlSection.style.setProperty("--tl-overlap", Math.round(overlap) + "px");
     };
 
     const frame = (t) => {
