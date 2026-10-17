@@ -4099,8 +4099,8 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 
     // Phones: the years stick to the top of the screen (a copy of the axis,
     // slid sideways in step with the scroller), and as you swipe the page
-    // scrolls so the top role in view sits just under them, with room for
-    // its photo fan. The sticky row drops below the nav when the nav is out.
+    // scrolls down the staircase with you. The sticky row drops below the
+    // nav when the nav is out.
     const phone = matchMedia("(max-width:760px)");
     const tlSection = tlScroller.closest(".tl");
     const stick = tlSection.querySelector(".tl__stick");
@@ -4108,39 +4108,69 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     stickTrack.appendChild(tlScroller.querySelector(".tl__axis").cloneNode(true));
     const rowEls = [...tlScroller.querySelectorAll(".tl__row")];
     const navEl = document.querySelector(".nav");
-    const FAN_ROOM = 140;
     const stickTop = () => {
       const out = navEl && !navEl.classList.contains("is-hidden") && !navEl.classList.contains("is-pinned");
       tlSection.style.setProperty("--tl-top", out ? navEl.offsetHeight + "px" : "0px");
     };
     if (navEl) new MutationObserver(stickTop).observe(navEl, { attributes: true, attributeFilter: ["class"] });
     stickTop();
-    let lastRow = null, tlRaf = 0;
-    const topRow = () => {
+    // The page follows continuously: each step of the staircase is a point
+    // (where its bar starts, how far down it sits), joined by straight lines.
+    // While you swipe, the page glides (a fifth of the gap each frame)
+    // towards putting the current point on that line just under the years,
+    // with room above for its photo fan; it stops half a second after the
+    // swipe does, so it never fights your own vertical scrolling.
+    const FAN_ROOM = 140;
+    let pts = [], glide = 0, lastSwipe = 0, glideFrom = 0;
+    const measureRows = () => {
       const view = tlScroller.getBoundingClientRect();
-      return rowEls.find((row) => {
-        const r = row.querySelector(".tl__bar").getBoundingClientRect();
-        return r.right > view.left + 24 && r.left < view.right - 24;
-      });
+      pts = rowEls
+        .map((row) => ({ x: row.querySelector(".tl__bar").getBoundingClientRect().left - view.left + tlScroller.scrollLeft, y: row.offsetTop }))
+        .sort((a, b) => a.x - b.x)
+        // keep only the steps of the staircase: a row that starts later but
+        // sits lower (a holiday) never becomes the top one, so it's dropped,
+        // and the depth only ever runs one way as you swipe one way
+        .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y < q.y));
     };
-    const follow = (user) => {
-      tlRaf = 0;
+    const depth = () => {
+      const v = tlScroller.scrollLeft + tlScroller.clientWidth * 0.8;
+      if (!pts.length) return 0;
+      if (v <= pts[0].x) return pts[0].y;
+      for (let i = 1; i < pts.length; i++) {
+        if (v <= pts[i].x) {
+          const a = pts[i - 1], b = pts[i];
+          return a.y + ((b.y - a.y) * (v - a.x)) / (b.x - a.x || 1);
+        }
+      }
+      return pts[pts.length - 1].y;
+    };
+    const step = () => {
+      glide = 0;
       stickTrack.style.transform = `translateX(${-tlScroller.scrollLeft}px)`;
       if (!phone.matches) return;
-      const row = topRow();
-      if (!row || row === lastRow) return;
-      lastRow = row;
-      // only move the page while you're actually in the timeline
+      const now = performance.now();
       const sec = tlSection.getBoundingClientRect();
-      if (!user || sec.top > innerHeight * 0.5 || sec.bottom < innerHeight * 0.5) return;
-      const under = parseFloat(tlSection.style.getPropertyValue("--tl-top")) + stick.offsetHeight;
-      const y = row.getBoundingClientRect().top + scrollY - under - FAN_ROOM;
-      scrollTo({ top: Math.max(0, y), behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth" });
+      if (sec.bottom < 0 || sec.top > innerHeight) return;
+      // page y of the rows' own top, so offsetTop-based depths map to the page
+      const origin = rowEls[0].getBoundingClientRect().top + scrollY - rowEls[0].offsetTop;
+      const under = parseFloat(tlSection.style.getPropertyValue("--tl-top")) + stick.offsetHeight + FAN_ROOM;
+      const diff = origin + depth() - under - scrollY;
+      if (Math.abs(diff) > 0.5) scrollBy({ top: diff * 0.2, behavior: "instant" });
+      if ((now - lastSwipe < 500 || Math.abs(diff) > 1) && now - glideFrom < 2000) glide = requestAnimationFrame(step);
     };
-    tlScroller.addEventListener("scroll", () => { if (!tlRaf) tlRaf = requestAnimationFrame(() => follow(true)); }, { passive: true });
-    addEventListener("resize", () => follow(false));
-    addEventListener("DOMContentLoaded", () => follow(false));
-    follow(false);
+    tlScroller.addEventListener("scroll", () => {
+      const now = performance.now();
+      if (now - lastSwipe > 500) glideFrom = now;
+      lastSwipe = now;
+      if (!glide) glide = requestAnimationFrame(step);
+    }, { passive: true });
+    // only the sticky copy needs syncing outside a swipe
+    const syncAxis = () => { stickTrack.style.transform = `translateX(${-tlScroller.scrollLeft}px)`; };
+    const remeasure = () => { measureRows(); syncAxis(); };
+    addEventListener("resize", remeasure);
+    addEventListener("DOMContentLoaded", remeasure);
+    addEventListener("load", remeasure);
+    remeasure();
   }
 
   // Work life fan: a short paper rustle as the cards come out.
