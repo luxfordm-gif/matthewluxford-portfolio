@@ -30,8 +30,8 @@ Case studies are still raw HTML — they get migrated to use layouts/partials in
 
 - `src/_includes/layouts/base.njk` — doctype, `<head>`, `<body id="top">`, content slot. Used by index.njk and cv.njk.
 - `src/_includes/partials/head-meta.njk` — meta tags, GA, fonts. Reads `title`, `description`, `canonical`, `ogImage`, etc. from page front-matter.
-- `src/_includes/partials/nav.njk` — main nav. Links Work · About · CV, primary CTA **Contact** (jumps to the footer's `#contact`, where the email and LinkedIn are); the CV used to be the CTA. On phones the links collapse into a burger menu (full-screen list under the bar, `.nav__menu`); its CSS is the `@shared: nav-menu` block in `index.njk` and `layouts/case.njk`. Takes `navBrandHref` and `navLinkBase` for homepage's same-page anchors vs case studies' cross-page links.
-- `src/_includes/partials/nav-cv.njk` — CV variant (close button).
+- `src/_includes/partials/nav.njk` — main nav. Links Work · About · CV, primary CTA **Contact** (jumps to the footer's `#contact`, where the email and LinkedIn are); the CV used to be the CTA. Sun/moon theme toggle in the bar. On phones the links collapse into a burger menu (full-screen list under the bar, `.nav__menu`, quiet 1.3rem/500 type: Matthew found the first 2.4rem/600 cut "shouty"); its and the toggle's CSS is the `@shared: nav-menu` block in `index.njk` and `layouts/case.njk`. Takes `navBrandHref` and `navLinkBase` for homepage's same-page anchors vs case studies' cross-page links.
+- `src/_includes/partials/nav-cv.njk` — CV variant (close button + theme toggle).
 - `src/_includes/partials/lux-large-footer.njk` — homepage big footer.
 - `src/_includes/partials/secret-footer.njk` — the magic reveal footer (used on index + cv).
 - `src/_includes/partials/terms-footer.njk` — small © + back-to-top row (used by case studies once migrated).
@@ -64,6 +64,14 @@ All synthesised in one `sfx` helper in `src/index.njk` (Web Audio, filtered nois
 ## Scroll smoothness
 
 Measure before and after any change meant to help it: an rAF frame-time trace over a scripted scroll (see the snake check in the wrap-up logs). `background-attachment:fixed` on `.page` is the known-good background; a fixed `::before` layer under a `clip-path` looked cheaper on a raster trace but dropped frames on the snake. The hero cards, deck, snake, profile-card slide and timeline all animate transforms only; keep it that way.
+
+## Palette tokens and the dark theme
+
+The palette is defined **once**, in `layouts/base.njk` `:root` (`--bg`, `--bg-rgb`, `--paper`, `--ink`, `--ink-2`, `--muted`, `--muted-strong`, `--line`, `--dot`, `--dot-soft`, `--glow`, `--paper-rgb`, `--bar`, `--bar-open`, `--dark`), with the night values under `:root[data-theme="dark"]`. Page CSS reads tokens and never repeats a value: `node scripts/check-tokens.js` (in `npm run check` and CI) fails on any palette literal outside base.njk. Translucent chrome uses `rgba(var(--bg-rgb), a)`. A colour that must stay the same in both themes (the black case-hero card, deck cards, hero polaroids, phone frames, the secret footer) is an *object* colour: use `--dark` or a literal and mark the line `/* fixed */` so the check skips it. Never pair `background:var(--ink)` with `color:#fff`: use `color:var(--bg)`, or it breaks when ink flips.
+
+The theme is `html[data-theme]`, set before first paint by a script in base.njk's head (saved choice in `localStorage.theme`, else the system setting), and toggled by the sun/moon button in `partials/nav.njk` (and `nav-cv.njk`). `work-with-me.njk` opts out with `noTheme: true` (it has its own dark palette).
+
+**Lesson (#97):** the palette was declared per page for the first weeks and a few chrome values were hardcoded, so the dark theme had to start with a tokenising pass. Tokenise the palette once in the base layout, with the check, on day one of any site.
 
 ## Type scale on laptops
 

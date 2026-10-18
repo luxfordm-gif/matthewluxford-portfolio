@@ -14,13 +14,7 @@ fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wg
 {% block pageStyles %}
 <style>
 :root{
-  --bg:#fafaf7;
-  --paper:#ffffff;
-  --ink:#0a0a0a;
-  --ink-2:#27272a;
-  --muted:#9a958d;
-  --line:#eae6dd;
-  --dot:#c9c4b9;
+  /* palette: layouts/base.njk */
   --pill:#494949;
   --serif:"Fraunces",ui-serif,Georgia,serif;
   --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -44,7 +38,7 @@ h1,h2,h3,h4{text-wrap:balance}
 .page{
   position:relative;z-index:2;
   background-color:var(--bg);
-  background-image:radial-gradient(circle, rgba(201, 196, 185, .3) 1px, transparent 1.4px);
+  background-image:radial-gradient(circle, var(--dot-soft) 1px, transparent 1.4px);
   background-size:18px 18px;
   background-attachment:fixed;
 }
@@ -66,6 +60,17 @@ p,li{text-wrap:pretty}
   transition:background .25s var(--ease),transform .2s var(--ease);
 }
 .nav__close:hover{background:var(--ink-2)}
+/* theme toggle, to the left of the close button on the same line */
+.nav__theme{
+  position:fixed;top:27px;right:calc(var(--pad) + 52px);z-index:60;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:40px;padding:0;border:0;border-radius:8px;
+  background:none;color:var(--ink);cursor:pointer;
+}
+.nav__theme svg{width:19px;height:19px;display:block}
+.nav__theme .moon{display:none}
+html[data-theme="dark"] .nav__theme .sun{display:none}
+html[data-theme="dark"] .nav__theme .moon{display:block}
 .nav__close:active{transform:scale(.94)}
 .nav{display:none}
 
@@ -418,9 +423,9 @@ body.near-secret-footer .cv-download-fade{
     pointer-events:none;
     background:linear-gradient(
       to bottom,
-      rgba(250,250,247,0) 0%,
-      rgba(250,250,247,.7) 55%,
-      rgba(250,250,247,.95) 100%
+      rgba(var(--bg-rgb),0) 0%,
+      rgba(var(--bg-rgb),.7) 55%,
+      rgba(var(--bg-rgb),.95) 100%
     );
   }
   .cv-download{
@@ -657,7 +662,7 @@ body.near-secret-footer .cv-download-fade{
   body{font-size:9.5pt;color:#000;line-height:1.4}
   .page{background:#fff!important;background-image:none!important}
   .nav{display:none}
-  .nav__close{display:none}
+  .nav__close,.nav__theme{display:none}
   .cv-hero__contact{font-size:8pt;color:#000;display:flex;flex-direction:column;align-items:flex-end;text-align:right;margin-bottom:5mm}
   .cv-hero__contact .dot{display:none}
   .cv-hero__contact .status{color:#000}

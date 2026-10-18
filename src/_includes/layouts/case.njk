@@ -3,8 +3,7 @@
 {% block pageStyles %}
 <style>
 :root{
-  --bg:#fafaf7;--paper:#ffffff;--ink:#0a0a0a;--ink-2:#27272a;
-  --muted:#9a958d;--line:#eae6dd;--dot:#c9c4b9;--dark:#0a0a0a;
+  /* palette: layouts/base.njk */
   --hl:#ffe600;
   --accent:{{ accent or '#0a0a0a' }};
   --accent-2:{{ accent2 or '#a7c1b1' }};
@@ -27,7 +26,7 @@ body{
 .page{
   position:relative;z-index:2;
   background-color:var(--bg);
-  background-image:radial-gradient(circle, rgba(201, 196, 185, .3) 1px, transparent 1.4px);
+  background-image:radial-gradient(circle, var(--dot-soft) 1px, transparent 1.4px);
   background-size:18px 18px;
   background-attachment:fixed;
 }
@@ -45,7 +44,7 @@ img,svg{display:block;max-width:100%}
 }
 .nav.is-pinned{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
 .nav.is-floating{
-  background:rgba(250,250,247,.78);
+  background:rgba(var(--bg-rgb),.78);
   backdrop-filter:saturate(160%) blur(14px);
   -webkit-backdrop-filter:saturate(160%) blur(14px);
   border-bottom-color:rgba(20,20,20,.06);
@@ -88,7 +87,8 @@ img,svg{display:block;max-width:100%}
 
 /* @shared: nav-menu */
 /* phone menu — the burger in the bar and the full-screen list under it.
-   Only on phones (≤760px): the links sit in the bar everywhere else. */
+   Only on phones (≤760px): the links sit in the bar everywhere else.
+   Also the theme toggle (sun / moon), which is in the bar on every width. */
 .nav__burger{
   display:none;width:40px;height:40px;margin-right:-8px;
   padding:0;border:0;background:none;color:inherit;cursor:pointer;
@@ -101,36 +101,47 @@ img,svg{display:block;max-width:100%}
 .nav.is-open .nav__burger span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
 .nav.is-open .nav__burger span:nth-child(2){opacity:0}
 .nav.is-open .nav__burger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+.nav__theme{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:40px;padding:0;border:0;border-radius:50%;
+  background:none;color:inherit;cursor:pointer;
+  transition:transform .25s cubic-bezier(.2,.7,.2,1);
+}
+.nav__theme:hover{transform:rotate(-15deg)}
+.nav__theme svg{width:19px;height:19px;display:block}
+.nav__theme .moon{display:none}
+html[data-theme="dark"] .nav__theme .sun{display:none}
+html[data-theme="dark"] .nav__theme .moon{display:block}
 .nav__menu{
   position:fixed;inset:0;z-index:59;
   display:flex;flex-direction:column;justify-content:flex-start;
   padding:calc(88px + env(safe-area-inset-top,0px)) var(--pad) calc(2rem + env(safe-area-inset-bottom,0px));
-  background:#fafaf7;color:#0a0a0a;
+  background:var(--bg);color:var(--ink);
   overflow:auto;
 }
 .nav__menu[hidden]{display:none}
 .nav__menu > a{
-  display:block;padding:1.1rem 0;
-  border-top:1px solid #eae6dd;
-  font-size:clamp(1.9rem,8vw,2.4rem);font-weight:600;letter-spacing:-.03em;line-height:1.1;
+  display:block;padding:1rem 0;
+  border-top:1px solid var(--line);
+  font-size:1.3rem;font-weight:500;letter-spacing:-.02em;line-height:1.2;
   color:inherit;text-decoration:none;
 }
-.nav__menu > a:last-of-type{border-bottom:1px solid #eae6dd}
+.nav__menu > a:last-of-type{border-bottom:1px solid var(--line)}
 .nav__menu-foot{
   display:flex;flex-direction:column;gap:.5rem;
   margin:auto 0 0;padding-top:2rem;
-  font-size:.95rem;color:#736e66;
+  font-size:.95rem;color:var(--muted);
 }
 .nav__menu-foot a{color:inherit;text-decoration:none}
 html.is-menu-open{overflow:hidden}
 html.is-menu-open .nav{transform:none !important}
 html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
-  background:#fafaf7;color:#0a0a0a;border-bottom-color:transparent;
+  background:var(--bg);color:var(--ink);border-bottom-color:transparent;
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
 @media (max-width:760px){
   .nav__burger{display:flex}
-  .nav__cta{padding:10px 16px;font-size:.9rem;margin-right:.6rem}
+  .nav__cta{padding:10px 16px;font-size:.9rem;margin:0 .4rem 0 .1rem}
 }
 @media (min-width:761px){.nav__menu{display:none !important}}
 /* @end-shared */
@@ -212,7 +223,7 @@ html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
 .award-badge{
   display:inline-flex;align-items:center;gap:8px;
   padding:8px 14px;border-radius:999px;
-  background:var(--ink);color:#ffe600;
+  background:var(--dark);color:#ffe600;
   font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
   margin-bottom:1rem;width:max-content;
 }
@@ -485,6 +496,12 @@ html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
     inset 0 0 0 1.5px rgba(255,255,255,.16),
     0 0 0 1.5px #0b0b0b,
     0 40px 70px -40px rgba(0,0,0,.45);
+}
+:root[data-theme="dark"] .phone{
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255,255,255,.22),
+    0 0 0 1.5px var(--line),
+    0 40px 70px -40px rgba(0,0,0,.9);
 }
 .phone__screen{
   position:relative;
