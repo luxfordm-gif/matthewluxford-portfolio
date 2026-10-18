@@ -422,22 +422,24 @@ img,svg{display:block;max-width:100%}
 }
 .reel__cap strong{color:var(--ink);font-weight:600}
 
-/* phone frame — the device is CSS; the image is just the screen */
+/* phone frame — a Pixel 10 Pro XL in CSS; the image is just the screen content.
+   Screen 1:2.226 (20:9): a status bar with a punch-hole camera on top, the
+   screenshot (1:1.965) in the middle, a gesture bar underneath. */
 .phone{
   --pw:clamp(230px,21vw,290px);
   width:var(--pw);
-  padding:calc(var(--pw) * .032);
-  background:#0b0b0b;
-  border-radius:calc(var(--pw) * .175);
+  padding:calc(var(--pw) * .026);
+  background:#141414;
+  border-radius:calc(var(--pw) * .16);
   box-shadow:
-    inset 0 0 0 1.5px rgba(255,255,255,.14),
+    inset 0 0 0 1.5px rgba(255,255,255,.16),
     0 0 0 1.5px #0b0b0b,
     0 40px 70px -40px rgba(0,0,0,.45);
 }
 .phone__screen{
   position:relative;
-  aspect-ratio:1 / 2.165;
-  border-radius:calc(var(--pw) * .145);
+  aspect-ratio:1 / 2.226;
+  border-radius:calc(var(--pw) * .135);
   overflow:hidden;
   background:var(--sbg,#fff);
   display:flex;flex-direction:column;
@@ -445,25 +447,35 @@ img,svg{display:block;max-width:100%}
 }
 .phone__status{
   position:relative;z-index:2;
-  flex:0 0 calc(var(--pw) * .18);
+  flex:0 0 calc(var(--pw) * .115);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 calc(var(--pw) * .09);
-  font-family:var(--sans);font-weight:600;font-size:calc(var(--pw) * .052);
-  letter-spacing:-.01em;color:var(--sfg,#111);
+  padding:0 calc(var(--pw) * .075);
+  font-family:var(--sans);font-weight:500;font-size:calc(var(--pw) * .048);
+  letter-spacing:0;color:var(--sfg,#111);
   background:var(--sbg,#fff);
 }
-.phone__status svg{width:calc(var(--pw) * .19);height:auto}
-.phone__island{
-  position:absolute;left:50%;top:calc(var(--pw) * .042);
-  width:calc(var(--pw) * .30);height:calc(var(--pw) * .088);
+.phone__status svg{width:calc(var(--pw) * .18);height:auto}
+.phone__cam{
+  position:absolute;left:50%;top:calc(var(--pw) * .028);
+  width:calc(var(--pw) * .052);height:calc(var(--pw) * .052);
   transform:translateX(-50%);
-  background:#000;border-radius:999px;
+  background:#000;border-radius:50%;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 calc(var(--pw) * .012) rgba(40,60,120,.9);
 }
 .phone__screen img,
 .phone__screen video{
   flex:1 1 auto;min-height:0;width:100%;
   object-fit:cover;object-position:top;
   display:block;pointer-events:none;
+}
+.phone__nav{
+  flex:0 0 calc(var(--pw) * .12);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--nbg,var(--sbg,#fff));
+}
+.phone__nav::before{
+  content:"";width:calc(var(--pw) * .32);height:calc(var(--pw) * .012);
+  border-radius:999px;background:var(--nfg,#111);opacity:.75;
 }
 
 /* card reel — natural aspect at a fixed height */
