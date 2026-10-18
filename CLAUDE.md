@@ -30,7 +30,7 @@ Case studies are still raw HTML — they get migrated to use layouts/partials in
 
 - `src/_includes/layouts/base.njk` — doctype, `<head>`, `<body id="top">`, content slot. Used by index.njk and cv.njk.
 - `src/_includes/partials/head-meta.njk` — meta tags, GA, fonts. Reads `title`, `description`, `canonical`, `ogImage`, etc. from page front-matter.
-- `src/_includes/partials/nav.njk` — main nav. Links Work · About · CV, primary CTA **Get in touch** (jumps to the footer's `#contact`, where the email and LinkedIn are); the CV used to be the CTA. On phones the links collapse into a burger menu (full-screen list under the bar, `.nav__menu`); its CSS is the `@shared: nav-menu` block in `index.njk` and `layouts/case.njk`. Takes `navBrandHref` and `navLinkBase` for homepage's same-page anchors vs case studies' cross-page links.
+- `src/_includes/partials/nav.njk` — main nav. Links Work · About · CV, primary CTA **Contact** (jumps to the footer's `#contact`, where the email and LinkedIn are); the CV used to be the CTA. On phones the links collapse into a burger menu (full-screen list under the bar, `.nav__menu`); its CSS is the `@shared: nav-menu` block in `index.njk` and `layouts/case.njk`. Takes `navBrandHref` and `navLinkBase` for homepage's same-page anchors vs case studies' cross-page links.
 - `src/_includes/partials/nav-cv.njk` — CV variant (close button).
 - `src/_includes/partials/lux-large-footer.njk` — homepage big footer.
 - `src/_includes/partials/secret-footer.njk` — the magic reveal footer (used on index + cv).
