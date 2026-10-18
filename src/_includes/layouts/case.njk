@@ -385,6 +385,112 @@ img,svg{display:block;max-width:100%}
 }
 .next a.next__cta:hover{transform:translateY(-2px)}
 
+/* reel — horizontal snap-scrolling strip of phones or cards, a caption under
+   each, thin rules between slides (Reps). Native scroll on touch, drag on
+   desktop (JS below). The first slide lines up with the content's left edge. */
+.reel{
+  margin:clamp(4rem,7vw,6rem) 0 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  --reel-inset:max(var(--pad), calc((100% - var(--w-content)) / 2 + var(--pad)));
+}
+.reel__track{
+  display:flex;align-items:stretch;
+  overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  scroll-padding-inline:var(--reel-inset);
+  padding-inline:var(--reel-inset);
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  cursor:grab;user-select:none;-webkit-user-select:none;
+  outline:none;
+}
+.reel__track::-webkit-scrollbar{display:none}
+.reel__track.is-dragging{scroll-snap-type:none;cursor:grabbing;scroll-behavior:auto}
+.reel__track:focus-visible{box-shadow:inset 0 0 0 2px var(--ink)}
+.reel__item{
+  flex:0 0 auto;scroll-snap-align:start;
+  margin:0;padding:clamp(2rem,3.5vw,3.25rem) clamp(1.5rem,3vw,3rem);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:clamp(1.1rem,1.6vw,1.5rem);
+  border-right:1px solid var(--line);
+}
+.reel__item:first-child{border-left:1px solid var(--line)}
+.reel__cap{
+  margin:0;text-align:center;
+  font-size:.85rem;line-height:1.45;color:var(--muted);
+  max-width:28ch;
+}
+.reel__cap strong{color:var(--ink);font-weight:600}
+
+/* phone frame — the device is CSS; the image is just the screen */
+.phone{
+  --pw:clamp(230px,21vw,290px);
+  width:var(--pw);
+  padding:calc(var(--pw) * .032);
+  background:#0b0b0b;
+  border-radius:calc(var(--pw) * .175);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255,255,255,.14),
+    0 0 0 1.5px #0b0b0b,
+    0 40px 70px -40px rgba(0,0,0,.45);
+}
+.phone__screen{
+  position:relative;
+  aspect-ratio:1 / 2.165;
+  border-radius:calc(var(--pw) * .145);
+  overflow:hidden;
+  background:var(--sbg,#fff);
+  display:flex;flex-direction:column;
+  transform:translateZ(0);
+}
+.phone__status{
+  position:relative;z-index:2;
+  flex:0 0 calc(var(--pw) * .18);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 calc(var(--pw) * .09);
+  font-family:var(--sans);font-weight:600;font-size:calc(var(--pw) * .052);
+  letter-spacing:-.01em;color:var(--sfg,#111);
+  background:var(--sbg,#fff);
+}
+.phone__status svg{width:calc(var(--pw) * .19);height:auto}
+.phone__island{
+  position:absolute;left:50%;top:calc(var(--pw) * .042);
+  width:calc(var(--pw) * .30);height:calc(var(--pw) * .088);
+  transform:translateX(-50%);
+  background:#000;border-radius:999px;
+}
+.phone__screen img{
+  flex:1 1 auto;min-height:0;width:100%;
+  object-fit:cover;object-position:top;
+  display:block;pointer-events:none;
+}
+
+/* card reel — natural aspect at a fixed height */
+.reel--cards .reel__card{
+  height:clamp(260px,32vw,440px);
+  border-radius:clamp(14px,1.4vw,20px);overflow:hidden;
+  background:var(--line);
+}
+.reel--cards .reel__card img{height:100%;width:auto;max-width:none;display:block;pointer-events:none}
+
+/* slides step in as the reel scrolls into view */
+.reel.reveal{opacity:1;transform:none;transition:none}
+.reel .reel__item > *{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease), transform .8s var(--ease)}
+.reel.is-in .reel__item > *{opacity:1;transform:none}
+.reel.is-in .reel__item:nth-child(2) > *{transition-delay:.1s}
+.reel.is-in .reel__item:nth-child(3) > *{transition-delay:.2s}
+.reel.is-in .reel__item:nth-child(4) > *{transition-delay:.3s}
+.reel.is-in .reel__item:nth-child(5) > *{transition-delay:.4s}
+.reel.is-in .reel__item:nth-child(n+6) > *{transition-delay:.5s}
+@media (prefers-reduced-motion: reduce){.reel .reel__item > *{opacity:1;transform:none;transition:none}}
+
+@media (max-width:760px){
+  .reel{margin-top:clamp(3rem,8vw,4.5rem)}
+  .reel__item{padding:1.75rem 1.1rem;scroll-snap-align:center}
+  .phone{--pw:min(66vw,290px)}
+  .reel--cards .reel__card{height:min(72vw,320px)}
+}
+
 /* pull quote — for occasional editorial breaks between body sections */
 .case__quote{
   max-width:var(--w-content);
@@ -720,7 +826,7 @@ img,svg{display:block;max-width:100%}
 </section>
 {%- endif %}
 {%- if next %}
-<section class="next" style="border-top:none;padding-top:calc(clamp(4rem,8vw,7rem) - 30px)">
+<section class="next"{% if prev %} style="border-top:none;padding-top:calc(clamp(4rem,8vw,7rem) - 30px)"{% endif %}>
   <p class="next__eyebrow">Next project</p>
   <h2 class="next__title">{{ next.title | safe }}</h2>
   <a class="next__cta" href="{{ next.slug }}">View case study →</a>
@@ -768,7 +874,7 @@ img,svg{display:block;max-width:100%}
 })();
 
 (() => {
-  const targets = document.querySelectorAll(".case__bleed:not(.case__bleed--top), .case__body, .case__hero, .case__hero-img, .case__gallery, .case__feature, .case__split, .outcomes, .next");
+  const targets = document.querySelectorAll(".case__bleed:not(.case__bleed--top), .case__body, .case__hero, .case__hero-img, .case__gallery, .case__feature, .case__split, .reel, .outcomes, .next");
   targets.forEach(el => el.classList.add("reveal"));
   if (!("IntersectionObserver" in window)) {
     targets.forEach(el => el.classList.add("is-in"));
@@ -805,6 +911,49 @@ img,svg{display:block;max-width:100%}
   // hero sits above the fold: release the h1 mask + fade the lead/meta on load
   const head = document.querySelector(".case__head");
   if (head) requestAnimationFrame(() => head.classList.add("is-in"));
+})();
+
+(() => {
+  // Reels: drag with a mouse on desktop (touch scrolls natively). Snap is
+  // switched off while dragging so the strip follows the pointer, then back
+  // on so it settles on a slide. A real drag swallows the click that ends it.
+  document.querySelectorAll(".reel__track").forEach((track) => {
+    let down = false, moved = false, startX = 0, startLeft = 0, pid = null;
+    track.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      down = true; moved = false; pid = e.pointerId;
+      startX = e.clientX; startLeft = track.scrollLeft;
+    });
+    track.addEventListener("pointermove", (e) => {
+      if (!down || e.pointerId !== pid) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 4) {
+        moved = true;
+        track.classList.add("is-dragging");
+        track.setPointerCapture(pid);
+      }
+      if (moved) track.scrollLeft = startLeft - dx;
+    });
+    const end = (e) => {
+      if (!down) return;
+      down = false;
+      if (moved) {
+        const left = track.scrollLeft;
+        track.classList.remove("is-dragging");
+        track.scrollLeft = left; // re-enabling snap settles on the nearest slide
+      }
+    };
+    track.addEventListener("pointerup", end);
+    track.addEventListener("pointercancel", end);
+    track.addEventListener("click", (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+    track.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const item = track.querySelector(".reel__item");
+      if (!item) return;
+      e.preventDefault();
+      track.scrollBy({ left: (e.key === "ArrowRight" ? 1 : -1) * item.offsetWidth, behavior: "smooth" });
+    });
+  });
 })();
 
 (() => {

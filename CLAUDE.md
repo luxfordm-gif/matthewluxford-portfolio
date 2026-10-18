@@ -118,6 +118,8 @@ All case-study pages follow the same shape — copy `skatefarm.html` or `reps.ht
 6. `<section class="next">` — "Next project" CTA
 7. `<footer class="terms-footer">` — small © + back-to-top row
 
+**Reels (Reps, #92).** Phone and card carousels in the style of kester.work/work/streaks: `{% reel "label" %}…{% endreel %}` with `{% reel_phone src, alt, caption, bg %}` or `{% reel_card src, alt, caption %}` inside (`"cards"` as the reel's second arg). Styles and the drag-to-scroll JS live in `layouts/case.njk`. The iPhone frame, status bar and island are CSS, so a phone image is just the screen under the status bar, cut at **1:1.985** (the frame is 1:2.165 and the status bar takes 0.18 of the width); `bg` is the screen's top colour so the status bar matches. Reps' screens came from Pixel screenshots (Android status/nav bars cropped off, then cut to ratio) and, for screens not yet shot, frames from the Claude Code recording (soft on retina: replace with real exports). A case study that drops `prev` from its front matter gets a single "Next project" block.
+
 Each page has its own accent palette in `:root` (`--accent`, `--accent-2`). Otherwise the CSS is mostly identical between pages.
 
 ## Case-sensitive paths
