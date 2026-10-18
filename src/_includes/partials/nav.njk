@@ -6,29 +6,54 @@
     <nav class="nav__links" aria-label="Primary">
       <a href="{{ navLinkBase | default('index.html') }}#work">Work</a>
       <a href="{{ navLinkBase | default('index.html') }}#hello">About</a>
-      <a href="{{ navLinkBase | default('index.html') }}#contact">Contact</a>
+      <a href="cv.html">CV</a>
     </nav>
-    <a class="nav__cta" href="cv.html">My CV</a>
+    <a class="nav__cta" href="{{ navLinkBase | default('index.html') }}#contact">Get in touch</a>
+    <button class="nav__burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu"><span></span><span></span><span></span></button>
   </div>
 </header>
+<nav class="nav__menu" id="nav-menu" aria-label="Menu" hidden>
+  <a href="{{ navLinkBase | default('index.html') }}#work">Work</a>
+  <a href="{{ navLinkBase | default('index.html') }}#hello">About</a>
+  <a href="cv.html">CV</a>
+  <a href="{{ navLinkBase | default('index.html') }}#contact">Get in touch</a>
+  <p class="nav__menu-foot"><a href="mailto:luxfordm@gmail.com">luxfordm@gmail.com</a><a href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener">LinkedIn ↗</a></p>
+</nav>
 <script>
 (function(){
   var brand = document.querySelector('.nav__brand');
-  if (!brand) return;
-  var letters = brand.querySelectorAll('.nav__brand-letters span');
-  var last = letters[letters.length - 1];
-  if (!last) return;
-  var playing = false;
-  function start(){
-    if (playing) return;
-    playing = true;
-    brand.classList.add('is-waving');
+  if (brand) {
+    var letters = brand.querySelectorAll('.nav__brand-letters span');
+    var last = letters[letters.length - 1];
+    var playing = false;
+    function start(){
+      if (playing || !last) return;
+      playing = true;
+      brand.classList.add('is-waving');
+    }
+    if (last) last.addEventListener('animationend', function(){
+      brand.classList.remove('is-waving');
+      playing = false;
+    });
+    brand.addEventListener('mouseenter', start);
+    brand.addEventListener('focus', start);
   }
-  last.addEventListener('animationend', function(){
-    brand.classList.remove('is-waving');
-    playing = false;
-  });
-  brand.addEventListener('mouseenter', start);
-  brand.addEventListener('focus', start);
+
+  // Phone menu: the burger opens a full-screen list under the bar. Closes on
+  // a link, Escape, or growing past the phone breakpoint.
+  var nav = document.querySelector('.nav');
+  var burger = document.querySelector('.nav__burger');
+  var menu = document.getElementById('nav-menu');
+  if (!nav || !burger || !menu) return;
+  function setOpen(open){
+    nav.classList.toggle('is-open', open);
+    document.documentElement.classList.toggle('is-menu-open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) menu.removeAttribute('hidden'); else menu.setAttribute('hidden', '');
+  }
+  burger.addEventListener('click', function(){ setOpen(!nav.classList.contains('is-open')); });
+  menu.addEventListener('click', function(e){ if (e.target.closest('a')) setOpen(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && nav.classList.contains('is-open')) { setOpen(false); burger.focus(); } });
+  window.addEventListener('resize', function(){ if (window.innerWidth > 760 && nav.classList.contains('is-open')) setOpen(false); });
 })();
 </script>

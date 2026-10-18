@@ -179,6 +179,55 @@ p,li{text-wrap:pretty}
   }
 }
 
+/* @shared: nav-menu */
+/* phone menu — the burger in the bar and the full-screen list under it.
+   Only on phones (≤760px): the links sit in the bar everywhere else. */
+.nav__burger{
+  display:none;width:40px;height:40px;margin-right:-8px;
+  padding:0;border:0;background:none;color:inherit;cursor:pointer;
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;
+}
+.nav__burger span{
+  display:block;width:20px;height:1.6px;background:currentColor;border-radius:2px;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1), opacity .25s;
+}
+.nav.is-open .nav__burger span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+.nav.is-open .nav__burger span:nth-child(2){opacity:0}
+.nav.is-open .nav__burger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+.nav__menu{
+  position:fixed;inset:0;z-index:59;
+  display:flex;flex-direction:column;justify-content:flex-start;
+  padding:calc(88px + env(safe-area-inset-top,0px)) var(--pad) calc(2rem + env(safe-area-inset-bottom,0px));
+  background:#fafaf7;color:#0a0a0a;
+  overflow:auto;
+}
+.nav__menu[hidden]{display:none}
+.nav__menu > a{
+  display:block;padding:1.1rem 0;
+  border-top:1px solid #eae6dd;
+  font-size:clamp(1.9rem,8vw,2.4rem);font-weight:600;letter-spacing:-.03em;line-height:1.1;
+  color:inherit;text-decoration:none;
+}
+.nav__menu > a:last-of-type{border-bottom:1px solid #eae6dd}
+.nav__menu-foot{
+  display:flex;flex-direction:column;gap:.5rem;
+  margin:auto 0 0;padding-top:2rem;
+  font-size:.95rem;color:#736e66;
+}
+.nav__menu-foot a{color:inherit;text-decoration:none}
+html.is-menu-open{overflow:hidden}
+html.is-menu-open .nav{transform:none !important}
+html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
+  background:#fafaf7;color:#0a0a0a;border-bottom-color:transparent;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+@media (max-width:760px){
+  .nav__burger{display:flex}
+  .nav__cta{padding:10px 16px;font-size:.9rem;margin-right:.6rem}
+}
+@media (min-width:761px){.nav__menu{display:none !important}}
+/* @end-shared */
+
 /* ============================================================ hero */
 .hero{
   position:relative;z-index:3;
@@ -670,6 +719,46 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   --yr:150px;--yr0:46px;--early:2007;--brk:2015;--to:2027;
   padding:clamp(4rem,8vw,7rem) 0 clamp(3rem,6vw,5rem);
 }
+/* ============================================================ what I do */
+/* Numbered rows between hairlines, after princepal.in's "What I do,
+   specifically." Type and rules only: no cards (see CLAUDE.md, layout tells). */
+.skills{position:relative;z-index:2;padding:clamp(5rem,9vw,8rem) var(--pad)}
+.skills__inner{max-width:1180px;margin:0 auto}
+.skills__head{margin-bottom:clamp(2.5rem,4vw,3.5rem)}
+.skills__title{
+  font-family:var(--sans);font-weight:500;
+  font-size:calc(var(--h2) * .78);
+  letter-spacing:-.03em;line-height:1.08;
+  margin:0;color:var(--ink);text-wrap:balance;
+}
+.skills__title .it{font-family:var(--serif-2);font-style:italic;font-weight:400;letter-spacing:-.015em}
+.skills__lead{margin:1.1rem 0 0;max-width:52ch;font-size:clamp(1.05rem,1rem + .35vw,1.2rem);line-height:1.6;color:var(--muted-strong)}
+.skills__list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.skills__row{
+  display:grid;grid-template-columns:3.5rem minmax(0,.8fr) minmax(0,1.4fr);
+  gap:.75rem clamp(1.5rem,3vw,3rem);align-items:start;
+  padding:clamp(1.75rem,3vw,2.5rem) 0;border-bottom:1px solid var(--line);
+}
+.skills__num{font-size:.8rem;font-weight:500;color:var(--muted-strong);letter-spacing:.08em;padding-top:.5rem;font-variant-numeric:tabular-nums}
+.skills__name{
+  font-family:var(--sans);font-weight:600;
+  font-size:clamp(1.35rem,1.1rem + .9vw,1.9rem);
+  letter-spacing:-.025em;line-height:1.1;margin:0;color:var(--ink);
+}
+.skills__name .it{font-family:var(--serif-2);font-style:italic;font-weight:400;letter-spacing:-.01em}
+.skills__body p{margin:0;max-width:58ch;font-size:clamp(1rem,.95rem + .3vw,1.12rem);line-height:1.6;color:var(--ink-2)}
+.skills__tags{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;margin:1.1rem 0 0;padding:0}
+.skills__tags li{
+  font-size:.68rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted-strong);border:1px solid var(--line);border-radius:999px;
+  padding:.5rem .8rem;line-height:1;
+}
+@media (max-width:880px){
+  .skills__row{grid-template-columns:2.6rem minmax(0,1fr);gap:.6rem 1rem}
+  .skills__body{grid-column:2}
+}
+@media (max-width:760px){.skills{padding:clamp(4rem,12vw,6rem) var(--pad)}}
+
 /* same title as the deck above: a step down from --h2, italic second line */
 .tl__head{max-width:1400px;margin:0 auto;padding:0 var(--pad);text-align:center}
 .tl__title{
@@ -2561,6 +2650,59 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     </div>
   </section>
 
+  <!-- WHAT I DO — numbered ruled rows (after princepal.in). Tag rows with
+       .reveal-up + --i so they step in; the section's data-reveal fires them. -->
+  <section class="skills" id="skills" aria-labelledby="skills-title" data-reveal data-pref-section="What I do">
+    <div class="skills__inner">
+      <div class="skills__head">
+        <h2 class="skills__title reveal-up" id="skills-title">What I do, <span class="it">specifically.</span></h2>
+        <p class="skills__lead reveal-up" style="--i:1">Product, web and brand, from the first scrappy sketch to the thing that goes live. Lately with an AI doing the typing.</p>
+      </div>
+      <ol class="skills__list">
+        <li class="skills__row reveal-up" style="--i:2">
+          <span class="skills__num" aria-hidden="true">01</span>
+          <h3 class="skills__name">Product <span class="it">design</span></h3>
+          <div class="skills__body">
+            <p>Flows, wireframes, prototypes and the polished screens at the end. Design systems that survive contact with engineers, and the small moves that make a screen feel finished.</p>
+            <ul class="skills__tags"><li>UX</li><li>UI</li><li>Prototypes</li><li>Design systems</li><li>Micro-interactions</li><li>Figma</li><li>iOS</li><li>Android</li></ul>
+          </div>
+        </li>
+        <li class="skills__row reveal-up" style="--i:3">
+          <span class="skills__num" aria-hidden="true">02</span>
+          <h3 class="skills__name">Websites <span class="it">&amp; landing pages</span></h3>
+          <div class="skills__body">
+            <p>Marketing sites and landing pages with a point. Strong type, clear hierarchy, a reason to keep scrolling, and a page that actually converts.</p>
+            <ul class="skills__tags"><li>Web design</li><li>Landing pages</li><li>Typography</li><li>Responsive</li><li>Figma</li></ul>
+          </div>
+        </li>
+        <li class="skills__row reveal-up" style="--i:4">
+          <span class="skills__num" aria-hidden="true">03</span>
+          <h3 class="skills__name">Brand <span class="it">&amp; identity</span></h3>
+          <div class="skills__body">
+            <p>Logos, palettes, type and tone of voice, with a brand book so it still holds together after I've gone. See <a href="riverfox.html">River Fox</a>.</p>
+            <ul class="skills__tags"><li>Logo</li><li>Brand book</li><li>Colour</li><li>Tone of voice</li><li>Art direction</li></ul>
+          </div>
+        </li>
+        <li class="skills__row reveal-up" style="--i:5">
+          <span class="skills__num" aria-hidden="true">04</span>
+          <h3 class="skills__name">Design <span class="it">direction</span></h3>
+          <div class="skills__body">
+            <p>Running the workshops, managing designers, and presenting the work to build teams and the people who sign it off. Sole designer or one of a team, either suits me.</p>
+            <ul class="skills__tags"><li>Workshops</li><li>Creative direction</li><li>Design ops</li><li>Stakeholders</li></ul>
+          </div>
+        </li>
+        <li class="skills__row reveal-up" style="--i:6">
+          <span class="skills__num" aria-hidden="true">05</span>
+          <h3 class="skills__name">Prototype &amp; ship <span class="it">with AI</span></h3>
+          <div class="skills__body">
+            <p>I don't hand-write HTML and CSS any more. I design it, then build and ship it with Claude Code, straight to a live URL. <a href="reps.html">Reps</a> and this site are both made that way.</p>
+            <ul class="skills__tags"><li>Claude Code</li><li>ChatGPT</li><li>GitHub</li><li>Supabase</li><li>Netlify</li></ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
   <!-- WORK LIFE — horizontal scrubber take on the About list below. Each bar's
        --s/--e are start/end years (decimals for months). Green bars are
        life, not work: the holidays are placeholders until real ones (and
@@ -3037,7 +3179,11 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 
   // active nav underline
   const links = document.querySelectorAll(".nav__links a");
-  const sections = [...links].map((a) => document.querySelector(a.getAttribute("href")));
+  const sections = [...links].map((a) => {
+    const href = a.getAttribute("href") || "";
+    const hash = href.indexOf("#") >= 0 ? href.slice(href.indexOf("#") + 1) : "";
+    return hash ? document.getElementById(hash) : null;
+  });
   const setActive = () => {
     const y = window.scrollY + 140;
     let i = -1;

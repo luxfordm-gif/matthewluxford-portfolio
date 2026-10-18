@@ -86,6 +86,55 @@ img,svg{display:block;max-width:100%}
 .nav__cta:hover{transform:translateY(-2px)}
 @media (max-width:760px){.nav__links{display:none}}
 
+/* @shared: nav-menu */
+/* phone menu — the burger in the bar and the full-screen list under it.
+   Only on phones (≤760px): the links sit in the bar everywhere else. */
+.nav__burger{
+  display:none;width:40px;height:40px;margin-right:-8px;
+  padding:0;border:0;background:none;color:inherit;cursor:pointer;
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;
+}
+.nav__burger span{
+  display:block;width:20px;height:1.6px;background:currentColor;border-radius:2px;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1), opacity .25s;
+}
+.nav.is-open .nav__burger span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+.nav.is-open .nav__burger span:nth-child(2){opacity:0}
+.nav.is-open .nav__burger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+.nav__menu{
+  position:fixed;inset:0;z-index:59;
+  display:flex;flex-direction:column;justify-content:flex-start;
+  padding:calc(88px + env(safe-area-inset-top,0px)) var(--pad) calc(2rem + env(safe-area-inset-bottom,0px));
+  background:#fafaf7;color:#0a0a0a;
+  overflow:auto;
+}
+.nav__menu[hidden]{display:none}
+.nav__menu > a{
+  display:block;padding:1.1rem 0;
+  border-top:1px solid #eae6dd;
+  font-size:clamp(1.9rem,8vw,2.4rem);font-weight:600;letter-spacing:-.03em;line-height:1.1;
+  color:inherit;text-decoration:none;
+}
+.nav__menu > a:last-of-type{border-bottom:1px solid #eae6dd}
+.nav__menu-foot{
+  display:flex;flex-direction:column;gap:.5rem;
+  margin:auto 0 0;padding-top:2rem;
+  font-size:.95rem;color:#736e66;
+}
+.nav__menu-foot a{color:inherit;text-decoration:none}
+html.is-menu-open{overflow:hidden}
+html.is-menu-open .nav{transform:none !important}
+html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
+  background:#fafaf7;color:#0a0a0a;border-bottom-color:transparent;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+@media (max-width:760px){
+  .nav__burger{display:flex}
+  .nav__cta{padding:10px 16px;font-size:.9rem;margin-right:.6rem}
+}
+@media (min-width:761px){.nav__menu{display:none !important}}
+/* @end-shared */
+
 /* back */
 .back{
   position:relative;z-index:5;

@@ -13,7 +13,7 @@ npm run check       # run the shared-CSS drift check (also runs in CI)
 
 ## Site map (source files)
 
-- `src/index.njk` — homepage (hero, FYI note, photo-card intro `.hello` — the nav's About lands here, work deck, "Where I've been" timeline `.tl`, beyond, testimonials, lux-large-footer). The old About list (accordion job rows) was removed in #80: the timeline carries that now.
+- `src/index.njk` — homepage (hero, FYI note, photo-card intro `.hello` — the nav's About lands here, work deck, "What I do" `.skills` (numbered ruled rows of what Matthew does, after princepal.in; no HTML/CSS row — he designs and ships with AI), "Where I've been" timeline `.tl`, beyond, testimonials, lux-large-footer). The old About list (accordion job rows) was removed in #80: the timeline carries that now.
   - Work deck `.deck`: loops endlessly (each card picks the loop offset `--o` that suits the move about to happen, so cards leave and arrive from the right side; a jump of several cards riffles one at a time). On phones the front card is `min(74vw,330px)` with one card tucked behind each side and no arrows (drag and the bars). Matthew preferred the wider card with a tidier fan over a slimmer card (#69).
   - `.hello` on phones: `--pad` + 1rem gutters and 96px between the landed profile card and the lead (#87).
   - "Where I've been" `.tl`: the axis starts at 2007, with 2007–2015 squeezed (`--yr0` a year) so there's no empty desert. Going back, the years stop once 2007 reaches the left edge (sticky `.tl__inner`) and the needle walks the rest of the way, so the far end never leaves a blank screen. On screens wide enough to show every year (~2400px+), JS stretches `--yr` so the years fill the width and only the needle moves. The Ten London fan lists the ten studios from the CV (`.tl__card--list`, spread wider by `.tl__fan--wide`). Move the needle's parts with `--walk`, never a transform on `.tl__needle` itself: that makes it a layer and the axis paints over the pill. A sideways scroller on desktop; on phones (≤760px) it pins to the full screen (`.tl.is-pinned`, a tall runway with a sticky `.tl__pin`) and the page scroll travels back through the years. The staircase (#89, after four wrong turns): while the needle is inside a role that role sits in the top slot; going back, the top hands over where the *newer* role **starts** (its bar's left edge), as a ≤40px ramp plus the spring. Never key it to where a bar ends — `.tl__bar` has `min-width:max-content`, so a bar's right edge is its label's width (with the real fonts Yoppie "ends" in 2024). Holidays are rows but never take the top. Rows only ever climb; there's no hold, scale or glide, and rows that climb past the years are clipped at the axis (JS `clip-path`). The empty room under Ten London at the end is filled by pulling Beyond the screen up (`--tl-overlap`, a negative `margin-bottom` on `.tl.is-pinned`; the timeline is `z-index:3` so Beyond's fade-in doesn't grey the last row). While the pinned timeline holds the screen the nav stays hidden on scroll-up (`tlHoldsScreen` in the nav code), otherwise it shoves the whole thing down. Sideways swipes drive the same page scroll and coast on release. Don't shrink the pin to a "window of rows": the holidays take rows while sitting off-screen right, so a four-row window showed two roles (#87/#88, reverted).
@@ -30,7 +30,7 @@ Case studies are still raw HTML — they get migrated to use layouts/partials in
 
 - `src/_includes/layouts/base.njk` — doctype, `<head>`, `<body id="top">`, content slot. Used by index.njk and cv.njk.
 - `src/_includes/partials/head-meta.njk` — meta tags, GA, fonts. Reads `title`, `description`, `canonical`, `ogImage`, etc. from page front-matter.
-- `src/_includes/partials/nav.njk` — main nav (Resume CTA). Takes `navBrandHref` and `navLinkBase` for homepage's same-page anchors vs case studies' cross-page links.
+- `src/_includes/partials/nav.njk` — main nav. Links Work · About · CV, primary CTA **Get in touch** (jumps to the footer's `#contact`, where the email and LinkedIn are); the CV used to be the CTA. On phones the links collapse into a burger menu (full-screen list under the bar, `.nav__menu`); its CSS is the `@shared: nav-menu` block in `index.njk` and `layouts/case.njk`. Takes `navBrandHref` and `navLinkBase` for homepage's same-page anchors vs case studies' cross-page links.
 - `src/_includes/partials/nav-cv.njk` — CV variant (close button).
 - `src/_includes/partials/lux-large-footer.njk` — homepage big footer.
 - `src/_includes/partials/secret-footer.njk` — the magic reveal footer (used on index + cv).
@@ -154,6 +154,7 @@ node scripts/check-shared-css.js --fix     # copy the first (alphabetical) file'
 ```
 
 Currently wrapped:
+- `nav-menu` — in `src/index.njk` and `src/_includes/layouts/case.njk` (the phone burger menu)
 - `secret-footer` — in `src/index.njk`, `src/cv.njk`, `src/_includes/layouts/case.njk` (the case-study layout)
 - `terms-footer` — in `src/_includes/layouts/case.njk` (single copy now the case studies share one layout)
 
