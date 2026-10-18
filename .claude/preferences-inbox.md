@@ -16,4 +16,4 @@ Written by cloud sessions, where `~/.claude` doesn't persist. The next local `wr
 - Cloud network only reaches GitHub and the package registries: Supabase, Fontshare, html2png.dev and his live sites are all denied. Public repos clone read-only through the proxy (`GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1`). A landing page can be served locally and shot with Playwright, with Google Fonts or system Inter standing in for Fontshare type (retake locally for the real fonts).
 - Headless Chromium in the cloud has no H.264: verify `<video>` behaviour with a short VP9 file, then ship the mp4.
 - Pixel screenshots are 1080×2404: crop y 162–2284 to drop Android's status and nav bars. Pillow for crops and WebP, ffmpeg for frames (`-ss <t> -frames:v 1`) and for cutting a walkthrough (`select=between(t,a,b)+…,setpts=N/30/TB`, crop, scale 540 wide, libx264 crf 27 → ~0.7 MB for 38s).
-
+- He doesn't do branding: no logos, identity or brand-book rows in any skills list or positioning copy.
