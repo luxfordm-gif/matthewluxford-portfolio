@@ -194,6 +194,17 @@ module.exports = function (eleventyConfig) {
 </figure>`;
   });
 
+  // Ruled rows — a definition list with hairlines between rows, for facts,
+  // steps or numbers without boxes (Reps). Variants: "steps" numbers the
+  // rows 01, 02…; "big" sets the term as a large figure.
+  eleventyConfig.addPairedShortcode("ruled", function (content, variant) {
+    const cls = variant ? `ruled ruled--${variant}` : "ruled";
+    return `<dl class="${cls}">${content}</dl>`;
+  });
+  eleventyConfig.addShortcode("ruled_row", function (term, text) {
+    return `<div class="ruled__row"><dt>${term}</dt><dd>${text}</dd></div>`;
+  });
+
   // Pill under a card in the homepage Featured work carousel — one short,
   // concrete fact about the work. Keep labels to two or three words.
   eleventyConfig.addShortcode("proj_tag", function (label) {

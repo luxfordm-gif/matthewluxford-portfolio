@@ -21,22 +21,6 @@ next:
 ---
 {% extends "layouts/case.njk" %}
 
-{% block pageStyles %}
-{{ super() }}
-<style>
-/* Reps — the build loop as a row of pills */
-.flow{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .35rem;margin-top:.25rem}
-.flow__step{
-  display:inline-flex;align-items:center;
-  padding:.5rem .9rem;border-radius:999px;
-  background:var(--paper);border:1px solid var(--line);
-  font-size:.9rem;font-weight:600;color:var(--ink);line-height:1;white-space:nowrap;
-}
-.flow__step--ship{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.flow__arr{color:var(--muted);font-size:.9rem;padding:0 .15rem}
-</style>
-{% endblock %}
-
 {% block caseBody %}
 {% case_hero_image "assets/reps/reps-hero.webp", "Reps app shown on iPhone — today's workout screen with exercises, sets and reps", "assets/reps/reps-hero-mobile.webp" %}
 
@@ -54,11 +38,14 @@ next:
   {% reel_phone "assets/reps/screen-end.webp", "End workout dialog — save and end, discard, or keep going", "<strong>Done.</strong> Save it, bin it, or keep going", "#818181" %}
 {% endreel %}
 
-{% case_hero "Design it.<br /><em>Build it.</em><br />Train with it.", "No brief. No client. Just the app I always wished existed, built around how I actually train.", "clamp(5rem,9vw,7rem)" %}
-  {% hero_stat "PDF &rarr; <em>App.</em>", "Upload a coach's plan, train off it the same day" %}
-  {% hero_stat "Daily <em>use.</em>", "Replaced the Google Doc on day one" %}
-  {% hero_stat "Built with <em>AI.</em>", "Voice note → Claude → Ship. Repeat." %}
-{% endcase_hero %}
+{% case_body "Design it.<br>Build it.<br>Train with it." %}
+  <p>No brief. No client. Just the app I always wished existed, built around how I actually train.</p>
+  {% ruled %}
+    {% ruled_row "PDF → app", "Upload a coach's plan, train off it the same day" %}
+    {% ruled_row "Daily use", "Replaced the Google Doc on day one" %}
+    {% ruled_row "Built with AI", "Voice note → Claude → ship. Repeat." %}
+  {% endruled %}
+{% endcase_body %}
 
 {% case_body "I built it." %}
   <p>A web app that lives on my phone like a native one. New plan arrives, I upload the <strong>PDF or CSV</strong>, it splits the weeks into days. Then it gets out of the way.</p>
@@ -89,15 +76,13 @@ next:
 </figure>
 
 {% case_body "How I build it." %}
-  <p>Train, notice what's clunky, <strong>voice-note it</strong>. The notes go into Claude Plan, the fix goes through Claude Code, GitHub and Supabase, and it's usually live the same day. If it needs design: a quick Figma wireframe, a ChatGPT image pass for options, then into Claude Code as the starting point.</p>
-  <div class="flow" aria-label="The build loop">
-    <span class="flow__step">Voice note</span><span class="flow__arr">→</span>
-    <span class="flow__step">Claude Plan</span><span class="flow__arr">→</span>
-    <span class="flow__step">Claude Code</span><span class="flow__arr">→</span>
-    <span class="flow__step">GitHub</span><span class="flow__arr">→</span>
-    <span class="flow__step">Supabase</span><span class="flow__arr">→</span>
-    <span class="flow__step flow__step--ship">Ship</span>
-  </div>
+  <p>Train, notice what's clunky, say it into a <strong>voice note</strong>. Then:</p>
+  {% ruled "steps" %}
+    {% ruled_row "<span>Claude Plan</span>", "maps the fix from the notes" %}
+    {% ruled_row "<span>Claude Code</span>", "builds it. If it needs design, a quick Figma wireframe and a ChatGPT image pass go in first" %}
+    {% ruled_row "<span>GitHub → Supabase</span>", "reviewed, merged, deployed" %}
+    {% ruled_row "<span>Ship</span>", "usually the same day" %}
+  {% endruled %}
 {% endcase_body %}
 
 {% case_body "The brand." %}
@@ -129,9 +114,11 @@ next:
   <p>Right now I'm building a <strong>coach login</strong>. A PT sees all their clients in one place and amends plans directly, which cuts out the back and forth across Google Docs, Excel and PDFs. Then <strong>open it up</strong>: a free tier for the basics, a paid one for PDF import, custom set structures and long-term progress. No timeline. It earns its keep every time I open it.</p>
 {% endcase_body %}
 
-{% outcomes %}
-  {% outcome "1", "Daily user — me. Every session." %}
-  {% outcome "0", "Google Docs harmed in the making of this app" %}
-  {% outcome "∞<em>.</em>", "Voice notes still queued for the next build" %}
-{% endoutcomes %}
+{% case_body "So far." %}
+  {% ruled "big" %}
+    {% ruled_row "1", "Daily user. Me, every session." %}
+    {% ruled_row "0", "Google Docs harmed in the making of this app" %}
+    {% ruled_row "∞", "Voice notes still queued for the next build" %}
+  {% endruled %}
+{% endcase_body %}
 {% endblock %}

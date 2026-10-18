@@ -106,6 +106,10 @@ The voice across the site is direct and conversational — read the Skate Farm a
 - First person, honest, slightly self-deprecating where it fits.
 - Lead with the thing, not the framing. ("A PDF lands in my inbox. Then the dance begins.")
 
+## Layout tells to avoid
+
+Matthew reads these as "AI generated layouts" (Reps, #92): a dark band with glassy bordered stat cards and serif-italic accents, a pill-and-arrow flow strip, and boxed big-number outcome cards. The quiet alternative is plain type between hairlines: the `ruled` / `ruled_row` shortcodes (facts, numbered steps with `"steps"`, big figures with `"big"`) inside a `case_body`, matching the reels' rules and the kester.work meta table. Prefer rules and type over boxes, pills and glass.
+
 ## Case-study template
 
 All case-study pages follow the same shape — copy `skatefarm.html` or `reps.html` as the starting point. Sections, in order:
