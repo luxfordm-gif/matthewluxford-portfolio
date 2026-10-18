@@ -992,6 +992,12 @@ html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
     for (const e of entries) {
       if (e.isIntersecting) {
         e.target.classList.add("is-in");
+        // A reel's slides sit off to the side, so their lazy images only start
+        // loading on the swipe that reveals them (a blank phone on 4G). Load the
+        // whole strip once the reel itself is on screen.
+        if (e.target.classList.contains("reel")) {
+          e.target.querySelectorAll('img[loading="lazy"]').forEach((img) => { img.loading = "eager"; });
+        }
         io.unobserve(e.target);
       }
     }
