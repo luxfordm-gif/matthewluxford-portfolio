@@ -10,14 +10,11 @@ fonts: "Caveat:wght@500;600&family=Fraunces:ital,wght@1,300..500&family=Inter:wg
 accent: "#0d0d0d"
 accent2: "#a7c1b1"
 caseTitle: "Reps."
-caseLead: "A training app I designed and built for <strong>myself</strong>. Started as a fix for my own broken workflow — turned into something I <strong>use every day</strong>."
+caseLead: "A training app I designed and built for <strong>myself</strong>. A fix for my own broken workflow that became the thing I <strong>open every session</strong>."
 meta:
   role: "Design &amp; build"
   timeline: "2026"
   scope: "Web app · AI · Supabase"
-prev:
-  slug: "skatefarm.html"
-  title: "The Skate Farm."
 next:
   slug: "riverfox.html"
   title: "River Fox."
@@ -28,30 +25,50 @@ next:
 {% case_hero_image "assets/reps/reps-hero.webp", "Reps app shown on iPhone — today's workout screen with exercises, sets and reps", "assets/reps/reps-hero-mobile.webp" %}
 
 {% case_body "The backbone." %}
-  <p>Training's part of my routine. I've worked with a personal trainer for four years and we've built a programme that works — <strong>consistency and tracking</strong> are the whole game. What's always annoyed me is the <strong>tooling</strong>. Every block starts the same way: a PDF plan lands, gets pasted into a Google Doc, columns tidied, dates added, numbers updated session after session. Every few months a new plan arrives and you start over. After four years of that, I <em>built the fix</em>.</p>
+  <p>Four years with a personal trainer. Every block starts the same way: a PDF lands, gets pasted into a Google Doc, tidied, dated, then updated set by set for twelve weeks. New plan, start again. <strong>Consistency and tracking</strong> are the whole game, and the tooling was the weak link. So I <em>built the fix</em>.</p>
 {% endcase_body %}
 
-{% case_hero "Design it.<br /><em>Build it.</em><br />Train with it.", "No brief. No client. Just the app I always wished existed — built around how I actually train, not how someone in a strategy deck thinks people train.", "clamp(5rem,9vw,7rem)" %}
-  {% hero_stat "PDF &rarr; <em>App.</em>", "Upload a coach's plan, train off it the same day" %}
-  {% hero_stat "Daily <em>use.</em>", "Replaced the Google Doc on day one" %}
-  {% hero_stat "Built with <em>AI.</em>", "Voice note → Claude → Ship. Repeat." %}
-{% endcase_hero %}
+{% reel "Reps app screens — a session" %}
+  {% reel_video "assets/reps/reps-walkthrough.mp4", "assets/reps/reps-walkthrough-poster.webp", "Screen recording of a Reps session: home, performance, a training day, logging sets, the rest timer and the barbell calculator", "<strong>A session, start to finish.</strong> Recorded on my phone", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-home.webp", "Reps home screen — good morning Matt, weekly progress 4 of 4 workouts, today's workout Legs up next", "<strong>Home.</strong> The week at a glance, today's session up next", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-legs.webp", "A Legs training day — seven exercises, 16 sets, about 40 minutes, with a Start workout button and the exercise plan below", "<strong>A training day,</strong> laid out properly", "#080808", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-exercise.webp", "Exercise screen — adductor, target sets, rep range and tempo, two sets logged at 130kg with the rest timer running in the header", "<strong>Sets, reps, tempo,</strong> and the rest timer ticking in the header", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-rest.webp", "Rest timer — 59 seconds until the next set, next set flex adductor 130kg by 8, buttons to subtract or add 15 seconds or skip", "<strong>Rest.</strong> Big numbers you can read from the bench", "#0a0a0a" %}
+  {% reel_phone "assets/reps/screen-barbell.webp", "Barbell calculator — three plates stacked on an Olympic bar, 165kg with bar", "<strong>Plate stacking.</strong> Tap each plate as you load it", "#818181", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-end.webp", "End workout dialog — save and end, discard, or keep going", "<strong>Done.</strong> Save it, bin it, or keep going", "#818181" %}
+{% endreel %}
+
+{% case_body "Design it.<br>Build it.<br>Train with it." %}
+  <p>No brief. No client. Just the app I always wished existed, built around how I actually train.</p>
+  {% ruled %}
+    {% ruled_row "PDF → app", "Upload a coach's plan, train off it the same day" %}
+    {% ruled_row "Daily use", "Replaced the Google Doc on day one" %}
+    {% ruled_row "Built with AI", "Voice note → Claude → ship. Repeat." %}
+  {% endruled %}
+{% endcase_body %}
 
 {% case_body "I built it." %}
-  <p>AI has made bits of it easier. It still wasn't <em>good</em>.</p>
-  <p>A web app. Lives on my phone like a native one — saved to the home screen, opens in a tap. New plan arrives, I upload the <strong>PDF or CSV</strong>, and the app reads it, splits it into days, and lays the week out properly.</p>
-  <p>Then it gets out of the way.</p>
-  <p>I've spent enough years inside gym apps to know what I don't want from one. Most of them feel like they were built by someone who's <em>never</em> actually used them. Too rigid. No drop sets without three taps and a menu. Supersets buried. You can't just <strong>do the workout</strong>.</p>
-  <p>So I built every flexibility I've ever missed:</p>
+  <p>A web app that lives on my phone like a native one. New plan arrives, I upload the <strong>PDF or CSV</strong>, it splits the weeks into days. Then it gets out of the way.</p>
+  <p>Most gym apps feel like they were built by someone who's <em>never used one</em>. Too rigid. Supersets buried. So I built every flexibility I've ever missed:</p>
   <ul>
-    <li><strong>Drop sets, supersets, rest-pause</strong> — first-class, not workarounds</li>
-    <li><strong>Edit anything mid-session</strong> — reps, weight, swap an exercise, add one in</li>
-    <li><strong>Last-week glance</strong> — the number you're chasing, right there on the row</li>
-    <li><strong>Big numbers, one tap</strong> — readable mid-session, no squinting required</li>
-    <li><strong>Plate stacking</strong> — tap each plate as you load it, see the total weight stack up in real time.</li>
+    <li><strong>Drop sets, supersets, rest-pause</strong> as first-class, not workarounds</li>
+    <li><strong>Edit anything mid-session</strong>: reps, weight, swap an exercise</li>
+    <li><strong>Last time's number</strong> right there on the row</li>
+    <li><strong>Big numbers</strong>, readable mid-set</li>
+    <li><strong>Plate stacking</strong>: tap each plate as you load the bar</li>
   </ul>
-  <p>It's an app built by someone who actually uses it. <em>Imagine that.</em></p>
 {% endcase_body %}
+
+{% reel "Reps app screens — progress and plans" %}
+  {% reel_phone "assets/reps/screen-performance.webp", "Performance screen — week 7 of the plan, 4 of 4 this week, body weight trend over six weeks", "<strong>Performance.</strong> The week in one line, the plan you're on", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-volume.webp", "Performance screen scrolled — training volume over 12 weeks, 31,598kg, and the biggest strength gain", "<strong>Volume and strength trends,</strong> twelve weeks back", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-deadlift.webp", "Deadlift detail — estimated one rep max 186kg, up 17.5% in six months, with a progression chart and personal records", "<strong>Every lift gets a chart.</strong> Estimated 1RM, records, recent sets", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-records.webp", "All-time records — 101 records, 35 set this month, listed by movement", "<strong>All-time records,</strong> by movement", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-weight.webp", "Body weight screen — log today's weight, with a trend chart since May", "<strong>Body weight,</strong> with the trend since May", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-sleep.webp", "Sleep screen — how long did you sleep last night, with an 8 hour goal", "<strong>Sleep.</strong> One number, logged in a tap", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-upload.webp", "Upload plan screen — drop in the PDF from your trainer", "<strong>New plan?</strong> Upload the coach's PDF, train off it the same day", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-plan.webp", "Exercise plan for Legs — four groups, seven exercises, with drop sets marked", "<strong>The plan,</strong> read straight out of the PDF", "#fafafa" %}
+{% endreel %}
 
 <figure class="case__bleed case__bleed--flat">
   <video src="assets/reps/reps-claude.mp4" poster="assets/reps/reps-claude-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording of building a Reps feature with Claude Code"></video>
@@ -59,28 +76,49 @@ next:
 </figure>
 
 {% case_body "How I build it." %}
-  <p class="case__sub">The feedback loop</p>
-  <p>While using the app daily, I capture what needs fixing. What's clunky. What's missing. Sometimes a feature request, sometimes <em>"this interaction feels wrong."</em></p>
-  <p>I dump those notes into <strong>Claude Plan</strong>, let it map out the solution strategy. If it's a backend fix or logic problem, Claude executes it directly into <strong>Claude Code</strong> → <strong>GitHub</strong> → <strong>Supabase</strong> → ship. Done the same day.</p>
-  <p class="case__sub">When design is needed</p>
-  <p>If it's a visual or interaction problem, I sketch a quick wireframe in <strong>Figma</strong>, throw it into <strong>ChatGPT</strong> image generation to explore options, then export that output at the correct artboard size into <strong>Claude Code</strong> as a starting point.</p>
-  <p>Once the working prototype is solid, I export custom PNGs at production size — glossy barbells, shiny plates with actual depth and shine — things that elevate it from <em>"quick dirty rectangles with semi-rounded corners"</em> to <em>"actually polished."</em></p>
-  <p class="case__sub">The speed</p>
-  <p>Most iterations ship the same day. Some don't need design at all. Some are just code fixes. Some need the full flow from wireframe → generated image → prototype → assets. The right tool for the right job, every time.</p>
-  <p>It's been a solid learning experience on the backend side too — <strong>GitHub</strong> workflows and <strong>Supabase</strong> especially have leveled up how I think about data and infrastructure.</p>
+  <p>Train, notice what's clunky, say it into a <strong>voice note</strong>. Then:</p>
+  {% ruled "steps" %}
+    {% ruled_row "<span>Claude Plan</span>", "maps the fix from the notes" %}
+    {% ruled_row "<span>Claude Code</span>", "builds it. If it needs design, a quick Figma wireframe and a ChatGPT image pass go in first" %}
+    {% ruled_row "<span>GitHub → Supabase</span>", "reviewed, merged, deployed" %}
+    {% ruled_row "<span>Ship</span>", "usually the same day" %}
+  {% endruled %}
 {% endcase_body %}
 
-{% case_gallery "assets/reps/two.webp", "Reps app — exercise detail", "assets/reps/three.webp", "Reps app — progress view" %}
+{% case_body "The brand." %}
+  <p>Then I got carried away and made a brand for an app with one user. Hoodies, tees, a shaker. None of it exists. <em>Yet.</em></p>
+{% endcase_body %}
+
+{% reel "Reps brand and merch mockups", "cards" %}
+  {% reel_card "assets/reps/merch-hoodie.webp", "Black Reps hoodie with a small white chest logo", "Hoodie" %}
+  {% reel_card "assets/reps/merch-back.webp", "White tee with a large Reps logo across the back", "Tee, back print" %}
+  {% reel_card "assets/reps/merch-shaker.webp", "Black Reps shaker bottle", "Shaker" %}
+  {% reel_card "assets/reps/merch-range.webp", "The range laid out — hoodies, tees and caps in black, grey, cream and sage", "The range" %}
+  {% reel_card "assets/reps/merch-bag.webp", "Back of a black Reps hoodie and gym bag in a dark gym", "Gym bag" %}
+  {% reel_card "assets/reps/merch-card.webp", "Black business card with the Reps logo and a debossed R", "Card" %}
+  {% reel_card "assets/reps/merch-tee.webp", "Cream tee with a small Reps chest logo", "Tee, chest print" %}
+{% endreel %}
+
+{% case_body "The site." %}
+  <p>A small landing page for the beta at <a href="https://getrepsapp.app/" target="_blank" rel="noopener">getrepsapp.app</a>: what it does, how it works, and a form to ask for access.</p>
+{% endcase_body %}
+
+{% reel "Reps landing page", "shots" %}
+  {% reel_card "assets/reps/site-hero.webp", "getrepsapp.app homepage — Never retype your training plan again, with the app on two phones", "The pitch, and the app on a phone" %}
+  {% reel_card "assets/reps/site-steps.webp", "Three steps to your first logged set — upload the plan, pick a day, log a set", "Three steps to the first logged set" %}
+  {% reel_card "assets/reps/site-calculator.webp", "Stop doing plate maths mid-set — the barbell calculator feature", "Each feature gets a screen and a reason" %}
+  {% reel_card "assets/reps/site-beta.webp", "A small beta, on purpose — the request access form", "A small beta, on purpose" %}
+{% endreel %}
 
 {% case_body "Where it's going." %}
-  <p>Right now it's mine. Works for me, fits how I train, solves the thing I've been meaning to fix for years.</p>
-  <p>The plan is to <strong>open it up</strong>. Build a proper site around it. A free tier that covers the basics — log a session, track a plan, see your progress. A paid tier (subscription or one-off) for the advanced stuff: PDF/CSV import, custom set structures, longer-term progress views, anything else my voice notes keep flagging.</p>
-  <p>No timeline. No pressure. It earns its keep every time I open it — anything beyond that is upside.</p>
+  <p>Right now I'm building a <strong>coach login</strong>. A PT sees all their clients in one place and amends plans directly, which cuts out the back and forth across Google Docs, Excel and PDFs. Then <strong>open it up</strong>: a free tier for the basics, a paid one for PDF import, custom set structures and long-term progress. No timeline. It earns its keep every time I open it.</p>
 {% endcase_body %}
 
-{% outcomes %}
-  {% outcome "1", "Daily user — me. Every session." %}
-  {% outcome "0", "Google Docs harmed in the making of this app" %}
-  {% outcome "∞<em>.</em>", "Voice notes still queued for the next build" %}
-{% endoutcomes %}
+{% case_body "So far." %}
+  {% ruled "big" %}
+    {% ruled_row "1", "Daily user. Me, every session." %}
+    {% ruled_row "0", "Google Docs harmed in the making of this app" %}
+    {% ruled_row "∞", "Voice notes still queued for the next build" %}
+  {% endruled %}
+{% endcase_body %}
 {% endblock %}

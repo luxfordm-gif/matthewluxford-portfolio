@@ -121,6 +121,90 @@ module.exports = function (eleventyConfig) {
   </div>`;
   });
 
+  // Reel — a horizontal, snap-scrolling strip with a caption under each
+  // slide (Reps). Wrap with {% reel "label" %} … {% endreel %} and use
+  // reel_phone (an iPhone frame around a screen) or reel_card (a plain
+  // rounded image) inside. Pass "cards" as the second arg for the card variant.
+  eleventyConfig.addPairedShortcode("reel", function (content, label, variant) {
+    // "cards": images at natural aspect and a fixed height; "shots": the same
+    // with a hairline border and paper background, for website screenshots.
+    const cls = variant === "shots" ? "reel reel--cards reel--shots" : variant === "cards" ? "reel reel--cards" : "reel reel--phones";
+    return `<section class="${cls}" aria-label="${label || "Gallery"}">
+  <div class="reel__track" tabindex="0">${content}</div>
+</section>`;
+  });
+
+  // A phone in a reel (a Pixel 10 Pro XL). The frame, status bar, camera and
+  // gesture bar are CSS, so the image is just the screen content: a 1080×2404
+  // Pixel screenshot with its own bars cropped off (1:1.965). Pass the
+  // screen's top colour as bg and, if different, its bottom colour as
+  // bottomBg so the status and gesture bars match.
+  const phoneStatusGlyphs = `<svg viewBox="0 0 60 12" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx=".7"/><rect x="4.5" y="6" width="3" height="6" rx=".7"/><rect x="9" y="3.5" width="3" height="8.5" rx=".7"/><rect x="13.5" y="1" width="3" height="11" rx=".7"/><path d="M24 4.6a9 9 0 0 1 12 0l-1.5 1.7a6.8 6.8 0 0 0-9 0z"/><path d="M26.7 7.4a5.2 5.2 0 0 1 6.6 0L30 11z"/><rect x="42" y="1.5" width="15" height="9" rx="2.5" fill="none" stroke="currentColor" stroke-opacity=".45"/><rect x="43.5" y="3" width="12" height="6" rx="1.5"/><rect x="58.2" y="4.3" width="1.3" height="3.4" rx=".6" opacity=".45"/></svg>`;
+  // Status bar and gesture bar colours: the screen's top colour behind the
+  // status bar, its bottom colour behind the gesture bar, white text on dark.
+  const isDark = (hex) => {
+    const m = /^#([0-9a-f]{6})$/i.exec((hex || "").trim());
+    if (!m) return false;
+    const n = parseInt(m[1], 16);
+    return (0.2126 * (n >> 16) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255 < 0.45;
+  };
+  const phoneStyle = (bg, bottomBg) => {
+    const parts = [];
+    if (bg) { parts.push(`--sbg:${bg}`); if (isDark(bg)) parts.push("--sfg:#fff"); }
+    const nbg = bottomBg || bg;
+    if (nbg) { parts.push(`--nbg:${nbg}`); if (isDark(nbg)) parts.push("--nfg:#fff"); }
+    return parts.length ? ` style="${parts.join(";")}"` : "";
+  };
+  eleventyConfig.addShortcode("reel_phone", function (src, alt, caption, bg, bottomBg) {
+    const style = phoneStyle(bg, bottomBg);
+    const cap = caption ? `\n  <figcaption class="reel__cap">${caption}</figcaption>` : "";
+    return `<figure class="reel__item">
+  <div class="phone"${style}>
+    <div class="phone__screen">
+      <div class="phone__status" aria-hidden="true"><span>9:41</span><i class="phone__cam"></i>${phoneStatusGlyphs}</div>
+      <img src="${src}" alt="${alt}" loading="lazy" draggable="false" />
+      <i class="phone__nav" aria-hidden="true"></i>
+    </div>
+  </div>${cap}
+</figure>`;
+  });
+
+  // A phone in a reel playing a short clip (a screen recording with the
+  // device's own bars cropped off). Muted, looping; JS plays it only while
+  // it's on screen so the file never downloads for a reel nobody reaches.
+  eleventyConfig.addShortcode("reel_video", function (src, poster, alt, caption, bg, bottomBg) {
+    const style = phoneStyle(bg, bottomBg);
+    const cap = caption ? `\n  <figcaption class="reel__cap">${caption}</figcaption>` : "";
+    return `<figure class="reel__item">
+  <div class="phone"${style}>
+    <div class="phone__screen">
+      <div class="phone__status" aria-hidden="true"><span>9:41</span><i class="phone__cam"></i>${phoneStatusGlyphs}</div>
+      <video class="phone__video" data-src="${src}" poster="${poster}" muted loop playsinline preload="none" aria-label="${alt}"></video>
+      <i class="phone__nav" aria-hidden="true"></i>
+    </div>
+  </div>${cap}
+</figure>`;
+  });
+
+  // A plain rounded image in a reel — natural aspect at a fixed height.
+  eleventyConfig.addShortcode("reel_card", function (src, alt, caption) {
+    const cap = caption ? `\n  <figcaption class="reel__cap">${caption}</figcaption>` : "";
+    return `<figure class="reel__item">
+  <div class="reel__card"><img src="${src}" alt="${alt}" loading="lazy" draggable="false" /></div>${cap}
+</figure>`;
+  });
+
+  // Ruled rows — a definition list with hairlines between rows, for facts,
+  // steps or numbers without boxes (Reps). Variants: "steps" numbers the
+  // rows 01, 02…; "big" sets the term as a large figure.
+  eleventyConfig.addPairedShortcode("ruled", function (content, variant) {
+    const cls = variant ? `ruled ruled--${variant}` : "ruled";
+    return `<dl class="${cls}">${content}</dl>`;
+  });
+  eleventyConfig.addShortcode("ruled_row", function (term, text) {
+    return `<div class="ruled__row"><dt>${term}</dt><dd>${text}</dd></div>`;
+  });
+
   // Pill under a card in the homepage Featured work carousel — one short,
   // concrete fact about the work. Keep labels to two or three words.
   eleventyConfig.addShortcode("proj_tag", function (label) {
