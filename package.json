@@ -6,7 +6,7 @@
   "scripts": {
     "build": "eleventy",
     "dev": "eleventy --serve",
-    "check": "node scripts/check-shared-css.js"
+    "check": "node scripts/check-shared-css.js && node scripts/check-tokens.js"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0"

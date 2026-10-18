@@ -4,3 +4,24 @@
     <line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 </a>
+<button class="nav__theme nav__theme--cv" type="button" aria-label="Switch to dark theme" aria-pressed="false">{% set iconId = "theme-mask-cv" %}{% include "partials/theme-icon.njk" %}</button>
+<script>
+(function(){
+  var toggle = document.querySelector('.nav__theme'), root = document.documentElement;
+  if (!toggle) return;
+  function paintTheme(t){
+    root.setAttribute('data-theme', t);
+    var m = document.querySelector('meta[name="theme-color"]');
+    var bg = getComputedStyle(root).getPropertyValue('--bg').trim();
+    if (m && bg) m.setAttribute('content', bg);
+    toggle.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
+    toggle.setAttribute('aria-label', t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+  paintTheme(root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+  toggle.addEventListener('click', function(){
+    var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    paintTheme(t);
+    try { localStorage.setItem('theme', t); } catch (e) {}
+  });
+})();
+</script>

@@ -3,6 +3,14 @@
 <head>
 {% include "partials/head-meta.njk" %}
 {% include "partials/pref-panel.njk" %}
+{%- if not noTheme %}
+<script>
+/* Theme, before first paint: a saved choice wins, otherwise the system
+   setting. The nav's toggle (partials/nav.njk) saves to the same key and
+   keeps the theme-color meta in step once styles have loaded. */
+(function(){try{var t=localStorage.getItem("theme");if(t!=="dark"&&t!=="light")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
+{%- endif %}
 <style>
 /* Design tokens — single source of truth for spacing, widths, type scale.
    Defined here so every page inherits the same values. Per-page CSS in
@@ -10,6 +18,27 @@
    Hand-tuned clamp() values are still allowed for one-offs; tokens are for
    anything that should stay consistent across components. */
 :root{
+  /* palette — the one place colours are defined. Every page reads these;
+     no page CSS hardcodes a palette value (scripts/check-tokens.js fails
+     the build if one creeps in). Objects that keep their own colour in
+     both themes (hero cards, deck cards, the black case-hero card, phone
+     frames, the secret footer) use --dark or their own literals, on purpose. */
+  --bg:#fafaf7;
+  --bg-rgb:250,250,247;        /* for rgba(var(--bg-rgb),a): nav glass, fades */
+  --paper:#ffffff;
+  --ink:#0a0a0a;
+  --ink-2:#27272a;
+  --muted:#9a958d;
+  --muted-strong:#736e66;      /* --muted darkened enough for small text (5:1) */
+  --line:#eae6dd;
+  --dot:#c9c4b9;               /* homepage dot grid */
+  --dot-soft:rgba(201,196,185,.3); /* case-study / CV dot grid */
+  --glow:#ffffff;              /* homepage hero glow */
+  --paper-rgb:255,255,255;     /* for rgba(var(--paper-rgb),a): glass over the page */
+  --bar:rgba(241,239,234,.86); /* timeline role bars */
+  --bar-open:rgba(233,230,223,.8);
+  --dark:#0a0a0a;              /* always dark, in both themes */
+
   /* spacing scale (vertical rhythm + section gaps) */
   --sp-xs:clamp(8px,1.5vw,14px);
   --sp-sm:clamp(14px,3vw,22px);
@@ -36,6 +65,30 @@
   --fs-body-sm:14px;
   --fs-caption:12px;
 }
+
+{%- if not noTheme %}
+/* dark theme — same tokens, night values. Warm near-blacks to match the
+   cream of the light set; type comes down from pure white so it doesn't
+   buzz. html[data-theme] is set before paint by the script in <head>. */
+:root{color-scheme:light}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f0f0e;
+  --bg-rgb:15,15,14;
+  --paper:#171716;
+  --ink:#f3f1ec;
+  --ink-2:#d6d3cc;
+  --muted:#8d887f;
+  --muted-strong:#a9a49a;
+  --line:#2a2927;
+  --dot:#34322e;
+  --dot-soft:rgba(255,255,255,.06);
+  --glow:#1b1b1a;
+  --paper-rgb:23,23,22;
+  --bar:rgba(255,255,255,.08);
+  --bar-open:rgba(255,255,255,.14);
+}
+{%- endif %}
 
 /* 13-15" laptops (761-1599px wide): nudge the rem base down so copy, gaps
    and paddings on every page come in ~6% without retuning each clamp().

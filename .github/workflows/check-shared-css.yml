@@ -1,4 +1,4 @@
-name: Build + shared CSS check
+name: Build + shared CSS + palette checks
 
 on:
   pull_request:
@@ -16,4 +16,5 @@ jobs:
           cache: "npm"
       - run: npm ci
       - run: node scripts/check-shared-css.js
+      - run: node scripts/check-tokens.js
       - run: npm run build

@@ -17,3 +17,4 @@ Written by cloud sessions, where `~/.claude` doesn't persist. The next local `wr
 - Headless Chromium in the cloud has no H.264: verify `<video>` behaviour with a short VP9 file, then ship the mp4.
 - Pixel screenshots are 1080×2404: crop y 162–2284 to drop Android's status and nav bars. Pillow for crops and WebP, ffmpeg for frames (`-ss <t> -frames:v 1`) and for cutting a walkthrough (`select=between(t,a,b)+…,setpts=N/30/TB`, crop, scale 540 wide, libx264 crf 27 → ~0.7 MB for 38s).
 - He doesn't do branding: no logos, identity or brand-book rows in any skills list or positioning copy.
+- Wants foundations (tokens, shared components, checks) laid before features, and to be told at the time if one is being skipped. When he finds one missing he asks why; answer straight (#97: the palette was declared per page and some chrome hardcoded until the dark theme needed it).
