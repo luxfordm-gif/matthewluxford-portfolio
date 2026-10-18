@@ -2577,13 +2577,13 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         <div class="tl__inner">
         <ol class="tl__axis" aria-hidden="true"><li style="--y:2007">2007</li><li class="tl__minor" style="--y:2008"></li><li class="tl__minor" style="--y:2009"></li><li class="tl__minor" style="--y:2010"></li><li class="tl__minor" style="--y:2011"></li><li class="tl__minor" style="--y:2012"></li><li class="tl__minor" style="--y:2013"></li><li class="tl__minor" style="--y:2014"></li><li style="--y:2015">2015</li><li style="--y:2016">2016</li><li style="--y:2017">2017</li><li style="--y:2018">2018</li><li style="--y:2019">2019</li><li style="--y:2020">2020</li><li style="--y:2021">2021</li><li style="--y:2022">2022</li><li style="--y:2023">2023</li><li style="--y:2024">2024</li><li style="--y:2025">2025</li><li style="--y:2026">2026</li></ol>
         <ol class="tl__rows">
-        <li class="tl__row"><div class="tl__bar tl__bar--now" style="--s:2022;--e:2027" tabindex="0">
-          <img class="tl__logo" src="assets/kraken-logo-sm.webp" alt="" width="20" height="20" loading="lazy" /><span class="tl__org">Kraken</span> <span class="tl__role">Senior Web Designer</span><span class="tl__now">2022 – now</span>
-          <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/kraken-logo.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">Consumer web, under NDA</span><span class="tl__card tl__card--txt">Crypto · equities · tokenised stocks</span></span>
-        </div></li>
         <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2026.17;--e:2026.2" tabindex="0">
           <span class="tl__role">Family holiday</span>
           <span class="tl__fan" aria-hidden="true"><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span><span class="tl__card tl__card--txt tl__card--ph">Ski photo</span></span>
+        </div></li>
+        <li class="tl__row"><div class="tl__bar tl__bar--now" style="--s:2022;--e:2027" tabindex="0">
+          <img class="tl__logo" src="assets/kraken-logo-sm.webp" alt="" width="20" height="20" loading="lazy" /><span class="tl__org">Kraken</span> <span class="tl__role">Senior Web Designer</span><span class="tl__now">2022 – now</span>
+          <span class="tl__fan" aria-hidden="true"><span class="tl__card"><img src="assets/timeline/kraken-logo.webp" alt="" width="320" height="240" loading="lazy" /></span><span class="tl__card tl__card--txt">Consumer web, under NDA</span><span class="tl__card tl__card--txt">Crypto · equities · tokenised stocks</span></span>
         </div></li>
         <li class="tl__row"><div class="tl__bar tl__bar--life" style="--s:2024.55;--e:2024.6" tabindex="0">
           <span class="tl__role">Family holiday</span>
@@ -4095,6 +4095,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         .map((r) => ({ x: r.bar.getBoundingClientRect().left - t0, y: r.y }))
         .sort((a, b) => b.x - a.x)
         .filter((pt, i, all) => all.slice(0, i).every((q) => pt.y > q.y));
+      // holidays newer than today's role sit above it (the ski trip over
+      // Kraken): while that role has the top, they stay in view above it
+      if (roles.length) roles[0].y = 0;
       const bounds = roles.slice(0, -1).map((r) => r.x); // crossing below bounds[i] hands the top to roles[i + 1]
       const gaps = bounds.slice(1).map((b, i) => bounds[i] - b);
       const W = Math.max(8, Math.min(40, ...gaps)); // ramp width, never wider than the closest two hand-overs
