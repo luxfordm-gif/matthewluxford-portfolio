@@ -126,7 +126,9 @@ module.exports = function (eleventyConfig) {
   // reel_phone (an iPhone frame around a screen) or reel_card (a plain
   // rounded image) inside. Pass "cards" as the second arg for the card variant.
   eleventyConfig.addPairedShortcode("reel", function (content, label, variant) {
-    const cls = variant === "cards" ? "reel reel--cards" : "reel reel--phones";
+    // "cards": images at natural aspect and a fixed height; "shots": the same
+    // with a hairline border and paper background, for website screenshots.
+    const cls = variant === "shots" ? "reel reel--cards reel--shots" : variant === "cards" ? "reel reel--cards" : "reel reel--phones";
     return `<section class="${cls}" aria-label="${label || "Gallery"}">
   <div class="reel__track" tabindex="0">${content}</div>
 </section>`;

@@ -485,6 +485,12 @@ img,svg{display:block;max-width:100%}
   background:var(--line);
 }
 .reel--cards .reel__card img{height:100%;width:auto;max-width:none;display:block;pointer-events:none}
+.reel--shots .reel__card{
+  height:clamp(240px,27vw,400px);
+  background:var(--paper);
+  border:1px solid var(--line);
+  box-shadow:0 30px 60px -40px rgba(0,0,0,.22);
+}
 
 /* slides step in as the reel scrolls into view */
 .reel.reveal{opacity:1;transform:none;transition:none}
@@ -502,6 +508,7 @@ img,svg{display:block;max-width:100%}
   .reel__item{padding:1.75rem 1.1rem;scroll-snap-align:center}
   .phone{--pw:min(66vw,290px)}
   .reel--cards .reel__card{height:min(72vw,320px)}
+  .reel--shots .reel__card{height:min(50vw,240px)}
 }
 
 /* pull quote — for occasional editorial breaks between body sections */
