@@ -1,0 +1,11 @@
+{#- Sun ⇄ moon. One disc; a masked "bite" circle slides in from off-canvas to
+    carve it into a crescent while the rays fold away, so the half-way frame is
+    a half moon. Driven by html[data-theme] in the @shared: nav-menu CSS.
+    Set iconId before including: mask ids must be unique on a page. -#}
+<svg class="nav__theme-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <mask id="{{ iconId }}"><rect width="24" height="24" fill="#fff"/><circle class="bite" cx="30" cy="7" r="6.5" fill="#000"/></mask>
+  <circle class="disc" cx="12" cy="12" r="6" fill="currentColor" mask="url(#{{ iconId }})"/>
+  <g class="rays" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <path d="M12 1.5v2.3M12 20.2v2.3M1.5 12h2.3M20.2 12h2.3M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>
+  </g>
+</svg>

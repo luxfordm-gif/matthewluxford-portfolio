@@ -60,17 +60,99 @@ p,li{text-wrap:pretty}
   transition:background .25s var(--ease),transform .2s var(--ease);
 }
 .nav__close:hover{background:var(--ink-2)}
-/* theme toggle, to the left of the close button on the same line */
-.nav__theme{
-  position:fixed;top:27px;right:calc(var(--pad) + 52px);z-index:60;
-  display:inline-flex;align-items:center;justify-content:center;
-  width:40px;height:40px;padding:0;border:0;border-radius:8px;
-  background:none;color:var(--ink);cursor:pointer;
+/* @shared: nav-menu */
+/* phone menu — the burger in the bar and the full-screen list under it.
+   Only on phones (≤760px): the links sit in the bar everywhere else.
+   Also the theme toggle: a ringed sun/moon in the bar on desktop, a
+   "Dark theme / Light theme" row in the phone menu. The icon morphs: the
+   masked bite slides in to carve the disc into a crescent while the rays
+   fold away (partials/theme-icon.njk). */
+.nav__burger{
+  display:none;width:40px;height:40px;margin-right:-8px;
+  padding:0;border:0;background:none;color:inherit;cursor:pointer;
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;
 }
-.nav__theme svg{width:19px;height:19px;display:block}
-.nav__theme .moon{display:none}
-html[data-theme="dark"] .nav__theme .sun{display:none}
-html[data-theme="dark"] .nav__theme .moon{display:block}
+.nav__burger span{
+  display:block;width:20px;height:1.6px;background:currentColor;border-radius:2px;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1), opacity .25s;
+}
+.nav.is-open .nav__burger span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+.nav.is-open .nav__burger span:nth-child(2){opacity:0}
+.nav.is-open .nav__burger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+.nav__theme{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;padding:0;border-radius:50%;
+  border:1px solid color-mix(in srgb, currentColor 32%, transparent);
+  background:none;color:inherit;cursor:pointer;
+  transition:border-color .3s, transform .3s cubic-bezier(.2,.7,.2,1);
+}
+.nav__theme:hover{border-color:currentColor}
+.nav__theme-icon{width:20px;height:20px;display:block;overflow:visible}
+.nav__theme-icon .disc{
+  transform-box:fill-box;transform-origin:center;
+  transition:transform .5s cubic-bezier(.2,.7,.2,1);
+}
+.nav__theme-icon .bite{
+  transition:transform .55s cubic-bezier(.2,.7,.2,1);
+}
+.nav__theme-icon .rays{
+  transform-box:fill-box;transform-origin:center;
+  transition:transform .45s cubic-bezier(.2,.7,.2,1), opacity .3s;
+}
+html[data-theme="dark"] .nav__theme-icon .disc{transform:scale(1.25)}
+html[data-theme="dark"] .nav__theme-icon .bite{transform:translate(-12.5px,0)}
+html[data-theme="dark"] .nav__theme-icon .rays{transform:rotate(90deg) scale(.2);opacity:0}
+@media (prefers-reduced-motion: reduce){
+  .nav__theme-icon .disc,.nav__theme-icon .bite,.nav__theme-icon .rays{transition:none}
+}
+.nav__menu{
+  position:fixed;inset:0;z-index:59;
+  display:flex;flex-direction:column;justify-content:flex-start;
+  padding:calc(88px + env(safe-area-inset-top,0px)) var(--pad) calc(2rem + env(safe-area-inset-bottom,0px));
+  background:var(--bg);color:var(--ink);
+  overflow:auto;
+}
+.nav__menu[hidden]{display:none}
+.nav__menu > a{
+  display:block;padding:1rem 0;
+  border-top:1px solid var(--line);
+  font-size:1.3rem;font-weight:500;letter-spacing:-.02em;line-height:1.2;
+  color:inherit;text-decoration:none;
+}
+.nav__theme--row{
+  width:100%;height:auto;border-radius:0;
+  justify-content:space-between;padding:1rem 0;
+  border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  font:inherit;font-size:1.3rem;font-weight:500;letter-spacing:-.02em;line-height:1.2;
+  text-align:left;
+}
+.nav__theme--row:hover{border-color:var(--line);transform:none}
+.nav__theme--row .nav__theme-icon{width:22px;height:22px;margin-right:4px}
+.nav__theme--row .to-light{display:none}
+html[data-theme="dark"] .nav__theme--row .to-dark{display:none}
+html[data-theme="dark"] .nav__theme--row .to-light{display:inline}
+.nav__menu-foot{
+  display:flex;flex-direction:column;gap:.5rem;
+  margin:auto 0 0;padding-top:2rem;
+  font-size:.95rem;color:var(--muted);
+}
+.nav__menu-foot a{color:inherit;text-decoration:none}
+html.is-menu-open{overflow:hidden}
+html.is-menu-open .nav{transform:none !important}
+html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
+  background:var(--bg);color:var(--ink);border-bottom-color:transparent;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+@media (max-width:760px){
+  .nav__burger{display:flex}
+  .nav__theme:not(.nav__theme--row){display:none}
+  .nav__cta{padding:10px 16px;font-size:.9rem;margin:0 .4rem 0 .1rem}
+}
+@media (min-width:761px){.nav__menu{display:none !important}}
+/* @end-shared */
+/* the CV has no bar: the toggle sits to the left of the close button */
+.nav__theme--cv{position:fixed;top:28px;right:calc(var(--pad) + 52px);z-index:60}
+@media (max-width:760px){.nav__theme--cv.nav__theme{display:inline-flex}}
 .nav__close:active{transform:scale(.94)}
 .nav{display:none}
 
