@@ -459,7 +459,8 @@ img,svg{display:block;max-width:100%}
   transform:translateX(-50%);
   background:#000;border-radius:999px;
 }
-.phone__screen img{
+.phone__screen img,
+.phone__screen video{
   flex:1 1 auto;min-height:0;width:100%;
   object-fit:cover;object-position:top;
   display:block;pointer-events:none;
@@ -954,6 +955,25 @@ img,svg{display:block;max-width:100%}
       track.scrollBy({ left: (e.key === "ArrowRight" ? 1 : -1) * item.offsetWidth, behavior: "smooth" });
     });
   });
+})();
+
+(() => {
+  // Reel videos: the src is attached and playback started only when the
+  // phone is on screen, and paused again when it scrolls away.
+  const vids = document.querySelectorAll(".phone__video[data-src]");
+  if (!vids.length) return;
+  const start = (v) => {
+    if (!v.src) { v.src = v.dataset.src; v.load(); }
+    v.play().catch(() => {});
+  };
+  if (!("IntersectionObserver" in window)) { vids.forEach(start); return; }
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) start(e.target);
+      else if (e.target.src) e.target.pause();
+    }
+  }, { threshold: 0.3 });
+  vids.forEach((v) => io.observe(v));
 })();
 
 (() => {

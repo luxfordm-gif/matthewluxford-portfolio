@@ -44,15 +44,14 @@ next:
   <p>Four years with a personal trainer. Every block starts the same way: a PDF lands, gets pasted into a Google Doc, tidied, dated, then updated set by set for twelve weeks. New plan, start again. <strong>Consistency and tracking</strong> are the whole game, and the tooling was the weak link. So I <em>built the fix</em>.</p>
 {% endcase_body %}
 
-{% reel "Reps app screens" %}
+{% reel "Reps app screens — a session" %}
+  {% reel_video "assets/reps/reps-walkthrough.mp4", "assets/reps/reps-walkthrough-poster.webp", "Screen recording of a Reps session: home, performance, a training day, logging sets, the rest timer and the barbell calculator", "<strong>A session, start to finish.</strong> Recorded on my phone", "#fafafa" %}
   {% reel_phone "assets/reps/screen-home.webp", "Reps home screen — good morning Matt, weekly progress 4 of 4 workouts, today's workout Legs up next", "<strong>Home.</strong> The week at a glance, today's session up next", "#fafafa" %}
-  {% reel_phone "assets/reps/screen-upload.webp", "Upload plan screen — drop in the PDF from your trainer", "<strong>Upload the coach's PDF.</strong> Train off it the same day", "#fafafa" %}
-  {% reel_phone "assets/reps/screen-legs.webp", "A Legs training day — seven exercises grouped by muscle, with a Start workout button", "<strong>A training day,</strong> laid out properly", "#f9f9f9" %}
-  {% reel_phone "assets/reps/screen-exercise.webp", "Exercise screen — prime pec deck fly, target sets and reps, last time's numbers, three sets to log", "<strong>Sets, reps,</strong> and last time's numbers right on the row", "#f9f9f9" %}
+  {% reel_phone "assets/reps/screen-legs.webp", "A Legs training day — seven exercises, 16 sets, about 40 minutes, with a Start workout button and the exercise plan below", "<strong>A training day,</strong> laid out properly", "#080808" %}
+  {% reel_phone "assets/reps/screen-exercise.webp", "Exercise screen — adductor, target sets, rep range and tempo, two sets logged at 130kg with the rest timer running in the header", "<strong>Sets, reps, tempo,</strong> and the rest timer ticking in the header", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-rest.webp", "Rest timer — 59 seconds until the next set, next set flex adductor 130kg by 8, buttons to subtract or add 15 seconds or skip", "<strong>Rest.</strong> Big numbers you can read from the bench", "#0a0a0a" %}
   {% reel_phone "assets/reps/screen-barbell.webp", "Barbell calculator — three plates stacked on an Olympic bar, 165kg with bar", "<strong>Plate stacking.</strong> Tap each plate as you load it", "#818181" %}
-  {% reel_phone "assets/reps/screen-performance.webp", "Performance screen — week 7 of the plan, 4 of 4 this week, body weight trend over six weeks", "<strong>Performance.</strong> Volume, weight and the plan you're on", "#fafafa" %}
-  {% reel_phone "assets/reps/screen-weight.webp", "Body weight screen — log today's weight, with a trend chart since May", "<strong>Body weight,</strong> with the trend since May", "#fafafa" %}
-  {% reel_phone "assets/reps/screen-sleep.webp", "Sleep screen — how long did you sleep last night, with an 8 hour goal", "<strong>Sleep.</strong> One number, logged in a tap", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-end.webp", "End workout dialog — save and end, discard, or keep going", "<strong>Done.</strong> Save it, bin it, or keep going", "#818181" %}
 {% endreel %}
 
 {% case_hero "Design it.<br /><em>Build it.</em><br />Train with it.", "No brief. No client. Just the app I always wished existed, built around how I actually train.", "clamp(5rem,9vw,7rem)" %}
@@ -72,6 +71,17 @@ next:
     <li><strong>Plate stacking</strong>: tap each plate as you load the bar</li>
   </ul>
 {% endcase_body %}
+
+{% reel "Reps app screens — progress and plans" %}
+  {% reel_phone "assets/reps/screen-performance.webp", "Performance screen — week 7 of the plan, 4 of 4 this week, body weight trend over six weeks", "<strong>Performance.</strong> The week in one line, the plan you're on", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-volume.webp", "Performance screen scrolled — training volume over 12 weeks, 31,598kg, and the biggest strength gain", "<strong>Volume and strength trends,</strong> twelve weeks back", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-deadlift.webp", "Deadlift detail — estimated one rep max 186kg, up 17.5% in six months, with a progression chart and personal records", "<strong>Every lift gets a chart.</strong> Estimated 1RM, records, recent sets", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-records.webp", "All-time records — 101 records, 35 set this month, listed by movement", "<strong>All-time records,</strong> by movement", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-weight.webp", "Body weight screen — log today's weight, with a trend chart since May", "<strong>Body weight,</strong> with the trend since May", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-sleep.webp", "Sleep screen — how long did you sleep last night, with an 8 hour goal", "<strong>Sleep.</strong> One number, logged in a tap", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-upload.webp", "Upload plan screen — drop in the PDF from your trainer", "<strong>New plan?</strong> Upload the coach's PDF, train off it the same day", "#fafafa" %}
+  {% reel_phone "assets/reps/screen-plan.webp", "Exercise plan for Legs — four groups, seven exercises, with drop sets marked", "<strong>The plan,</strong> read straight out of the PDF", "#fafafa" %}
+{% endreel %}
 
 <figure class="case__bleed case__bleed--flat">
   <video src="assets/reps/reps-claude.mp4" poster="assets/reps/reps-claude-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording of building a Reps feature with Claude Code"></video>

@@ -136,14 +136,43 @@ module.exports = function (eleventyConfig) {
   // the image is just the screen (cut at 1:1.985, under the status bar).
   // Pass the screen's top colour as bg so the status bar matches it.
   const phoneStatusGlyphs = `<svg viewBox="0 0 60 12" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx=".7"/><rect x="4.5" y="6" width="3" height="6" rx=".7"/><rect x="9" y="3.5" width="3" height="8.5" rx=".7"/><rect x="13.5" y="1" width="3" height="11" rx=".7"/><path d="M24 4.6a9 9 0 0 1 12 0l-1.5 1.7a6.8 6.8 0 0 0-9 0z"/><path d="M26.7 7.4a5.2 5.2 0 0 1 6.6 0L30 11z"/><rect x="42" y="1.5" width="15" height="9" rx="2.5" fill="none" stroke="currentColor" stroke-opacity=".45"/><rect x="43.5" y="3" width="12" height="6" rx="1.5"/><rect x="58.2" y="4.3" width="1.3" height="3.4" rx=".6" opacity=".45"/></svg>`;
+  // Status bar colours: the screen's top colour as background, white text on
+  // a dark one so "9:41" stays readable.
+  const phoneStyle = (bg) => {
+    if (!bg) return "";
+    const m = /^#([0-9a-f]{6})$/i.exec(bg.trim());
+    let dark = false;
+    if (m) {
+      const n = parseInt(m[1], 16);
+      const lum = (0.2126 * (n >> 16) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255;
+      dark = lum < 0.45;
+    }
+    return ` style="--sbg:${bg}${dark ? ";--sfg:#fff" : ""}"`;
+  };
   eleventyConfig.addShortcode("reel_phone", function (src, alt, caption, bg) {
-    const style = bg ? ` style="--sbg:${bg}"` : "";
+    const style = phoneStyle(bg);
     const cap = caption ? `\n  <figcaption class="reel__cap">${caption}</figcaption>` : "";
     return `<figure class="reel__item">
   <div class="phone"${style}>
     <div class="phone__screen">
       <div class="phone__status" aria-hidden="true"><span>9:41</span><i class="phone__island"></i>${phoneStatusGlyphs}</div>
       <img src="${src}" alt="${alt}" loading="lazy" draggable="false" />
+    </div>
+  </div>${cap}
+</figure>`;
+  });
+
+  // A phone in a reel playing a short clip (a screen recording with the
+  // device's own bars cropped off). Muted, looping; JS plays it only while
+  // it's on screen so the file never downloads for a reel nobody reaches.
+  eleventyConfig.addShortcode("reel_video", function (src, poster, alt, caption, bg) {
+    const style = phoneStyle(bg);
+    const cap = caption ? `\n  <figcaption class="reel__cap">${caption}</figcaption>` : "";
+    return `<figure class="reel__item">
+  <div class="phone"${style}>
+    <div class="phone__screen">
+      <div class="phone__status" aria-hidden="true"><span>9:41</span><i class="phone__island"></i>${phoneStatusGlyphs}</div>
+      <video class="phone__video" data-src="${src}" poster="${poster}" muted loop playsinline preload="none" aria-label="${alt}"></video>
     </div>
   </div>${cap}
 </figure>`;
