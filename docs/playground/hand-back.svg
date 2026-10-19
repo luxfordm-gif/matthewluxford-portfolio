@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 760" width="880" height="1520">
+  <!-- the palm and wrist, behind the phone (phone box: x 120-320, y 30-486 of 440×760) -->
+<defs>
+              <linearGradient id="hand-skin" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e5b99c"/><stop offset="1" stop-color="#d4a082"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#hand-skin)" d="M150 330C150 430 190 520 250 580C300 630 340 680 350 760L520 760L500 460C480 400 430 340 380 300C330 250 200 260 150 330Z"/>
+            <path fill="#b97f62" opacity=".28" d="M250 580C300 630 340 680 350 760L392 760C386 690 356 640 316 600C296 580 268 566 250 580Z"/>
+          </svg>
