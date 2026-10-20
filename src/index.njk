@@ -130,7 +130,7 @@ p,li{text-wrap:pretty}
 @media (prefers-reduced-motion: reduce){
   .nav__brand.is-waving .nav__brand-letters span{animation:none}
 }
-.nav__right{display:flex;align-items:center;gap:20px}
+.nav__right{display:flex;align-items:center;gap:30px}
 .nav__links{display:flex;gap:clamp(1.25rem,2.6vw,2rem)}
 .nav__links a{font-size:1rem;color:inherit;font-weight:500;position:relative}
 .nav__links a::after{
@@ -141,13 +141,21 @@ p,li{text-wrap:pretty}
 .nav__links a:hover::after,.nav__links a.is-active::after{transform:scaleX(1)}
 .nav__cta{
   display:inline-flex;align-items:center;gap:8px;
-  height:36px;padding:0 20px;margin-left:-10px;border-radius:999px;
+  height:44px;padding:0 26px;margin-left:-12px;border-radius:999px;
   background:var(--ink);color:var(--bg);
   font-weight:500;font-size:.95rem;
-  transition:transform .25s var(--ease);
+  transition:background-color .25s var(--ease), transform .2s var(--ease);
 }
 .nav.is-floating .nav__cta{background:var(--ink);color:var(--paper)}
-.nav__cta:hover{transform:translateY(-2px)}
+/* hover = the same button, slightly lighter (primary stays primary). Light
+   theme: black a touch lighter. Dark theme: the cream pill a touch whiter.
+   Over a dark section the pill is white already, so it dims a hair instead. */
+@media (hover:hover){
+  .nav .nav__cta:hover{background:color-mix(in srgb,var(--ink),#fff 14%)} /* fixed */
+  html[data-theme="dark"] .nav .nav__cta:hover{background:#fff} /* fixed */
+  .nav.is-floating.is-on-dark .nav__cta:hover{background:color-mix(in srgb,#fff,#000 9%)} /* fixed */
+}
+.nav__cta:active{transform:scale(.97)}
 @media (max-width:760px){
   .nav__links{display:none}
   .nav.is-pinned{
@@ -184,13 +192,15 @@ p,li{text-wrap:pretty}
 .nav.is-open .nav__burger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
 .nav__theme{
   display:inline-flex;align-items:center;justify-content:center;
-  width:36px;height:36px;padding:0;border-radius:50%;
+  width:44px;height:44px;padding:0;border-radius:50%;
   border:1px solid color-mix(in srgb, currentColor 32%, transparent);
   background:none;color:inherit;cursor:pointer;
   transition:border-color .3s, transform .3s cubic-bezier(.2,.7,.2,1);
 }
 .nav__theme:hover{border-color:currentColor}
-.nav__sep{flex:none;width:1px;height:18px;background:currentColor;opacity:.28}
+.nav__theme:focus{outline:none}
+.nav__theme:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.nav__sep{flex:none;width:1px;height:20px;background:currentColor;opacity:.28}
 .nav__theme-icon{width:20px;height:20px;display:block;overflow:visible}
 .nav__theme-icon .disc{
   transform-box:fill-box;transform-origin:center;
@@ -251,7 +261,7 @@ html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
   .nav__burger{display:flex}
   .nav__theme:not(.nav__theme--row){display:none}
   .nav__sep{display:none}
-  .nav__cta{padding:10px 16px;font-size:.9rem;margin:0 .4rem 0 .1rem}
+  .nav__cta{height:auto;padding:10px 16px;font-size:.9rem;margin:0 .4rem 0 .1rem}
 }
 @media (min-width:761px){.nav__menu{display:none !important}}
 /* @end-shared */
