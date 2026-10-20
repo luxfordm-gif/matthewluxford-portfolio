@@ -35,6 +35,12 @@
         {value:"light",title:"Inter Light",sub:"The current one"}
       ]},
 {%- endif %}
+{%- if prefWall %}
+      {id:"wall",label:"Phone screens",options:[
+        {value:"slide",title:"Slide up",sub:"Each screen pushes the last one out"},
+        {value:"fade",title:"Crossfade",sub:"Screens dissolve into each other"}
+      ]},
+{%- endif %}
     ]
   };
   // apply saved layout choices before first paint, so there's no flash

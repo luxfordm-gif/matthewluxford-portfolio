@@ -23,6 +23,7 @@ npm run check       # run the shared-CSS drift check (also runs in CI)
 - `src/collective.html` — The Collective case study
 - `src/skatefarm.html` — The Skate Farm case study
 - `src/reps.html` — Reps app side project case study
+- `src/playground.njk` — **Playground**: animation ideas built to be looked at, not described. Not linked from the nav; the CV-style close button and theme toggle, a numbered index of experiments (`.pg-index`), then each experiment as a `.pg-exp` (head, the thing, a `ruled` notes list). Add an idea by adding an index row and a section. The first is **01 Scroll wall** (`.wall`): a tall runway with a sticky full-screen stage; one scroll listener turns the page scroll into `--p` (0–1) and everything reads it. Eleven columns of Reps screens (rotations of one list, cloned by JS until tall enough) travel up at different speeds and are clipped by the stage, so an ultra-wide fills and a phone sees three. A hand rises in holding the CSS Pixel (the `@shared: phone` block from `layouts/case.njk`, with a `.phone__stack` of screens inside that hold then slide up; the panel's **Phone screens** group, `prefWall`, swaps the slide for a crossfade). The hand is two cut-out images either side of the phone, `assets/playground/hand-back.webp` and `hand-front.webp`, baked from the SVGs in `docs/playground/` (a runtime blur dropped frames in the trace; the baked front layer carries the thumb's shadow). It's drawn for now: a photo of Matthew's hand holding the Pixel, cut out, goes in the same two files (440×760 box, phone at x 120–320, y 30–486). Reduced motion gets one static screen. `html.is-wall` is set while the stage holds the screen so the chrome sits white on black in either theme.
 
 Case studies are still raw HTML — they get migrated to use layouts/partials in a follow-up PR.
 
@@ -162,9 +163,10 @@ node scripts/check-shared-css.js --fix     # copy the first (alphabetical) file'
 ```
 
 Currently wrapped:
-- `nav-menu` — in `src/index.njk`, `src/_includes/layouts/case.njk` and `src/cv.njk` (the phone burger menu and the theme toggle)
+- `nav-menu` — in `src/index.njk`, `src/_includes/layouts/case.njk`, `src/cv.njk` and `src/playground.njk` (the phone burger menu and the theme toggle)
 - `secret-footer` — in `src/index.njk`, `src/cv.njk`, `src/_includes/layouts/case.njk` (the case-study layout)
-- `terms-footer` — in `src/_includes/layouts/case.njk` (single copy now the case studies share one layout)
+- `phone` — the CSS Pixel 10 Pro XL, in `src/_includes/layouts/case.njk` and `src/playground.njk`
+- `terms-footer` — in `src/_includes/layouts/case.njk` and `src/playground.njk`
 
 The check walks `src/` recursively, so blocks inside `_includes/` (layouts, partials) are covered too — not just the page files in `src/` root. Extend by wrapping more blocks the same way; the script auto-picks them up.
 

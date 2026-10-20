@@ -1,0 +1,598 @@
+---
+title: "Playground — Matthew Luxford"
+description: "Animation ideas, built in the browser to see if they hold up. Scroll."
+canonical: "https://matthewluxford.co.uk/playground.html"
+ogType: "website"
+ogImage: "https://matthewluxford.co.uk/assets/og-image.jpg"
+ogImageAlt: "Playground — animation ideas by Matthew Luxford"
+fonts: "Fraunces:ital,wght@1,300..500&family=Inter:wght@400;500;600;700"
+prefWall: true
+---
+{% extends "layouts/base.njk" %}
+
+{% block pageStyles %}
+<style>
+:root{
+  /* palette: layouts/base.njk */
+  --serif:"Fraunces",ui-serif,Georgia,serif;
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --pad:clamp(1.25rem,4vw,3.5rem);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans);font-size:var(--fs-body);
+  line-height:1.55;color:var(--ink);overflow-x:hidden;
+  background:var(--bg);
+  text-wrap:pretty;
+}
+h1,h2,h3{text-wrap:balance}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+.page{
+  position:relative;z-index:2;
+  background-color:var(--bg);
+  background-image:radial-gradient(circle, var(--dot-soft) 1px, transparent 1.4px);
+  background-size:18px 18px;
+  background-attachment:fixed;
+}
+
+/* ============================================================== nav */
+/* the CV's close button and toggle, nothing else: the playground is a side
+   door off the site, not a page in it */
+.nav__close{
+  position:fixed;top:27px;right:var(--pad);z-index:60;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:8px;
+  background:var(--ink);color:var(--paper);
+  transition:background .25s var(--ease),transform .2s var(--ease),color .25s var(--ease);
+}
+.nav__close:hover{background:var(--ink-2)}
+.nav__close:active{transform:scale(.94)}
+/* @shared: nav-menu */
+/* phone menu — the burger in the bar and the full-screen list under it.
+   Only on phones (≤760px): the links sit in the bar everywhere else.
+   Also the theme toggle: a ringed sun/moon in the bar on desktop, a
+   "Dark theme / Light theme" row in the phone menu. The icon morphs: the
+   masked bite slides in to carve the disc into a crescent while the rays
+   fold away (partials/theme-icon.njk). */
+.nav__burger{
+  display:none;width:40px;height:40px;margin-right:-8px;
+  padding:0;border:0;background:none;color:inherit;cursor:pointer;
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;
+}
+.nav__burger span{
+  display:block;width:20px;height:1.6px;background:currentColor;border-radius:2px;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1), opacity .25s;
+}
+.nav.is-open .nav__burger span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+.nav.is-open .nav__burger span:nth-child(2){opacity:0}
+.nav.is-open .nav__burger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+.nav__theme{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;padding:0;border-radius:50%;
+  border:1px solid color-mix(in srgb, currentColor 32%, transparent);
+  background:none;color:inherit;cursor:pointer;
+  transition:border-color .3s, transform .3s cubic-bezier(.2,.7,.2,1);
+}
+.nav__theme:hover{border-color:currentColor}
+.nav__theme-icon{width:20px;height:20px;display:block;overflow:visible}
+.nav__theme-icon .disc{
+  transform-box:fill-box;transform-origin:center;
+  transition:transform .5s cubic-bezier(.2,.7,.2,1);
+}
+.nav__theme-icon .bite{
+  transition:transform .55s cubic-bezier(.2,.7,.2,1);
+}
+.nav__theme-icon .rays{
+  transform-box:fill-box;transform-origin:center;
+  transition:transform .45s cubic-bezier(.2,.7,.2,1), opacity .3s;
+}
+html[data-theme="dark"] .nav__theme-icon .disc{transform:scale(1.25)}
+html[data-theme="dark"] .nav__theme-icon .bite{transform:translate(-12.5px,0)}
+html[data-theme="dark"] .nav__theme-icon .rays{transform:rotate(90deg) scale(.2);opacity:0}
+@media (prefers-reduced-motion: reduce){
+  .nav__theme-icon .disc,.nav__theme-icon .bite,.nav__theme-icon .rays{transition:none}
+}
+.nav__menu{
+  position:fixed;inset:0;z-index:59;
+  display:flex;flex-direction:column;justify-content:flex-start;
+  padding:calc(88px + env(safe-area-inset-top,0px)) var(--pad) calc(2rem + env(safe-area-inset-bottom,0px));
+  background:var(--bg);color:var(--ink);
+  overflow:auto;
+}
+.nav__menu[hidden]{display:none}
+.nav__menu > a{
+  display:block;padding:1rem 0;
+  border-top:1px solid var(--line);
+  font-size:1.3rem;font-weight:500;letter-spacing:-.02em;line-height:1.2;
+  color:inherit;text-decoration:none;
+}
+.nav__theme--row{
+  width:100%;height:auto;border-radius:0;
+  justify-content:space-between;padding:1rem 0;
+  border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  font:inherit;font-size:1.3rem;font-weight:500;letter-spacing:-.02em;line-height:1.2;
+  text-align:left;
+}
+.nav__theme--row:hover{border-color:var(--line);transform:none}
+.nav__theme--row .nav__theme-icon{width:22px;height:22px;margin-right:4px}
+.nav__theme--row .to-light{display:none}
+html[data-theme="dark"] .nav__theme--row .to-dark{display:none}
+html[data-theme="dark"] .nav__theme--row .to-light{display:inline}
+.nav__menu-foot{
+  display:flex;flex-direction:column;gap:.5rem;
+  margin:auto 0 0;padding-top:2rem;
+  font-size:.95rem;color:var(--muted);
+}
+.nav__menu-foot a{color:inherit;text-decoration:none}
+html.is-menu-open{overflow:hidden}
+html.is-menu-open .nav{transform:none !important}
+html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
+  background:var(--bg);color:var(--ink);border-bottom-color:transparent;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+@media (max-width:760px){
+  .nav__burger{display:flex}
+  .nav__theme:not(.nav__theme--row){display:none}
+  .nav__cta{padding:10px 16px;font-size:.9rem;margin:0 .4rem 0 .1rem}
+}
+@media (min-width:761px){.nav__menu{display:none !important}}
+/* @end-shared */
+.nav__theme--cv{position:fixed;top:28px;right:calc(var(--pad) + 52px);z-index:60;transition:border-color .3s, color .3s, transform .3s cubic-bezier(.2,.7,.2,1)}
+@media (max-width:760px){.nav__theme--cv.nav__theme{display:inline-flex}}
+/* while the wall holds the screen the chrome sits on black whatever the theme */
+html.is-wall .nav__close{background:#fff;color:#0a0a0a} /* fixed */
+html.is-wall .nav__theme--cv{color:#fff} /* fixed */
+
+/* ============================================================== head */
+.pg-head{
+  max-width:var(--w-content);margin:0 auto;
+  padding:calc(120px + 4vw) var(--pad) var(--sp-xl);
+}
+.pg-eyebrow{
+  display:flex;align-items:center;gap:.75rem;
+  margin:0 0 1.25rem;
+  font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-strong);
+}
+.pg-eyebrow::before{content:"";width:28px;height:1px;background:currentColor;opacity:.6}
+.pg-head h1{
+  margin:0;
+  font-size:clamp(2.6rem,1.5rem + 5vw,6.5rem);font-weight:600;
+  letter-spacing:-.035em;line-height:.98;
+  max-width:14ch;
+}
+.pg-head p{
+  margin:1.75rem 0 0;max-width:var(--w-narrow);
+  font-size:var(--fs-body-lg);line-height:1.45;color:var(--ink-2);
+}
+.pg-head p em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink)}
+
+/* the running list of ideas: a ruled row each, numbered */
+.pg-index{
+  max-width:var(--w-content);margin:0 auto;padding:0 var(--pad) var(--sp-xl);
+}
+.pg-index a{
+  display:grid;grid-template-columns:3.5rem 1fr auto;gap:1.5rem;align-items:baseline;
+  padding:1.1rem 0;border-top:1px solid var(--line);
+  transition:color .25s var(--ease);
+}
+.pg-index a:last-child{border-bottom:1px solid var(--line)}
+.pg-index a:hover{color:var(--muted-strong)}
+.pg-index a:hover strong{color:var(--ink)}
+.pg-index .n{font-size:.85rem;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+.pg-index strong{font-weight:600;letter-spacing:-.01em}
+.pg-index span:not(.n){color:var(--muted-strong)}
+.pg-index .go{font-size:.9rem;color:var(--muted)}
+@media (max-width:760px){
+  .pg-index a{grid-template-columns:2.5rem 1fr;gap:.75rem}
+  .pg-index .go{display:none}
+}
+
+/* ============================================================== experiment */
+.pg-exp{position:relative}
+.pg-exp__head{
+  max-width:var(--w-content);margin:0 auto;
+  padding:var(--sp-lg) var(--pad);
+  display:grid;grid-template-columns:1fr 2fr;gap:var(--sp-md);align-items:end;
+}
+.pg-exp__head h2{
+  margin:0;
+  font-size:var(--fs-h2);font-weight:600;letter-spacing:-.025em;line-height:1.05;
+}
+.pg-exp__head h2 .n{display:block;font-size:.8rem;font-weight:500;letter-spacing:.14em;color:var(--muted);margin-bottom:.9rem}
+.pg-exp__head p{margin:0;max-width:var(--w-prose);color:var(--ink-2);font-size:var(--fs-body-lg);line-height:1.45}
+.pg-exp__note{
+  max-width:var(--w-content);margin:0 auto;padding:var(--sp-lg) var(--pad) var(--sp-2xl);
+  display:grid;grid-template-columns:1fr 2fr;gap:var(--sp-md);
+}
+.pg-exp__note h3{margin:0;font-size:var(--fs-h4);font-weight:600;letter-spacing:-.015em}
+.pg-exp__note p{margin:0 0 1rem;max-width:var(--w-prose);color:var(--ink-2)}
+.pg-exp__note p:last-child{margin-bottom:0}
+.pg-exp__note em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink)}
+.pg-exp__note strong{font-weight:600;color:var(--ink)}
+/* facts as plain type between hairlines */
+.ruled{margin:0;padding:0}
+.ruled__row{display:grid;grid-template-columns:minmax(8rem,12rem) 1fr;gap:1.25rem;padding:.9rem 0;border-top:1px solid var(--line)}
+.ruled__row:last-child{border-bottom:1px solid var(--line)}
+.ruled dt{margin:0;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.ruled dd{margin:0;color:var(--ink-2)}
+@media (max-width:760px){
+  .pg-exp__head,.pg-exp__note{grid-template-columns:1fr;gap:1.25rem}
+  .ruled__row{grid-template-columns:1fr;gap:.25rem}
+}
+
+/* ------------------------------------------------------- 01 scroll wall
+   A tall runway (.wall) with a full-screen sticky stage (.wall__pin). While
+   it holds the screen, page scroll drives everything: columns of Reps
+   screens travel up at different speeds, a hand rises in holding the phone
+   still in the middle, and the phone flicks through the same screens.
+   Transforms only, one scroll listener, numbers set in JS as custom
+   properties (--p is the 0-1 progress through the runway). */
+.wall{
+  --run:380vh;                               /* how long it holds for */
+  --gap:clamp(10px,1.2vw,18px);
+  --tw:clamp(130px,13.5vw,220px);           /* tile width */
+  --pw:clamp(200px,18vw,270px);             /* phone width */
+  height:var(--run);
+  position:relative;
+}
+.wall__pin{
+  position:sticky;top:0;
+  height:100vh;height:100svh;
+  overflow:hidden;
+  background:#070707; /* fixed */
+  color:#fff; /* fixed */
+}
+.wall__cols{
+  position:absolute;inset:0;
+  display:flex;justify-content:center;align-items:flex-start;gap:var(--gap);
+  padding:0 var(--gap);
+}
+.wall__col{
+  flex:0 0 var(--tw);
+  display:flex;flex-direction:column;gap:var(--gap);
+  height:max-content;
+  will-change:transform;
+  transform:translate3d(0,var(--y,0px),0);
+}
+.wall__tile{
+  flex:0 0 auto;
+  width:var(--tw);aspect-ratio:640 / 1257;
+  border-radius:calc(var(--tw) * .09);overflow:hidden;
+  background:#161616; /* fixed */
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.wall__tile img{width:100%;height:100%;object-fit:cover;object-position:top;pointer-events:none}
+/* fade the wall at the top and bottom so the tiles come and go softly */
+.wall__pin::before,.wall__pin::after{
+  content:"";position:absolute;left:0;right:0;height:22vh;z-index:2;pointer-events:none;
+}
+.wall__pin::before{top:0;background:linear-gradient(to bottom,#070707,rgba(7,7,7,0))} /* fixed */
+.wall__pin::after{bottom:0;background:linear-gradient(to top,#070707,rgba(7,7,7,0))} /* fixed */
+
+/* the hand: two cut-out images either side of the CSS phone. The wrapper is
+   sized off the phone so the drawing scales with it (phone 200 wide at
+   x 120, y 30 in a 440×760 image), and runs off the bottom of the stage so
+   the wrist never ends. */
+.wall__hand{
+  position:absolute;left:50%;top:50%;z-index:3;
+  width:calc(var(--pw) * 2.2);aspect-ratio:440 / 760;
+  transform:translate(-50%,-36%) translate3d(0,var(--hy,0px),0) rotate(var(--hr,0deg));
+  transform-origin:70% 100%;
+  will-change:transform;
+}
+.wall__hand > img{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.wall__hand .phone{
+  position:absolute;left:27.27%;top:3.95%;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255,255,255,.16),
+    0 0 0 1.5px #0b0b0b, /* fixed */
+    0 60px 90px -30px rgba(0,0,0,.8);
+}
+/* the screens stack inside the phone and slide up as the wall goes by */
+.phone__stack{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:#fafafa} /* fixed */
+.phone__stack img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:top;pointer-events:none;
+  transform:translate3d(0,calc(var(--k,0) * 100%),0);
+  will-change:transform;
+}
+.phone__stack img[hidden]{display:none}
+html[data-pref-wall="fade"] .phone__stack img{transform:none;opacity:var(--a,1)}
+
+/* the stage before the hand arrives and after it leaves holds a wordmark */
+.wall__mark{
+  position:absolute;left:50%;bottom:clamp(1.5rem,4vh,3rem);z-index:4;
+  transform:translateX(-50%);
+  font-size:.78rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.55); /* fixed */
+  opacity:var(--mo,1);transition:opacity .4s var(--ease);
+  white-space:nowrap;
+}
+
+@media (max-width:760px){
+  .wall{
+    --run:320vh;
+    --gap:10px;
+    --tw:calc((100vw - 4 * var(--gap)) / 3);
+    --pw:min(58vw,240px);
+  }
+  .wall__hand{transform:translate(-50%,-34%) translate3d(0,var(--hy,0px),0) rotate(var(--hr,0deg))}
+}
+@media (prefers-reduced-motion: reduce){
+  /* no runway: the wall is one static screen */
+  .wall{height:auto}
+  .wall__pin{position:relative}
+}
+
+/* @shared: phone */
+/* phone frame — a Pixel 10 Pro XL in CSS; the image is just the screen content.
+   Screen 1:2.226 (20:9): a status bar with a punch-hole camera on top, the
+   screenshot (1:1.965) in the middle, a gesture bar underneath. */
+.phone{
+  --pw:clamp(230px,21vw,290px);
+  width:var(--pw);
+  padding:calc(var(--pw) * .026);
+  background:#141414;
+  border-radius:calc(var(--pw) * .16);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255,255,255,.16),
+    0 0 0 1.5px #0b0b0b,
+    0 40px 70px -40px rgba(0,0,0,.45);
+}
+:root[data-theme="dark"] .phone{
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255,255,255,.22),
+    0 0 0 1.5px var(--line),
+    0 40px 70px -40px rgba(0,0,0,.9);
+}
+.phone__screen{
+  position:relative;
+  aspect-ratio:1 / 2.226;
+  border-radius:calc(var(--pw) * .135);
+  overflow:hidden;
+  background:var(--sbg,#fff);
+  display:flex;flex-direction:column;
+  transform:translateZ(0);
+}
+.phone__status{
+  position:relative;z-index:2;
+  flex:0 0 calc(var(--pw) * .115);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 calc(var(--pw) * .075);
+  font-family:var(--sans);font-weight:500;font-size:calc(var(--pw) * .048);
+  letter-spacing:0;color:var(--sfg,#111);
+  background:var(--sbg,#fff);
+}
+.phone__status svg{width:calc(var(--pw) * .18);height:auto}
+.phone__cam{
+  position:absolute;left:50%;top:calc(var(--pw) * .028);
+  width:calc(var(--pw) * .052);height:calc(var(--pw) * .052);
+  transform:translateX(-50%);
+  background:#000;border-radius:50%;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 calc(var(--pw) * .012) rgba(40,60,120,.9);
+}
+.phone__screen img,
+.phone__screen video{
+  flex:1 1 auto;min-height:0;width:100%;
+  object-fit:cover;object-position:top;
+  display:block;pointer-events:none;
+}
+.phone__nav{
+  flex:0 0 calc(var(--pw) * .12);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--nbg,var(--sbg,#fff));
+}
+.phone__nav::before{
+  content:"";width:calc(var(--pw) * .32);height:calc(var(--pw) * .012);
+  border-radius:999px;background:var(--nfg,#111);opacity:.75;
+}
+/* @end-shared */
+
+/* @shared: terms-footer */
+.terms-footer{padding:clamp(3rem,6vw,5rem) var(--pad) 2rem;border-top:1px solid var(--line);max-width:var(--w-content);margin:0 auto}
+.terms-footer__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.85rem;color:var(--muted)}
+@media (max-width:760px){.terms-footer__bottom{justify-content:center;text-align:center;gap:.25rem}}
+/* @end-shared */
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "partials/nav-cv.njk" %}
+
+<main class="page">
+  <header class="pg-head">
+    <p class="pg-eyebrow">Playground</p>
+    <h1>Ideas I want to see move.</h1>
+    <p>Animation experiments, built in the browser rather than described in a deck. Some will make it onto the site. <em>Most won't.</em> Scroll.</p>
+  </header>
+
+  <nav class="pg-index" aria-label="Experiments">
+    <a href="#scroll-wall"><span class="n">01</span><span><strong>Scroll wall.</strong> A hand holds the phone still while the screens go by.</span><span class="go">↓</span></a>
+  </nav>
+
+  {#- 01 — the wall. Eleven columns of Reps screens, centred and clipped by
+      the stage, so an ultra-wide fills and a phone sees three plus slivers.
+      Each column is a different rotation of the same list so no two rows
+      match; JS clones tiles until a column is tall enough for its travel. The phone shows its own short
+      run of screens. -#}
+  {%- set screens = [
+    ["home", "Reps home screen — the week at a glance, today's session up next"],
+    ["legs", "A Legs training day laid out with seven exercises"],
+    ["exercise", "Exercise screen with sets logged and the rest timer in the header"],
+    ["rest", "Rest timer counting down"],
+    ["barbell", "Barbell calculator with three plates on the bar"],
+    ["performance", "Performance screen with the week and body weight trend"],
+    ["volume", "Training volume over twelve weeks"],
+    ["deadlift", "Deadlift detail with estimated one rep max and records"],
+    ["records", "All-time records by movement"],
+    ["weight", "Body weight log with the trend"],
+    ["sleep", "Sleep log with an eight hour goal"],
+    ["plan", "Exercise plan read out of the coach's PDF"],
+    ["end", "End workout dialog"]
+  ] -%}
+  {%- set phoneScreens = ["home", "legs", "exercise", "rest", "barbell", "performance", "deadlift", "records"] -%}
+  <section class="pg-exp" id="scroll-wall" aria-labelledby="scroll-wall-title">
+    <div class="pg-exp__head">
+      <h2 id="scroll-wall-title"><span class="n">01</span>Scroll wall</h2>
+      <p>A wall of Reps screens scrolls past at different speeds. A hand comes up holding the phone, keeps it still in the middle, and the phone flicks through the same screens as you go.</p>
+    </div>
+
+    <div class="wall" data-wall>
+      <div class="wall__pin">
+        <div class="wall__cols" aria-hidden="true">
+          {%- set speeds = [0.8, 1.1, 0.72, 1.05, 0.88, 0.95, 1.22, 0.8, 1.0, 0.76, 1.15] %}
+          {%- set starts = [0.4, 0.15, 0.1, 0.55, 0.3, 0.7, 0.75, 0.45, 0.2, 0.6, 0.35] %}
+          {%- for c in range(0, 11) %}
+          <div class="wall__col" data-speed="{{ speeds[c] }}" data-start="{{ starts[c] }}">
+            {%- for i in range(0, screens.length) %}
+            {%- set s = screens[(i + c * 5) % screens.length] %}
+            <div class="wall__tile"><img src="assets/reps/screen-{{ s[0] }}.webp" alt="" loading="{{ 'eager' if i < 4 else 'lazy' }}" draggable="false" /></div>
+            {%- endfor %}
+          </div>
+          {%- endfor %}
+        </div>
+
+        <div class="wall__hand" data-hand>
+          {#- the hand is two cut-outs either side of the phone: palm and wrist
+              behind, fingertips and thumb (with their shadow on the screen) in
+              front. Drawn for now: source SVGs in docs/playground/, baked to
+              WebP so nothing blurs at runtime. A photo of a real hand goes in
+              the same two files, same 440×760 box, phone at x 120-320 y 30-486. -#}
+          <img class="hand-back" src="assets/playground/hand-back.webp" alt="" width="880" height="1520" loading="eager" draggable="false" />
+
+          <div class="phone" style="--sbg:#fafafa;--nbg:#fafafa">
+            <div class="phone__screen">
+              <div class="phone__status" aria-hidden="true"><span>9:41</span><i class="phone__cam"></i><svg viewBox="0 0 60 12" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx=".7"/><rect x="4.5" y="6" width="3" height="6" rx=".7"/><rect x="9" y="3.5" width="3" height="8.5" rx=".7"/><rect x="13.5" y="1" width="3" height="11" rx=".7"/><path d="M24 4.6a9 9 0 0 1 12 0l-1.5 1.7a6.8 6.8 0 0 0-9 0z"/><path d="M26.7 7.4a5.2 5.2 0 0 1 6.6 0L30 11z"/><rect x="42" y="1.5" width="15" height="9" rx="2.5" fill="none" stroke="currentColor" stroke-opacity=".45"/><rect x="43.5" y="3" width="12" height="6" rx="1.5"/><rect x="58.2" y="4.3" width="1.3" height="3.4" rx=".6" opacity=".45"/></svg></div>
+              <div class="phone__stack" data-stack>
+                {%- for name in phoneScreens %}
+                {%- for s in screens %}{% if s[0] == name %}
+                <img src="assets/reps/screen-{{ name }}.webp" alt="{{ s[1] }}" loading="eager" draggable="false" style="--k:{{ loop.index0 }}"{% if loop.index0 > 1 %} hidden{% endif %} />
+                {%- endif %}{% endfor %}
+                {%- endfor %}
+              </div>
+              <i class="phone__nav" aria-hidden="true"></i>
+            </div>
+          </div>
+
+          <img class="hand-front" src="assets/playground/hand-front.webp" alt="" width="880" height="1520" loading="eager" draggable="false" />
+        </div>
+
+        <p class="wall__mark" aria-hidden="true">Keep scrolling</p>
+      </div>
+    </div>
+
+    <div class="pg-exp__note">
+      <h3>Notes</h3>
+      <div>
+        <dl class="ruled">
+          <div class="ruled__row"><dt>Where it came from</dt><dd>An agency site in a reel someone sent me. Wall of app screens, a hand in the middle, the phone's screen changing as you scroll. <em>Not boring.</em></dd></div>
+          <div class="ruled__row"><dt>How it's built</dt><dd>One sticky stage inside a tall runway. The scroll position becomes a 0–1 number; the columns, the hand and the phone's screens all read it. Transforms only, so it stays smooth.</dd></div>
+          <div class="ruled__row"><dt>The phone</dt><dd>The same CSS Pixel the Reps page uses, with a stack of screens inside instead of one. The Layout toggle in the panel swaps the slide for a crossfade.</dd></div>
+          <div class="ruled__row"><dt>Still to do</dt><dd><strong>A real hand.</strong> This one's drawn. A photo of mine holding the Pixel, cut out, goes in the same slot: one image behind the phone, one in front.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include "partials/terms-footer.njk" %}
+
+<script>
+(function(){
+  var wall = document.querySelector("[data-wall]");
+  if (!wall) return;
+  var pin = wall.querySelector(".wall__pin");
+  var cols = [].slice.call(wall.querySelectorAll(".wall__col"));
+  var hand = wall.querySelector("[data-hand]");
+  var mark = wall.querySelector(".wall__mark");
+  var imgs = [].slice.call(wall.querySelectorAll("[data-stack] img"));
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var html = document.documentElement;
+  var pinH = 0, run = 0, tileH = 0, gap = 0;
+  var colRun = [], colStart = [];
+
+  function clamp(v, a, b){ return v < a ? a : v > b ? b : v; }
+  function smooth(t){ t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
+
+  // size the columns to their travel: each needs to cover the stage for the
+  // whole of its run, so clone tiles until it does
+  function layout(){
+    pinH = pin.clientHeight;
+    run = wall.offsetHeight - pinH;
+    var first = cols[0].firstElementChild;
+    tileH = first.offsetHeight;
+    gap = parseFloat(getComputedStyle(cols[0]).rowGap) || 0;
+    cols.forEach(function(col, i){
+      var speed = parseFloat(col.dataset.speed) || 1;
+      var travel = reduce ? 0 : pinH * 1.5 * speed;
+      colRun[i] = travel;
+      // start part way into the column so rows are staggered like brickwork
+      colStart[i] = -(parseFloat(col.dataset.start) || 0) * (tileH + gap);
+      var need = pinH + travel - colStart[i] + tileH;
+      var kids = [].slice.call(col.children);
+      var k = 0;
+      while (col.scrollHeight < need && k < 60) {
+        var clone = kids[k % kids.length].cloneNode(true);
+        clone.querySelector("img").loading = "lazy";
+        col.appendChild(clone);
+        k++;
+      }
+    });
+    paint();
+  }
+
+  var p = 0, N = imgs.length;
+  function paint(){
+    var r = wall.getBoundingClientRect();
+    p = reduce ? 0.35 : clamp(-r.top / Math.max(run, 1), 0, 1);
+    var holding = !reduce && r.top <= 0 && r.bottom >= pinH;
+    html.classList.toggle("is-wall", holding);
+
+    cols.forEach(function(col, i){
+      col.style.setProperty("--y", (colStart[i] - p * colRun[i]).toFixed(1) + "px");
+    });
+
+    // the hand rises in over the first stretch, holds, and leaves at the end
+    var e = reduce ? 1 : smooth(p / 0.16);
+    var out = reduce ? 0 : smooth((p - 0.9) / 0.1);
+    var hy = (1 - e) * pinH * 0.75 - out * pinH * 0.9;
+    var hr = (1 - e) * -7 + out * 4;
+    hand.style.setProperty("--hy", hy.toFixed(1) + "px");
+    hand.style.setProperty("--hr", hr.toFixed(2) + "deg");
+    if (mark) mark.style.setProperty("--mo", p < 0.02 || p > 0.96 ? 1 : 0);
+
+    // the phone's screens: each holds, then slides up to the next
+    var q = clamp((p - 0.18) / 0.7, 0, 1);
+    var t = q * (N - 1);
+    var idx = Math.floor(t);
+    var f = t - idx;
+    var s = idx + smooth((f - 0.45) / 0.55);
+    imgs.forEach(function(img, i){
+      var k = i - s;
+      var on = k > -1 && k < 1;
+      img.hidden = !on;
+      if (on) {
+        img.style.setProperty("--k", k.toFixed(4));
+        img.style.setProperty("--a", (1 - Math.abs(k)).toFixed(3));
+      }
+    });
+  }
+
+  var ticking = false;
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){ ticking = false; paint(); });
+  }
+  addEventListener("scroll", onScroll, { passive: true });
+  var rt;
+  addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(layout, 120); });
+  if (document.readyState === "complete") layout(); else addEventListener("load", layout);
+  layout();
+})();
+</script>
+{% endblock %}
