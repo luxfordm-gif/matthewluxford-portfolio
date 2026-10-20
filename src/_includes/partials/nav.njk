@@ -8,6 +8,7 @@
       <a href="{{ navLinkBase | default('index.html') }}#hello">About</a>
       <a href="cv.html">CV</a>
     </nav>
+    <span class="nav__sep" aria-hidden="true"></span>
     <button class="nav__theme" type="button" aria-label="Switch to dark theme" aria-pressed="false">{% set iconId = "theme-mask-bar" %}{% include "partials/theme-icon.njk" %}</button>
     <a class="nav__cta" href="{{ navLinkBase | default('index.html') }}#contact">Contact</a>
     <button class="nav__burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu"><span></span><span></span><span></span></button>
