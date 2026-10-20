@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 760" width="880" height="1520">
+  <!-- in front of the phone: the shadow on the screen, then the fingertips and thumb -->
+  <style>.shade{filter:blur(8px)}</style>
+<defs>
+              <linearGradient id="hand-skin" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e5b99c"/><stop offset="1" stop-color="#d4a082"/>
+              </linearGradient>
+            </defs>
+  <g class="shade-wrap">
+            <g class="shade" fill="#000" opacity=".4">
+              <path d="M292 226C302 208 332 212 342 238C352 262 354 312 364 352C374 400 396 462 408 522L408 660L304 660C306 600 300 540 294 480C288 420 280 332 286 274C288 252 286 238 292 226Z"/>
+              <rect x="104" y="238" width="64" height="44" rx="22"/>
+              <rect x="104" y="293" width="64" height="44" rx="22"/>
+              <rect x="104" y="348" width="64" height="44" rx="22"/>
+              <rect x="110" y="403" width="56" height="38" rx="19"/>
+            </g>
+          </g>
+            {#- fingertips, index to little -#}
+            <g fill="url(#hand-skin)">
+              <rect x="98" y="228" width="68" height="44" rx="22"/>
+              <rect x="98" y="283" width="68" height="44" rx="22"/>
+              <rect x="98" y="338" width="68" height="44" rx="22"/>
+              <rect x="104" y="393" width="60" height="38" rx="19"/>
+            </g>
+            <g fill="#f3d3c2" opacity=".9">
+              <rect x="136" y="238" width="22" height="24" rx="9"/>
+              <rect x="136" y="293" width="22" height="24" rx="9"/>
+              <rect x="136" y="348" width="22" height="24" rx="9"/>
+              <rect x="134" y="402" width="20" height="20" rx="8"/>
+            </g>
+            <g fill="none" stroke="#b97f62" stroke-width="2" stroke-linecap="round" opacity=".45">
+              <path d="M118 236c-3 8-3 20 0 28M118 291c-3 8-3 20 0 28M118 346c-3 8-3 20 0 28M122 400c-2 7-2 17 0 24"/>
+            </g>
+            {#- thumb -#}
+            <path fill="url(#hand-skin)" d="M296 214C306 196 338 200 348 226C356 250 358 300 366 340C376 388 398 450 410 510C416 560 420 620 420 660L300 660C302 600 296 540 290 480C284 420 276 320 282 262C284 240 288 226 296 214Z"/>
+            <path fill="#f3d3c2" opacity=".9" d="M302 220C312 208 332 212 338 230C342 244 338 258 328 262C316 266 300 258 298 244C297 234 298 226 302 220Z"/>
+            <path fill="none" stroke="#b97f62" stroke-width="2" stroke-linecap="round" opacity=".45" d="M306 330c12 4 26 4 38 0M318 420c10 3 20 3 30 0"/>
+            <path fill="#c48d70" opacity=".3" d="M290 480C284 420 276 320 282 262L296 258C292 318 300 420 306 480C310 540 314 600 312 660L300 660C302 600 296 540 290 480Z"/>
+          </svg>
