@@ -93,8 +93,7 @@ p,li{text-wrap:pretty}
   padding:24px var(--pad);
   transition:transform .45s var(--ease), background .35s var(--ease), border-color .35s var(--ease), backdrop-filter .35s var(--ease), padding .35s var(--ease);
   border-bottom:1px solid transparent;
-  mix-blend-mode:difference;
-  color:#fff;
+  color:var(--ink);
 }
 .nav.is-pinned{
   background:rgba(var(--bg-rgb),0);
@@ -106,8 +105,6 @@ p,li{text-wrap:pretty}
   backdrop-filter:saturate(160%) blur(14px);
   -webkit-backdrop-filter:saturate(160%) blur(14px);
   border-bottom-color:rgba(20,20,20,.06);
-  mix-blend-mode:normal;
-  color:var(--ink);
 }
 /* Over a dark section the light blurred band reads as a white slab, so invert
    it. Driven by [data-nav-dark] elements + the scroll handler. */
@@ -133,7 +130,7 @@ p,li{text-wrap:pretty}
 @media (prefers-reduced-motion: reduce){
   .nav__brand.is-waving .nav__brand-letters span{animation:none}
 }
-.nav__right{display:flex;align-items:center;gap:clamp(1.5rem,3vw,2.6rem)}
+.nav__right{display:flex;align-items:center;gap:20px}
 .nav__links{display:flex;gap:clamp(1.25rem,2.6vw,2rem)}
 .nav__links a{font-size:1rem;color:inherit;font-weight:500;position:relative}
 .nav__links a::after{
@@ -144,8 +141,8 @@ p,li{text-wrap:pretty}
 .nav__links a:hover::after,.nav__links a.is-active::after{transform:scaleX(1)}
 .nav__cta{
   display:inline-flex;align-items:center;gap:8px;
-  padding:11px 22px;border-radius:999px;
-  background:#fff;color:#000;
+  height:36px;padding:0 20px;margin-left:-10px;border-radius:999px;
+  background:var(--ink);color:var(--bg);
   font-weight:500;font-size:.95rem;
   transition:transform .25s var(--ease);
 }
@@ -153,11 +150,6 @@ p,li{text-wrap:pretty}
 .nav__cta:hover{transform:translateY(-2px)}
 @media (max-width:760px){
   .nav__links{display:none}
-  /* mobile: drop mix-blend-mode (flaky w/ position:fixed on iOS) */
-  .nav{
-    mix-blend-mode:normal;
-    color:var(--ink);
-  }
   .nav.is-pinned{
     background:rgba(var(--bg-rgb),.78);
     backdrop-filter:saturate(160%) blur(10px);
@@ -192,12 +184,13 @@ p,li{text-wrap:pretty}
 .nav.is-open .nav__burger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
 .nav__theme{
   display:inline-flex;align-items:center;justify-content:center;
-  width:38px;height:38px;padding:0;border-radius:50%;
+  width:36px;height:36px;padding:0;border-radius:50%;
   border:1px solid color-mix(in srgb, currentColor 32%, transparent);
   background:none;color:inherit;cursor:pointer;
   transition:border-color .3s, transform .3s cubic-bezier(.2,.7,.2,1);
 }
 .nav__theme:hover{border-color:currentColor}
+.nav__sep{flex:none;width:1px;height:18px;background:currentColor;opacity:.28}
 .nav__theme-icon{width:20px;height:20px;display:block;overflow:visible}
 .nav__theme-icon .disc{
   transform-box:fill-box;transform-origin:center;
@@ -257,6 +250,7 @@ html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
 @media (max-width:760px){
   .nav__burger{display:flex}
   .nav__theme:not(.nav__theme--row){display:none}
+  .nav__sep{display:none}
   .nav__cta{padding:10px 16px;font-size:.9rem;margin:0 .4rem 0 .1rem}
 }
 @media (min-width:761px){.nav__menu{display:none !important}}
@@ -2733,10 +2727,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
        --s/--e are start/end years (decimals for months). Green bars are
        life, not work: the holidays are placeholders until real ones (and
        photos for their fan cards) land. Fan images: assets/timeline/, 320×240. -->
-  <section class="tl" id="timeline" aria-labelledby="tl-title" data-reveal data-pref-section="Work life timeline">
+  <section class="tl" id="timeline" aria-labelledby="tl-title" data-reveal hidden data-pref-section="Work life timeline">
    <div class="tl__pin">
     <div class="tl__head">
-      <h2 class="tl__title" id="tl-title">Where I've been</h2>
+      <h2 class="tl__title" id="tl-title">Work life</h2>
       <p class="tl__hint"><span class="tl__hint--desk">(drag to go back in time)</span><span class="tl__hint--phone">(scroll to go back in time)</span></p>
     </div>
     <div class="tl__view">
@@ -4366,6 +4360,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 
     let openedOnToday = false;
     const remeasure = () => {
+      // parked by the review panel (display:none): nothing to measure until
+      // it's switched on, which fires a resize
+      if (!tlScroller.offsetParent) return;
       measure(); placeNeedle();
       if (!tlSection.classList.contains("is-pinned") && !openedOnToday) { tlScroller.scrollLeft = posAt(NOW); openedOnToday = true; }
       const pos = tlSection.classList.contains("is-pinned") ? (cur ? cur.x : posAt(NOW)) : tlScroller.scrollLeft;
