@@ -97,7 +97,7 @@ img,svg{display:block;max-width:100%}
 /* phone menu — the burger in the bar and the full-screen list under it.
    Only on phones (≤760px): the links sit in the bar everywhere else.
    Also the theme toggle: a ringed sun/moon in the bar on desktop, a
-   "Dark theme / Light theme" row in the phone menu. The icon morphs: the
+   sliding sun/moon pill in the bar on phones (after mzistudio.com). The icon morphs: the
    masked bite slides in to carve the disc into a crescent while the rays
    fold away (partials/theme-icon.njk). */
 .nav__burger{
@@ -155,18 +155,20 @@ html[data-theme="dark"] .nav__theme-icon .rays{transform:rotate(90deg) scale(.2)
   font-size:1.3rem;font-weight:500;letter-spacing:-.02em;line-height:1.2;
   color:inherit;text-decoration:none;
 }
-.nav__theme--row{
-  width:100%;height:auto;border-radius:0;
-  justify-content:space-between;padding:1rem 0;
-  border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  font:inherit;font-size:1.3rem;font-weight:500;letter-spacing:-.02em;line-height:1.2;
-  text-align:left;
+.nav__theme--switch{display:none}
+.nav__glyph{position:absolute;top:50%;width:14px;height:14px;margin-top:-7px;opacity:.45}
+.nav__glyph--sun{left:9px}
+.nav__glyph--moon{right:9px}
+.nav__thumb{
+  position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb, currentColor 16%, transparent);
+  border:1px solid color-mix(in srgb, currentColor 40%, transparent);
+  transition:transform .4s cubic-bezier(.2,.7,.2,1);
 }
-.nav__theme--row:hover{border-color:var(--line);transform:none}
-.nav__theme--row .nav__theme-icon{width:22px;height:22px;margin-right:4px}
-.nav__theme--row .to-light{display:none}
-html[data-theme="dark"] .nav__theme--row .to-dark{display:none}
-html[data-theme="dark"] .nav__theme--row .to-light{display:inline}
+.nav__thumb .nav__theme-icon{width:16px;height:16px}
+html[data-theme="dark"] .nav__thumb{transform:translateX(28px)}
+@media (prefers-reduced-motion: reduce){.nav__thumb{transition:none}}
 .nav__menu-foot{
   display:flex;flex-direction:column;gap:.5rem;
   margin:auto 0 0;padding-top:2rem;
@@ -181,7 +183,11 @@ html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
 }
 @media (max-width:760px){
   .nav__burger{display:flex}
-  .nav__theme:not(.nav__theme--row){display:none}
+  .nav__theme:not(.nav__theme--switch){display:none}
+  .nav__theme--switch{
+    display:block;position:relative;flex:none;width:60px;height:32px;margin-right:.6rem;
+    border-radius:999px;
+  }
   .nav__sep{display:none}
   .nav__cta{height:auto;padding:10px 16px;font-size:.9rem;margin:0 .4rem 0 .1rem}
 }

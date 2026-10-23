@@ -10,6 +10,7 @@
     </nav>
     <span class="nav__sep" aria-hidden="true"></span>
     <button class="nav__theme" type="button" aria-label="Switch to dark theme" aria-pressed="false">{% set iconId = "theme-mask-bar" %}{% include "partials/theme-icon.njk" %}</button>
+    <button class="nav__theme nav__theme--switch" type="button" aria-label="Switch to dark theme" aria-pressed="false"><svg class="nav__glyph nav__glyph--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><svg class="nav__glyph nav__glyph--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span class="nav__thumb">{% set iconId = "theme-mask-switch" %}{% include "partials/theme-icon.njk" %}</span></button>
     <a class="nav__cta" href="{{ navLinkBase | default('index.html') }}#contact">Contact</a>
     <button class="nav__burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu"><span></span><span></span><span></span></button>
   </div>
@@ -19,7 +20,6 @@
   <a href="{{ navLinkBase | default('index.html') }}#hello">About</a>
   <a href="cv.html">CV</a>
   <a href="{{ navLinkBase | default('index.html') }}#contact">Contact</a>
-  <button class="nav__theme nav__theme--row" type="button" aria-label="Switch to dark theme" aria-pressed="false"><span class="to-dark">Dark theme</span><span class="to-light">Light theme</span>{% set iconId = "theme-mask-menu" %}{% include "partials/theme-icon.njk" %}</button>
   <p class="nav__menu-foot"><a href="mailto:luxfordm@gmail.com">luxfordm@gmail.com</a><a href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener">LinkedIn ↗</a></p>
 </nav>
 <script>
