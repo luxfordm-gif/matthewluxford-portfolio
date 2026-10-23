@@ -795,7 +795,29 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   .skills__row{grid-template-columns:2.6rem minmax(0,1fr);gap:.6rem 1rem}
   .skills__body{grid-column:2}
 }
-@media (max-width:760px){.skills{padding:clamp(4rem,12vw,6rem) var(--pad)}}
+.skills__top{display:contents}
+.skills__toggle{display:none}
+@media (max-width:760px){
+  .skills{padding:clamp(4rem,12vw,6rem) var(--pad)}
+  /* phones: tap a row to open it (after mzistudio.com's services list) */
+  .skills__row{display:block;padding:0}
+  .skills__top{position:relative;display:grid;grid-template-columns:2.6rem minmax(0,1fr) 1.5rem;gap:0 1rem;align-items:center;padding:1.6rem 0}
+  .skills__num{padding-top:0}
+  .skills__toggle{display:block;appearance:none;background:none;border:0;padding:0;margin:0;width:1.5rem;height:1.5rem;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .skills__toggle::after{content:"";position:absolute;inset:0}
+  .skills__toggle:focus-visible::after{outline:2px solid var(--ink);outline-offset:-2px}
+  .skills__plus{position:relative;display:block;width:100%;height:100%}
+  .skills__plus::before,.skills__plus::after{content:"";position:absolute;left:50%;top:50%;width:1.05rem;height:1.5px;background:currentColor;transform:translate(-50%,-50%);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+  .skills__plus::after{transform:translate(-50%,-50%) rotate(90deg)}
+  .skills__row.is-open .skills__plus::after{transform:translate(-50%,-50%) rotate(0)}
+  .skills__body{display:grid;grid-template-rows:0fr;visibility:hidden;margin-left:3.6rem;transition:grid-template-rows .35s cubic-bezier(.2,.7,.2,1),visibility 0s .35s}
+  .skills__row.is-open .skills__body{grid-template-rows:1fr;visibility:visible;transition-delay:0s}
+  .skills__body-in{min-height:0;overflow:hidden}
+  .skills__body-in > :last-child{margin-bottom:1.7rem}
+}
+@media (max-width:760px) and (prefers-reduced-motion:reduce){
+  .skills__body,.skills__plus::before,.skills__plus::after{transition:none}
+}
 
 /* same title as the deck above: a step down from --h2, italic second line */
 .tl__head{max-width:1400px;margin:0 auto;padding:0 var(--pad);text-align:center}
@@ -2698,35 +2720,55 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       </div>
       <ol class="skills__list">
         <li class="skills__row reveal-up" style="--i:2">
-          <span class="skills__num" aria-hidden="true">01</span>
-          <h3 class="skills__name">Product <span class="it">design</span></h3>
-          <div class="skills__body">
+          <div class="skills__top">
+            <span class="skills__num" aria-hidden="true">01</span>
+            <h3 class="skills__name" id="skills-n1">Product <span class="it">design</span></h3>
+            <button class="skills__toggle" type="button" aria-expanded="false" aria-controls="skills-b1" aria-labelledby="skills-n1"><span class="skills__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="skills__body" id="skills-b1">
+            <div class="skills__body-in">
             <p>Flows, wireframes, prototypes and the polished screens at the end. Design systems that survive contact with engineers, and the small moves that make a screen feel finished.</p>
             <ul class="skills__tags"><li>UX</li><li>UI</li><li>Prototypes</li><li>Design systems</li><li>Micro-interactions</li><li>Figma</li><li>iOS</li><li>Android</li></ul>
           </div>
+          </div>
         </li>
         <li class="skills__row reveal-up" style="--i:3">
-          <span class="skills__num" aria-hidden="true">02</span>
-          <h3 class="skills__name">Websites <span class="it">&amp; landing pages</span></h3>
-          <div class="skills__body">
+          <div class="skills__top">
+            <span class="skills__num" aria-hidden="true">02</span>
+            <h3 class="skills__name" id="skills-n2">Websites <span class="it">&amp; landing pages</span></h3>
+            <button class="skills__toggle" type="button" aria-expanded="false" aria-controls="skills-b2" aria-labelledby="skills-n2"><span class="skills__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="skills__body" id="skills-b2">
+            <div class="skills__body-in">
             <p>Marketing sites and landing pages with a point. Strong type, clear hierarchy, a reason to keep scrolling, and a page that actually converts.</p>
             <ul class="skills__tags"><li>Web design</li><li>Landing pages</li><li>Typography</li><li>Responsive</li><li>Figma</li></ul>
           </div>
+          </div>
         </li>
         <li class="skills__row reveal-up" style="--i:4">
-          <span class="skills__num" aria-hidden="true">03</span>
-          <h3 class="skills__name">Design <span class="it">direction</span></h3>
-          <div class="skills__body">
+          <div class="skills__top">
+            <span class="skills__num" aria-hidden="true">03</span>
+            <h3 class="skills__name" id="skills-n3">Design <span class="it">direction</span></h3>
+            <button class="skills__toggle" type="button" aria-expanded="false" aria-controls="skills-b3" aria-labelledby="skills-n3"><span class="skills__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="skills__body" id="skills-b3">
+            <div class="skills__body-in">
             <p>Running the workshops, managing designers, and presenting the work to build teams and the people who sign it off. Sole designer or one of a team, either suits me.</p>
             <ul class="skills__tags"><li>Workshops</li><li>Creative direction</li><li>Design ops</li><li>Stakeholders</li></ul>
           </div>
+          </div>
         </li>
         <li class="skills__row reveal-up" style="--i:5">
-          <span class="skills__num" aria-hidden="true">04</span>
-          <h3 class="skills__name">Prototype &amp; ship <span class="it">with AI</span></h3>
-          <div class="skills__body">
+          <div class="skills__top">
+            <span class="skills__num" aria-hidden="true">04</span>
+            <h3 class="skills__name" id="skills-n4">Prototype &amp; ship <span class="it">with AI</span></h3>
+            <button class="skills__toggle" type="button" aria-expanded="false" aria-controls="skills-b4" aria-labelledby="skills-n4"><span class="skills__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="skills__body" id="skills-b4">
+            <div class="skills__body-in">
             <p>I don't hand-write HTML and CSS any more. I design it, then build and ship it with Claude Code, straight to a live URL. <a href="reps.html">Reps</a> and this site are both made that way.</p>
             <ul class="skills__tags"><li>Claude Code</li><li>ChatGPT</li><li>GitHub</li><li>Supabase</li><li>Netlify</li></ul>
+          </div>
           </div>
         </li>
       </ol>
@@ -4418,6 +4460,15 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   document.addEventListener("pointerdown", (e) => {
     if (e.pointerType !== "mouse" && !e.target.closest(".tl__bar")) closeBars();
   }, { passive: true });
+
+  // What I do: on phones each row is an accordion (CSS only shows the toggle ≤760px)
+  document.querySelectorAll(".skills__toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const row = btn.closest(".skills__row");
+      const open = row.classList.toggle("is-open");
+      btn.setAttribute("aria-expanded", open);
+    });
+  });
 
   // GA4: case study card clicks
   document.querySelectorAll("a.proj[href]").forEach((a) => {
