@@ -2750,8 +2750,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         <li class="skills__word">Product design</li>
         <li class="skills__word">UX</li>
         <li class="skills__word">UI</li>
-        <li class="skills__word">iOS</li>
-        <li class="skills__word">Android</li>
+        <li class="skills__word">iOS/Android apps</li>
         <li class="skills__word">Prototypes</li>
         <li class="skills__word">AI prototypes</li>
         <li class="skills__word">Vibe coding</li>
@@ -3341,7 +3340,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   //  - detent: the timeline's dial, a notch per month (lower and woodier than
   //    the lens tick) and a firmer double notch on a new year
   //  - shutter: a camera shutter, two quick clicks (open, close)
-  //  - roll: the What I do wheel landing on a word, a soft hollow tock
+  //  - roll: the What I do wheel passing a word, a hollow tock
   const sfx = (() => {
     const AC = window.AudioContext || window.webkitAudioContext;
     const quiet = { pop() {}, folder() {}, fan() {}, lift() {}, tick() {}, detent() {}, shutter() {}, pluck() {}, thud() {}, roll() {} };
@@ -3352,6 +3351,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       if (ctx.state === "suspended") ctx.resume();
     };
     addEventListener("pointerdown", unlock, { passive: true });
+    // a touch only counts as a gesture when the finger lifts, and iOS wants
+    // the resume inside that handler, so listen there too
+    addEventListener("pointerup", unlock, { passive: true });
+    addEventListener("touchend", unlock, { passive: true });
     addEventListener("keydown", unlock);
     const ready = () => ctx && ctx.state === "running";
     // one burst of noise through a filter chain, shaped by a gain envelope
@@ -3436,8 +3439,9 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       roll() {
         if (!ready()) return;
         // lower and rounder than the lens tick or the dial's notch: a
-        // narrow, resonant band of noise, gone in a few hundredths
-        burst({ len: 0.03, attack: 0.002, peak: 0.05, filters: [["bandpass", 900 + Math.random() * 120, 5], ["lowpass", 1800]] });
+        // narrow, resonant band of noise, gone in a few hundredths. Louder
+        // than most, or it vanishes on a phone speaker.
+        burst({ len: 0.03, attack: 0.002, peak: 0.14, filters: [["bandpass", 900 + Math.random() * 120, 5], ["lowpass", 1800]] });
       },
       shutter() {
         if (!ready()) return;
@@ -4467,7 +4471,8 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   // What I do: the word wheel. The page scroll through the section's runway
   // turns it one word per --step, easing into a short hold on each word; a
   // word's distance from the title's line (d, in rows) sets where it sits on
-  // the curve and how far it has faded. A soft tock as each word lands.
+  // the curve and how far it has faded. A tock as each word passes the line,
+  // either way.
   {
     const sec = document.querySelector(".skills");
     const reduce = matchMedia("(prefers-reduced-motion:reduce)");
@@ -4481,7 +4486,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       const HOLD = 0.18; // share of each step spent resting on a word, each side
       sec.classList.add("is-wheel");
       sec.style.setProperty("--steps", last);
-      let fs = 0, active = -1;
+      let fs = 0, active = -1, lastClick = 0;
       const measure = () => {
         fs = parseFloat(getComputedStyle(wheel).fontSize);
         // the wheel column is as wide as its widest word, so the title and
@@ -4505,7 +4510,8 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         });
         const now = Math.round(p);
         if (now !== active) {
-          if (active !== -1 && !quiet) sfx.roll();
+          const t = performance.now();
+          if (active !== -1 && !quiet && t - lastClick > 35) { lastClick = t; sfx.roll(); }
           active = now;
           words.forEach((w, k) => w.toggleAttribute("aria-current", k === now));
         }

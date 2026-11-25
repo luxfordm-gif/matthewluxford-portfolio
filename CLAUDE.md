@@ -60,7 +60,7 @@ All synthesised in one `sfx` helper in `src/index.njk` (Web Audio, filtered nois
 - `lift` — a hero card lifting on hover / tap-to-pop (lighter, no tap)
 - `pluck` / `thud` — a polaroid in the snake picked up / bumping the stage edge after a throw
 - `detent` — the timeline needle: a notch per month as it passes (lower and woodier than the lens tick, throttled), a firmer double notch on a new year; silent on load/resize
-- `roll` — the What I do wheel landing on a word (a soft, hollow tock, lower than the lens tick)
+- `roll` — the What I do wheel: a hollow tock as each word passes the line, either direction (throttled, and louder than the others so it carries on a phone speaker); silent on load/resize
 - `tick` / `shutter` — the snake: a tick per word (throttled, both scroll directions), a shutter once per key phrase; silent on load/resize paints
 
 ## Scroll smoothness
