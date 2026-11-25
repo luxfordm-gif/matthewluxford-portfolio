@@ -465,23 +465,32 @@ html.is-menu-open .nav.is-pinned,html.is-menu-open .nav.is-floating{
    cards to its left and under AC/DC. On scroll it travels down into the About intro (JS sets
    translate / rotate / scale, which stack with the deal + hover transforms). */
 .fcard--3{
-  left:50%;margin-left:-110px;top:-2px;padding:7px;gap:0;z-index:5;
+  left:50%;margin-left:-110px;top:-2px;padding:7px 7px 8px;gap:0;z-index:5;
+  border-radius:14px;
   /* dealt leaning a touch right; it straightens as it slides down the page
      (the slide JS rotates by -r as it goes). Never wiggles. */
   --r:4deg;--stack-tx:1px;--stack-ty:2px;--stack-r:2deg;
   background:var(--paper);
   will-change:translate,rotate,scale;
 }
-.me__photo{position:relative;flex:1;min-height:0;border-radius:14px;overflow:hidden;background:#000}
-.me__photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 15%}
-.me__foot{display:flex;align-items:center;gap:6px;padding:7px 1px 0 2px}
+.me__photo{position:relative;flex:1;min-height:0;border-radius:8px;overflow:hidden;background:#000}
+.me__photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0}
+/* the foot: LinkedIn mark, handle, Connect. The mark keeps the handle off the
+   card's rounded corner; the pill's text is trimmed to its cap height so the
+   padding is the same above and below. */
+.me__foot{display:flex;align-items:center;gap:6px;padding:8px 2px 1px}
+.me__in{flex:none;display:block;width:20px;height:20px;border-radius:4px;background:var(--ink);color:var(--bg)} /* matches the Connect pill, so it flips with the theme */
+.me__in svg{display:block;width:100%;height:100%}
 .me__who{display:flex;flex-direction:column;min-width:0;line-height:1.2}
 .me__who span:first-child{font-size:.62rem;font-weight:500;color:var(--ink)}
 .me__who span:last-child{font-size:.56rem;color:var(--muted-strong)}
 .me__connect{
-  margin-left:auto;flex:none;padding:.38rem .62rem;border-radius:999px;
+  margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:.28em;
+  padding:.42rem .62rem;border-radius:999px;line-height:1;
   background:var(--ink);color:var(--bg);text-decoration:none;font-size:.62rem;font-weight:500;
 }
+.me__connect span{text-box:trim-both cap alphabetic}
+.me__connect svg{flex:none;width:.72em;height:.72em}
 .me__connect:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .fcard--4{
   left:50%;margin-left:215px;top:42px;z-index:7; /* over AC/DC */
@@ -780,67 +789,66 @@ html:not([data-pref-intro="beside"]) .hello__aside{max-width:none}
   padding:clamp(4rem,8vw,7rem) 0 clamp(3rem,6vw,5rem);
 }
 /* ============================================================ what I do */
-/* Numbered rows between hairlines, after princepal.in's "What I do,
-   specifically." Type and rules only: no cards (see CLAUDE.md, layout tells). */
+/* A word wheel (after a "creative toolkit for:" list Matthew liked): the
+   title on the left, the things he does on a wheel to its right. The section
+   is a tall runway with a sticky full-screen stage, and the page's own scroll
+   turns the wheel, a word per --step of scroll with a short hold on each.
+   Words curve back to the left and fade the further they sit from the title's
+   line. JS adds .is-wheel, sets --steps and --wheel-w, and places each word;
+   without JS or with reduced motion it's the title over a plain list. */
 .skills{position:relative;z-index:2;padding:clamp(5rem,9vw,8rem) var(--pad)}
-.skills__inner{max-width:1180px;margin:0 auto}
-.skills__head{margin-bottom:clamp(2.5rem,4vw,3.5rem)}
+.skills__pin{max-width:1180px;margin:0 auto}
 .skills__title{
-  font-family:var(--sans);font-weight:500;
-  font-size:calc(var(--h2) * .78);
-  letter-spacing:-.03em;line-height:1.08;
-  margin:0;color:var(--ink);text-wrap:balance;
+  font-family:var(--sans);font-weight:500;font-size:var(--h2);
+  letter-spacing:-.03em;line-height:1.1;margin:0;color:var(--ink);
 }
-.skills__title .it{font-family:var(--serif-2);font-style:italic;font-weight:400;letter-spacing:-.015em}
-.skills__lead{margin:1.1rem 0 0;max-width:52ch;font-size:clamp(1.05rem,1rem + .35vw,1.2rem);line-height:1.6;color:var(--muted-strong)}
-.skills__list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-.skills__row{
-  display:grid;grid-template-columns:3.5rem minmax(0,.8fr) minmax(0,1.4fr);
-  gap:.75rem clamp(1.5rem,3vw,3rem);align-items:start;
-  padding:clamp(1.75rem,3vw,2.5rem) 0;border-bottom:1px solid var(--line);
+.skills__wheel{
+  list-style:none;margin:clamp(1.5rem,3vw,2.5rem) 0 0;padding:0;
+  display:flex;flex-wrap:wrap;gap:.35em 1em;
+  font-size:clamp(1.3rem,1rem + 1.2vw,2.2rem);
 }
-.skills__num{font-size:.8rem;font-weight:500;color:var(--muted-strong);letter-spacing:.08em;padding-top:.5rem;font-variant-numeric:tabular-nums}
-.skills__name{
-  font-family:var(--sans);font-weight:600;
-  font-size:clamp(1.35rem,1.1rem + .9vw,1.9rem);
-  letter-spacing:-.025em;line-height:1.1;margin:0;color:var(--ink);
+.skills__word{font-weight:500;letter-spacing:-.025em;line-height:1.1;color:var(--muted-strong);white-space:nowrap}
+.skills.is-wheel{
+  --step:clamp(80px,12vh,130px);
+  padding:0;
+  background:var(--bg);
+  height:calc(100vh + var(--steps,11) * var(--step));
+  height:calc(100svh + var(--steps,11) * var(--step));
 }
-.skills__name .it{font-family:var(--serif-2);font-style:italic;font-weight:400;letter-spacing:-.01em}
-.skills__body p{margin:0;max-width:58ch;font-size:clamp(1rem,.95rem + .3vw,1.12rem);line-height:1.6;color:var(--ink-2)}
-.skills__tags{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;margin:1.1rem 0 0;padding:0}
-.skills__tags li{
-  font-size:.68rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--muted-strong);border:1px solid var(--line);border-radius:999px;
-  padding:.5rem .8rem;line-height:1;
+/* plain ground under the words: the dots fade out above and back in below */
+.skills.is-wheel::before,
+.skills.is-wheel::after{
+  content:"";position:absolute;left:0;right:0;height:clamp(90px,14vh,160px);pointer-events:none;
 }
-@media (max-width:880px){
-  .skills__row{grid-template-columns:2.6rem minmax(0,1fr);gap:.6rem 1rem}
-  .skills__body{grid-column:2}
+.skills.is-wheel::before{bottom:100%;background:linear-gradient(to bottom,transparent,var(--bg))}
+.skills.is-wheel::after{top:100%;background:linear-gradient(to bottom,var(--bg),transparent)}
+.is-wheel .skills__pin{
+  position:sticky;top:0;max-width:none;
+  height:100vh;height:100svh;overflow:hidden;
+  display:grid;grid-template-columns:auto var(--wheel-w,50vw);justify-content:center;align-items:center;
+  column-gap:clamp(1.25rem,2.6vw,3rem);
+  padding:0 var(--pad);
 }
-.skills__top{display:contents}
-.skills__toggle{display:none}
+.is-wheel .skills__title{white-space:nowrap}
+.is-wheel .skills__wheel{position:relative;display:block;height:100%;margin:0;font-size:var(--h2)}
+.is-wheel .skills__word{
+  position:absolute;left:0;top:50%;margin-top:-.55em;
+  letter-spacing:-.03em;color:var(--ink);
+  opacity:0;will-change:transform,opacity;
+}
 @media (max-width:760px){
   .skills{padding:clamp(4rem,12vw,6rem) var(--pad)}
-  /* phones: tap a row to open it (after mzistudio.com's services list) */
-  .skills__row{display:block;padding:0}
-  .skills__top{position:relative;display:grid;grid-template-columns:2.6rem minmax(0,1fr) 1.5rem;gap:0 1rem;align-items:center;padding:1.6rem 0}
-  .skills__num{padding-top:0}
-  .skills__toggle{display:block;appearance:none;background:none;border:0;padding:0;margin:0;width:1.5rem;height:1.5rem;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
-  .skills__toggle::after{content:"";position:absolute;inset:0}
-  .skills__toggle:focus-visible::after{outline:2px solid var(--ink);outline-offset:-2px}
-  .skills__plus{position:relative;display:block;width:100%;height:100%}
-  .skills__plus::before,.skills__plus::after{content:"";position:absolute;left:50%;top:50%;width:1.05rem;height:1.5px;background:currentColor;transform:translate(-50%,-50%);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
-  .skills__plus::after{transform:translate(-50%,-50%) rotate(90deg)}
-  .skills__row.is-open .skills__plus::after{transform:translate(-50%,-50%) rotate(0)}
-  .skills__body{display:grid;grid-template-rows:0fr;visibility:hidden;margin-left:3.6rem;transition:grid-template-rows .35s cubic-bezier(.2,.7,.2,1),visibility 0s .35s}
-  .skills__row.is-open .skills__body{grid-template-rows:1fr;visibility:visible;transition-delay:0s}
-  .skills__body-in{min-height:0;overflow:hidden}
-  .skills__body-in > :last-child{margin-bottom:1.7rem}
+  /* phones: the title sits up top and the wheel runs under it; a longer
+     step, or one flick spins the whole wheel */
+  .skills.is-wheel{--step:clamp(100px,15vh,150px)}
+  .is-wheel .skills__pin{display:block;padding:0}
+  .is-wheel .skills__title{position:absolute;left:var(--pad);top:13%;z-index:1}
+  .is-wheel .skills__wheel{
+    position:absolute;inset:0;
+    font-size:clamp(1.5rem,7vw,2.1rem);
+  }
+  .is-wheel .skills__word{left:calc(var(--pad) + 2em);top:52%}
 }
-@media (max-width:760px) and (prefers-reduced-motion:reduce){
-  .skills__body,.skills__plus::before,.skills__plus::after{transition:none}
-}
-
 /* same title as the deck above: a step down from --h2, italic second line */
 .tl__head{max-width:1400px;margin:0 auto;padding:0 var(--pad);text-align:center}
 .tl__title{
@@ -2348,11 +2356,12 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
 
       <article class="fcard fcard--3 fcard--me">
         <div class="me__photo">
-          <img src="assets/hello/matthew-card.webp" width="720" height="900" alt="Matthew Luxford smiling at the camera in a black T-shirt, a desk and monitor behind him." loading="eager" />
+          <img src="assets/hello/matthew-illustration.webp" width="860" height="941" alt="Illustrated portrait of Matthew Luxford in sunglasses and a dark red shirt, grinning in front of a sunset city skyline with palm trees and a Ferris wheel." loading="eager" />
         </div>
         <div class="me__foot">
+          <span class="me__in" aria-hidden="true"><svg viewBox="0 0 20 20"><path fill="currentColor" d="M5.4 7.9h2.1v6.7H5.4zM6.45 4.6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4M8.8 7.9h2v.92h.03c.28-.53.97-1.08 2-1.08 2.13 0 2.53 1.4 2.53 3.23v3.63h-2.1v-3.22c0-.77-.02-1.76-1.07-1.76-1.08 0-1.24.84-1.24 1.7v3.28H8.8z"/></svg></span>
           <span class="me__who"><span>@matthewluxford</span><span>LinkedIn</span></span>
-          <a class="me__connect" href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener" aria-label="Connect on LinkedIn"><span aria-hidden="true">+</span> Connect</a>
+          <a class="me__connect" href="https://linkedin.com/in/matthewluxford/" target="_blank" rel="noopener" aria-label="Connect on LinkedIn"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Connect</span></a>
         </div>
       </article>
       <article class="fcard fcard--4">
@@ -2396,7 +2405,7 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     <div class="hello__inner">
       <figure class="hello__card reveal-up">
         <div class="hello__photo">
-          <img src="assets/hello/matthew-card.webp" width="720" height="900" alt="Matthew grinning at the camera in a black T-shirt, a desk and monitor softly out of focus behind him." loading="lazy" />
+          <img src="assets/hello/matthew-illustration.webp" width="860" height="941" alt="Illustrated portrait of Matthew in sunglasses and a dark red shirt, grinning in front of a sunset skyline with palm trees." loading="lazy" />
         </div>
         <figcaption class="hello__card-foot">
           <span class="hello__who">
@@ -2732,68 +2741,32 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     </div>
   </section>
 
-  <!-- WHAT I DO — numbered ruled rows (after princepal.in). Tag rows with
-       .reveal-up + --i so they step in; the section's data-reveal fires them. -->
-  <section class="skills" id="skills" aria-labelledby="skills-title" data-reveal data-pref-section="What I do">
-    <div class="skills__inner">
-      <div class="skills__head">
-        <h2 class="skills__title reveal-up" id="skills-title">What I do, <span class="it">specifically.</span></h2>
-        <p class="skills__lead reveal-up" style="--i:1">Product and web, from the first scrappy sketch to the thing that goes live. Lately with an AI doing the typing.</p>
-      </div>
-      <ol class="skills__list">
-        <li class="skills__row is-open reveal-up" style="--i:2">
-          <div class="skills__top">
-            <span class="skills__num" aria-hidden="true">01</span>
-            <h3 class="skills__name" id="skills-n1">Product <span class="it">design</span></h3>
-            <button class="skills__toggle" type="button" aria-expanded="true" aria-controls="skills-b1" aria-labelledby="skills-n1"><span class="skills__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="skills__body" id="skills-b1">
-            <div class="skills__body-in">
-            <p>Flows, wireframes, prototypes and the polished screens at the end. Design systems that survive contact with engineers, and the small moves that make a screen feel finished.</p>
-            <ul class="skills__tags"><li>UX</li><li>UI</li><li>Prototypes</li><li>Design systems</li><li>Micro-interactions</li><li>Figma</li><li>iOS</li><li>Android</li></ul>
-          </div>
-          </div>
-        </li>
-        <li class="skills__row reveal-up" style="--i:3">
-          <div class="skills__top">
-            <span class="skills__num" aria-hidden="true">02</span>
-            <h3 class="skills__name" id="skills-n2">Websites <span class="it">&amp; landing pages</span></h3>
-            <button class="skills__toggle" type="button" aria-expanded="false" aria-controls="skills-b2" aria-labelledby="skills-n2"><span class="skills__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="skills__body" id="skills-b2">
-            <div class="skills__body-in">
-            <p>Marketing sites and landing pages with a point. Strong type, clear hierarchy, a reason to keep scrolling, and a page that actually converts.</p>
-            <ul class="skills__tags"><li>Web design</li><li>Landing pages</li><li>Typography</li><li>Responsive</li><li>Figma</li></ul>
-          </div>
-          </div>
-        </li>
-        <li class="skills__row reveal-up" style="--i:4">
-          <div class="skills__top">
-            <span class="skills__num" aria-hidden="true">03</span>
-            <h3 class="skills__name" id="skills-n3">Design <span class="it">direction</span></h3>
-            <button class="skills__toggle" type="button" aria-expanded="false" aria-controls="skills-b3" aria-labelledby="skills-n3"><span class="skills__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="skills__body" id="skills-b3">
-            <div class="skills__body-in">
-            <p>Running the workshops, managing designers, and presenting the work to build teams and the people who sign it off. Sole designer or one of a team, either suits me.</p>
-            <ul class="skills__tags"><li>Workshops</li><li>Creative direction</li><li>Design ops</li><li>Stakeholders</li></ul>
-          </div>
-          </div>
-        </li>
-        <li class="skills__row reveal-up" style="--i:5">
-          <div class="skills__top">
-            <span class="skills__num" aria-hidden="true">04</span>
-            <h3 class="skills__name" id="skills-n4">Prototype &amp; ship <span class="it">with AI</span></h3>
-            <button class="skills__toggle" type="button" aria-expanded="false" aria-controls="skills-b4" aria-labelledby="skills-n4"><span class="skills__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="skills__body" id="skills-b4">
-            <div class="skills__body-in">
-            <p>I don't hand-write HTML and CSS any more. I design it, then build and ship it with Claude Code, straight to a live URL. <a href="reps.html">Reps</a> and this site are both made that way.</p>
-            <ul class="skills__tags"><li>Claude Code</li><li>ChatGPT</li><li>GitHub</li><li>Supabase</li><li>Netlify</li></ul>
-          </div>
-          </div>
-        </li>
-      </ol>
+  <!-- WHAT I DO — a word wheel turned by the page scroll (CSS + JS note
+       under "what I do"). The list is real text; add or reorder words here. -->
+  <section class="skills" id="skills" aria-labelledby="skills-title" data-pref-section="What I do">
+    <div class="skills__pin">
+      <h2 class="skills__title" id="skills-title">What I do</h2>
+      <ul class="skills__wheel">
+        <li class="skills__word">Product design</li>
+        <li class="skills__word">UX</li>
+        <li class="skills__word">UI</li>
+        <li class="skills__word">iOS/Android apps</li>
+        <li class="skills__word">Prototypes</li>
+        <li class="skills__word">AI prototypes</li>
+        <li class="skills__word">Vibe coding</li>
+        <li class="skills__word">Claude Code</li>
+        <li class="skills__word">Design systems</li>
+        <li class="skills__word">Micro-interactions</li>
+        <li class="skills__word">Figma</li>
+        <li class="skills__word">Websites</li>
+        <li class="skills__word">Web design</li>
+        <li class="skills__word">Landing pages</li>
+        <li class="skills__word">Typography</li>
+        <li class="skills__word">Responsive</li>
+        <li class="skills__word">Workshops</li>
+        <li class="skills__word">Creative direction</li>
+        <li class="skills__word">Design direction</li>
+      </ul>
     </div>
   </section>
 
@@ -3367,9 +3340,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
   //  - detent: the timeline's dial, a notch per month (lower and woodier than
   //    the lens tick) and a firmer double notch on a new year
   //  - shutter: a camera shutter, two quick clicks (open, close)
+  //  - roll: the What I do wheel passing a word, a hollow tock
   const sfx = (() => {
     const AC = window.AudioContext || window.webkitAudioContext;
-    const quiet = { pop() {}, folder() {}, fan() {}, lift() {}, tick() {}, detent() {}, shutter() {}, pluck() {}, thud() {} };
+    const quiet = { pop() {}, folder() {}, fan() {}, lift() {}, tick() {}, detent() {}, shutter() {}, pluck() {}, thud() {}, roll() {} };
     if (!AC) return quiet;
     let ctx = null;
     const unlock = () => {
@@ -3377,6 +3351,10 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
       if (ctx.state === "suspended") ctx.resume();
     };
     addEventListener("pointerdown", unlock, { passive: true });
+    // a touch only counts as a gesture when the finger lifts, and iOS wants
+    // the resume inside that handler, so listen there too
+    addEventListener("pointerup", unlock, { passive: true });
+    addEventListener("touchend", unlock, { passive: true });
     addEventListener("keydown", unlock);
     const ready = () => ctx && ctx.state === "running";
     // one burst of noise through a filter chain, shaped by a gain envelope
@@ -3457,6 +3435,13 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
         if (!ready()) return;
         burst({ len: 0.016, attack: 0.001, peak: year ? 0.06 : 0.04, filters: [["highpass", 1200], ["bandpass", 2300 + Math.random() * 400, 2.5]] });
         if (year) burst({ at: 0.045, len: 0.02, attack: 0.001, peak: 0.055, filters: [["bandpass", 1500 + Math.random() * 200, 2]] });
+      },
+      roll() {
+        if (!ready()) return;
+        // lower and rounder than the lens tick or the dial's notch: a
+        // narrow, resonant band of noise, gone in a few hundredths. Louder
+        // than most, or it vanishes on a phone speaker.
+        burst({ len: 0.03, attack: 0.002, peak: 0.14, filters: [["bandpass", 900 + Math.random() * 120, 5], ["lowpass", 1800]] });
       },
       shutter() {
         if (!ready()) return;
@@ -4483,14 +4468,63 @@ html[data-pref-cardtitle="light"] .deck__name{font-weight:300;letter-spacing:-.0
     if (e.pointerType !== "mouse" && !e.target.closest(".tl__bar")) closeBars();
   }, { passive: true });
 
-  // What I do: on phones each row is an accordion (CSS only shows the toggle ≤760px)
-  document.querySelectorAll(".skills__toggle").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const row = btn.closest(".skills__row");
-      const open = row.classList.toggle("is-open");
-      btn.setAttribute("aria-expanded", open);
-    });
-  });
+  // What I do: the word wheel. The page scroll through the section's runway
+  // turns it one word per --step, easing into a short hold on each word; a
+  // word's distance from the title's line (d, in rows) sets where it sits on
+  // the curve and how far it has faded. A tock as each word passes the line,
+  // either way.
+  {
+    const sec = document.querySelector(".skills");
+    const reduce = matchMedia("(prefers-reduced-motion:reduce)");
+    if (sec && !reduce.matches) {
+      const pin = sec.querySelector(".skills__pin");
+      const wheel = sec.querySelector(".skills__wheel");
+      const words = [...wheel.querySelectorAll(".skills__word")];
+      const last = words.length - 1;
+      const ROW = 1.18; // row height, em
+      const CURVE = 0.15; // how far a word leans back left: em per row squared
+      const HOLD = 0.18; // share of each step spent resting on a word, each side
+      sec.classList.add("is-wheel");
+      sec.style.setProperty("--steps", last);
+      let fs = 0, active = -1, lastClick = 0;
+      const measure = () => {
+        fs = parseFloat(getComputedStyle(wheel).fontSize);
+        // the wheel column is as wide as its widest word, so the title and
+        // the wheel centre together on the page
+        const widest = Math.max(...words.map((w) => w.offsetWidth));
+        sec.style.setProperty("--wheel-w", Math.ceil(widest + 2) + "px");
+      };
+      const update = (quiet) => {
+        const travel = sec.offsetHeight - pin.offsetHeight;
+        const raw = travel > 0 ? Math.min(1, Math.max(0, -sec.getBoundingClientRect().top / travel)) * last : 0;
+        const i = Math.floor(raw);
+        let t = Math.min(1, Math.max(0, (raw - i - HOLD) / (1 - 2 * HOLD)));
+        t = t * t * (3 - 2 * t);
+        const p = Math.min(last, i + t);
+        words.forEach((w, k) => {
+          const d = k - p, a = Math.abs(d);
+          // halves about every row, gone by the fifth
+          const o = Math.exp(-0.75 * a) * Math.min(1, Math.max(0, 4.6 - a));
+          w.style.opacity = o.toFixed(3);
+          w.style.transform = `translate3d(${(-CURVE * d * d * fs).toFixed(1)}px,${(d * ROW * fs).toFixed(1)}px,0)`;
+        });
+        const now = Math.round(p);
+        if (now !== active) {
+          const t = performance.now();
+          if (active !== -1 && !quiet && t - lastClick > 35) { lastClick = t; sfx.roll(); }
+          active = now;
+          words.forEach((w, k) => w.toggleAttribute("aria-current", k === now));
+        }
+      };
+      let raf = 0;
+      addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, { passive: true });
+      const refresh = () => { measure(); update(true); };
+      addEventListener("resize", refresh);
+      addEventListener("load", refresh);
+      if (document.fonts) document.fonts.ready.then(refresh);
+      refresh();
+    }
+  }
 
   // GA4: case study card clicks
   document.querySelectorAll("a.proj[href]").forEach((a) => {
